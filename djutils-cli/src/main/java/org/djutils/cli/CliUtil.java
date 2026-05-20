@@ -294,7 +294,14 @@ public final class CliUtil
             }
             if (testMode)
             {
-                throw new CliRuntimeException("parse errors");
+                StringBuilder sb = new StringBuilder();
+                sb.append("parse errors:\n");
+                for (Exception e : parseErrors)
+                {
+                    sb.append(e.getMessage());
+                    sb.append("\n");
+                }
+                throw new CliRuntimeException(sb.toString());
             }
             System.exit(-1);
         }

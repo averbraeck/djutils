@@ -1,84 +1,80 @@
 package org.djutils.cli;
 
-import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
-import org.djunits.value.vdouble.scalar.AbsorbedDose;
-import org.djunits.value.vdouble.scalar.Acceleration;
-import org.djunits.value.vdouble.scalar.AmountOfSubstance;
-import org.djunits.value.vdouble.scalar.Angle;
-import org.djunits.value.vdouble.scalar.AngularAcceleration;
-import org.djunits.value.vdouble.scalar.AngularVelocity;
-import org.djunits.value.vdouble.scalar.Area;
-import org.djunits.value.vdouble.scalar.CatalyticActivity;
-import org.djunits.value.vdouble.scalar.Density;
-import org.djunits.value.vdouble.scalar.Dimensionless;
-import org.djunits.value.vdouble.scalar.Direction;
-import org.djunits.value.vdouble.scalar.Duration;
-import org.djunits.value.vdouble.scalar.ElectricalCapacitance;
-import org.djunits.value.vdouble.scalar.ElectricalCharge;
-import org.djunits.value.vdouble.scalar.ElectricalConductance;
-import org.djunits.value.vdouble.scalar.ElectricalCurrent;
-import org.djunits.value.vdouble.scalar.ElectricalInductance;
-import org.djunits.value.vdouble.scalar.ElectricalPotential;
-import org.djunits.value.vdouble.scalar.ElectricalResistance;
-import org.djunits.value.vdouble.scalar.Energy;
-import org.djunits.value.vdouble.scalar.EquivalentDose;
-import org.djunits.value.vdouble.scalar.FlowMass;
-import org.djunits.value.vdouble.scalar.FlowVolume;
-import org.djunits.value.vdouble.scalar.Force;
-import org.djunits.value.vdouble.scalar.Frequency;
-import org.djunits.value.vdouble.scalar.Illuminance;
-import org.djunits.value.vdouble.scalar.Length;
-import org.djunits.value.vdouble.scalar.LinearDensity;
-import org.djunits.value.vdouble.scalar.LuminousFlux;
-import org.djunits.value.vdouble.scalar.LuminousIntensity;
-import org.djunits.value.vdouble.scalar.MagneticFlux;
-import org.djunits.value.vdouble.scalar.MagneticFluxDensity;
-import org.djunits.value.vdouble.scalar.Mass;
-import org.djunits.value.vdouble.scalar.Momentum;
-import org.djunits.value.vdouble.scalar.Position;
-import org.djunits.value.vdouble.scalar.Power;
-import org.djunits.value.vdouble.scalar.Pressure;
-import org.djunits.value.vdouble.scalar.RadioActivity;
-import org.djunits.value.vdouble.scalar.SolidAngle;
-import org.djunits.value.vdouble.scalar.Speed;
-import org.djunits.value.vdouble.scalar.Temperature;
-import org.djunits.value.vdouble.scalar.Time;
-import org.djunits.value.vdouble.scalar.Torque;
-import org.djunits.value.vdouble.scalar.Volume;
+import org.djunits.quantity.AbsorbedDose;
+import org.djunits.quantity.Acceleration;
+import org.djunits.quantity.AmountOfSubstance;
+import org.djunits.quantity.Angle;
+import org.djunits.quantity.AngularAcceleration;
+import org.djunits.quantity.AngularVelocity;
+import org.djunits.quantity.Area;
+import org.djunits.quantity.ArealObjectDensity;
+import org.djunits.quantity.CatalyticActivity;
+import org.djunits.quantity.Density;
+import org.djunits.quantity.Dimensionless;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.ElectricCharge;
+import org.djunits.quantity.ElectricCurrent;
+import org.djunits.quantity.ElectricPotential;
+import org.djunits.quantity.ElectricalCapacitance;
+import org.djunits.quantity.ElectricalConductance;
+import org.djunits.quantity.ElectricalInductance;
+import org.djunits.quantity.ElectricalResistance;
+import org.djunits.quantity.Energy;
+import org.djunits.quantity.EquivalentDose;
+import org.djunits.quantity.FlowMass;
+import org.djunits.quantity.FlowVolume;
+import org.djunits.quantity.Force;
+import org.djunits.quantity.Frequency;
+import org.djunits.quantity.Illuminance;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.LinearDensity;
+import org.djunits.quantity.LinearObjectDensity;
+import org.djunits.quantity.LuminousFlux;
+import org.djunits.quantity.LuminousIntensity;
+import org.djunits.quantity.MagneticFlux;
+import org.djunits.quantity.MagneticFluxDensity;
+import org.djunits.quantity.Mass;
+import org.djunits.quantity.Momentum;
+import org.djunits.quantity.Power;
+import org.djunits.quantity.Pressure;
+import org.djunits.quantity.RadioActivity;
+import org.djunits.quantity.SIQuantity;
+import org.djunits.quantity.SolidAngle;
+import org.djunits.quantity.Speed;
+import org.djunits.quantity.Temperature;
+import org.djunits.quantity.TemperatureDifference;
+import org.djunits.quantity.Torque;
+import org.djunits.quantity.Volume;
+import org.djunits.quantity.VolumetricObjectDensity;
 
 import jakarta.annotation.Generated;
 import picocli.CommandLine;
 import picocli.CommandLine.ITypeConverter;
 
 /**
- * CliUnitConverters offers conversion methods for DJUNITS scalars so these can be used on the command line, e.g.:
- * 
- * <pre>
- * java -jar ProgramApp.jar --timeout=5min
- * </pre>
- * 
- * <br>
- * Copyright (c) 2018-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
- * for project information <a href="https://www.simulation.tudelft.nl/" target="_blank">www.simulation.tudelft.nl</a>. The
- * source code and binary code of this software is proprietary information of Delft University of Technology.
- * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
+ * Command-line converters for all DJUNITS quantities.
+ * <p>
+ * This class is generated by org.djunits.generator.GenerateCliConverters and registers a Picocli converter for each discovered
+ * quantity in {@code org.djunits.quantity}. Each converter delegates parsing to {@code T.valueOf(String)} for correctness and
+ * consistency with the quantity API.
+ * </p>
  */
 public final class CliUnitConverters
 {
-    /** */
+    /**
+     * Constructs a {@code CliUnitConverters} utility class.
+     */
     private CliUnitConverters()
     {
-        // static utility class
-    }
+        /* utility class */ }
 
     /**
-     * Register all DJUNITS converters for a CommandLine.
-     * @param cmd the CommandLine for which the DJUNITS converters should be registered
+     * Registers all DJUNITS converters on a Picocli {@link CommandLine} instance.
+     * @param cmd the {@link CommandLine} on which to register all quantity converters.
      */
-    @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+    @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
     public static void registerAll(final CommandLine cmd)
     {
-        cmd.registerConverter(AbsoluteTemperature.class, new ABSOLUTETEMPERATURE());
         cmd.registerConverter(AbsorbedDose.class, new ABSORBEDDOSE());
         cmd.registerConverter(Acceleration.class, new ACCELERATION());
         cmd.registerConverter(AmountOfSubstance.class, new AMOUNTOFSUBSTANCE());
@@ -86,18 +82,18 @@ public final class CliUnitConverters
         cmd.registerConverter(AngularAcceleration.class, new ANGULARACCELERATION());
         cmd.registerConverter(AngularVelocity.class, new ANGULARVELOCITY());
         cmd.registerConverter(Area.class, new AREA());
+        cmd.registerConverter(ArealObjectDensity.class, new AREALOBJECTDENSITY());
         cmd.registerConverter(CatalyticActivity.class, new CATALYTICACTIVITY());
         cmd.registerConverter(Density.class, new DENSITY());
         cmd.registerConverter(Dimensionless.class, new DIMENSIONLESS());
-        cmd.registerConverter(Direction.class, new DIRECTION());
         cmd.registerConverter(Duration.class, new DURATION());
         cmd.registerConverter(ElectricalCapacitance.class, new ELECTRICALCAPACITANCE());
-        cmd.registerConverter(ElectricalCharge.class, new ELECTRICALCHARGE());
         cmd.registerConverter(ElectricalConductance.class, new ELECTRICALCONDUCTANCE());
-        cmd.registerConverter(ElectricalCurrent.class, new ELECTRICALCURRENT());
         cmd.registerConverter(ElectricalInductance.class, new ELECTRICALINDUCTANCE());
-        cmd.registerConverter(ElectricalPotential.class, new ELECTRICALPOTENTIAL());
         cmd.registerConverter(ElectricalResistance.class, new ELECTRICALRESISTANCE());
+        cmd.registerConverter(ElectricCharge.class, new ELECTRICCHARGE());
+        cmd.registerConverter(ElectricCurrent.class, new ELECTRICCURRENT());
+        cmd.registerConverter(ElectricPotential.class, new ELECTRICPOTENTIAL());
         cmd.registerConverter(Energy.class, new ENERGY());
         cmd.registerConverter(EquivalentDose.class, new EQUIVALENTDOSE());
         cmd.registerConverter(FlowMass.class, new FLOWMASS());
@@ -107,741 +103,1173 @@ public final class CliUnitConverters
         cmd.registerConverter(Illuminance.class, new ILLUMINANCE());
         cmd.registerConverter(Length.class, new LENGTH());
         cmd.registerConverter(LinearDensity.class, new LINEARDENSITY());
+        cmd.registerConverter(LinearObjectDensity.class, new LINEAROBJECTDENSITY());
         cmd.registerConverter(LuminousFlux.class, new LUMINOUSFLUX());
         cmd.registerConverter(LuminousIntensity.class, new LUMINOUSINTENSITY());
         cmd.registerConverter(MagneticFlux.class, new MAGNETICFLUX());
         cmd.registerConverter(MagneticFluxDensity.class, new MAGNETICFLUXDENSITY());
         cmd.registerConverter(Mass.class, new MASS());
         cmd.registerConverter(Momentum.class, new MOMENTUM());
-        cmd.registerConverter(Position.class, new POSITION());
         cmd.registerConverter(Power.class, new POWER());
         cmd.registerConverter(Pressure.class, new PRESSURE());
         cmd.registerConverter(RadioActivity.class, new RADIOACTIVITY());
+        cmd.registerConverter(SIQuantity.class, new SIQUANTITY());
         cmd.registerConverter(SolidAngle.class, new SOLIDANGLE());
         cmd.registerConverter(Speed.class, new SPEED());
         cmd.registerConverter(Temperature.class, new TEMPERATURE());
-        cmd.registerConverter(Time.class, new TIME());
+        cmd.registerConverter(TemperatureDifference.class, new TEMPERATUREDIFFERENCE());
         cmd.registerConverter(Torque.class, new TORQUE());
         cmd.registerConverter(Volume.class, new VOLUME());
+        cmd.registerConverter(VolumetricObjectDensity.class, new VOLUMETRICOBJECTDENSITY());
     }
 
     /**
-     * Convert an absolute temperature String with unit on the command line to an AbsoluteTemperature scalar.
-     */
-    public static class ABSOLUTETEMPERATURE implements ITypeConverter<AbsoluteTemperature>
-    {
-        @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
-        public AbsoluteTemperature convert(final String value) throws Exception
-        {
-            CliUtil.prepareLocale();
-            var ret = AbsoluteTemperature.valueOf(value);
-            CliUtil.restoreLocale();
-            return ret;
-        }
-    }
-
-    /**
-     * Convert an absorbed dose String with unit on the command line to an AbsorbedDose scalar.
+     * Converter for AbsorbedDose values supplied on the command line.
+     * <p>
+     * Converts an absorbed dose string with unit to an {@link AbsorbedDose} quantity.
+     * </p>
      */
     public static class ABSORBEDDOSE implements ITypeConverter<AbsorbedDose>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link AbsorbedDose} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link AbsorbedDose} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public AbsorbedDose convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = AbsorbedDose.valueOf(value);
+            var result = AbsorbedDose.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an acceleration String with unit on the command line to an Acceleration scalar.
+     * Converter for Acceleration values supplied on the command line.
+     * <p>
+     * Converts an acceleration string with unit to an {@link Acceleration} quantity.
+     * </p>
      */
     public static class ACCELERATION implements ITypeConverter<Acceleration>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Acceleration} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Acceleration} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Acceleration convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Acceleration.valueOf(value);
+            var result = Acceleration.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an amount of substance String with unit on the command line to an AmountOfSubstance scalar.
+     * Converter for AmountOfSubstance values supplied on the command line.
+     * <p>
+     * Converts an amount of substance string with unit to an {@link AmountOfSubstance} quantity.
+     * </p>
      */
     public static class AMOUNTOFSUBSTANCE implements ITypeConverter<AmountOfSubstance>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link AmountOfSubstance} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link AmountOfSubstance} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public AmountOfSubstance convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = AmountOfSubstance.valueOf(value);
+            var result = AmountOfSubstance.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an angle String with unit on the command line to an Angle scalar.
+     * Converter for Angle values supplied on the command line.
+     * <p>
+     * Converts an angle string with unit to an {@link Angle} quantity.
+     * </p>
      */
     public static class ANGLE implements ITypeConverter<Angle>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Angle} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Angle} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Angle convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Angle.valueOf(value);
+            var result = Angle.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an angular acceleration String with unit on the command line to an AngularAcceleration scalar.
+     * Converter for AngularAcceleration values supplied on the command line.
+     * <p>
+     * Converts an angular acceleration string with unit to an {@link AngularAcceleration} quantity.
+     * </p>
      */
     public static class ANGULARACCELERATION implements ITypeConverter<AngularAcceleration>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link AngularAcceleration} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link AngularAcceleration} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public AngularAcceleration convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = AngularAcceleration.valueOf(value);
+            var result = AngularAcceleration.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an angular velocity String with unit on the command line to an AngularVelocity scalar.
+     * Converter for AngularVelocity values supplied on the command line.
+     * <p>
+     * Converts an angular velocity string with unit to an {@link AngularVelocity} quantity.
+     * </p>
      */
     public static class ANGULARVELOCITY implements ITypeConverter<AngularVelocity>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link AngularVelocity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link AngularVelocity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public AngularVelocity convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = AngularVelocity.valueOf(value);
+            var result = AngularVelocity.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an area String with unit on the command line to an Area scalar.
+     * Converter for Area values supplied on the command line.
+     * <p>
+     * Converts an area string with unit to an {@link Area} quantity.
+     * </p>
      */
     public static class AREA implements ITypeConverter<Area>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Area} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Area} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Area convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Area.valueOf(value);
+            var result = Area.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a catalytic activity String with unit on the command line to a CatalyticActivity scalar.
+     * Converter for ArealObjectDensity values supplied on the command line.
+     * <p>
+     * Converts an areal object density string with unit to an {@link ArealObjectDensity} quantity.
+     * </p>
+     */
+    public static class AREALOBJECTDENSITY implements ITypeConverter<ArealObjectDensity>
+    {
+        /**
+         * Parses a textual value-with-unit into a {@link ArealObjectDensity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ArealObjectDensity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public ArealObjectDensity convert(final String value) throws Exception
+        {
+            CliUtil.prepareLocale();
+            var result = ArealObjectDensity.valueOf(value);
+            CliUtil.restoreLocale();
+            return result;
+        }
+    }
+
+    /**
+     * Converter for CatalyticActivity values supplied on the command line.
+     * <p>
+     * Converts a catalytic activity string with unit to a {@link CatalyticActivity} quantity.
+     * </p>
      */
     public static class CATALYTICACTIVITY implements ITypeConverter<CatalyticActivity>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link CatalyticActivity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link CatalyticActivity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public CatalyticActivity convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = CatalyticActivity.valueOf(value);
+            var result = CatalyticActivity.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a density String with unit on the command line to a Density scalar.
+     * Converter for Density values supplied on the command line.
+     * <p>
+     * Converts a density string with unit to a {@link Density} quantity.
+     * </p>
      */
     public static class DENSITY implements ITypeConverter<Density>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Density} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Density} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Density convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Density.valueOf(value);
+            var result = Density.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a dimensionless String with unit on the command line to a Dimensionless scalar.
+     * Converter for Dimensionless values supplied on the command line.
+     * <p>
+     * Converts a dimensionless string with unit to a {@link Dimensionless} quantity.
+     * </p>
      */
     public static class DIMENSIONLESS implements ITypeConverter<Dimensionless>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Dimensionless} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Dimensionless} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Dimensionless convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Dimensionless.valueOf(value);
+            var result = Dimensionless.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a direction String with unit on the command line to a Direction scalar.
-     */
-    public static class DIRECTION implements ITypeConverter<Direction>
-    {
-        @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
-        public Direction convert(final String value) throws Exception
-        {
-            CliUtil.prepareLocale();
-            var ret = Direction.valueOf(value);
-            CliUtil.restoreLocale();
-            return ret;
-        }
-    }
-
-    /**
-     * Convert a duration String with unit on the command line to a Duration scalar.
+     * Converter for Duration values supplied on the command line.
+     * <p>
+     * Converts a duration string with unit to a {@link Duration} quantity.
+     * </p>
      */
     public static class DURATION implements ITypeConverter<Duration>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Duration} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Duration} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Duration convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Duration.valueOf(value);
+            var result = Duration.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an electrical capacitance String with unit on the command line to an ElectricalCapacitance scalar.
+     * Converter for ElectricalCapacitance values supplied on the command line.
+     * <p>
+     * Converts an electrical capacitance string with unit to an {@link ElectricalCapacitance} quantity.
+     * </p>
      */
     public static class ELECTRICALCAPACITANCE implements ITypeConverter<ElectricalCapacitance>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link ElectricalCapacitance} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ElectricalCapacitance} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public ElectricalCapacitance convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = ElectricalCapacitance.valueOf(value);
+            var result = ElectricalCapacitance.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an electrical charge String with unit on the command line to an ElectricalCharge scalar.
-     */
-    public static class ELECTRICALCHARGE implements ITypeConverter<ElectricalCharge>
-    {
-        @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
-        public ElectricalCharge convert(final String value) throws Exception
-        {
-            CliUtil.prepareLocale();
-            var ret = ElectricalCharge.valueOf(value);
-            CliUtil.restoreLocale();
-            return ret;
-        }
-    }
-
-    /**
-     * Convert an electrical conductance String with unit on the command line to an ElectricalConductance scalar.
+     * Converter for ElectricalConductance values supplied on the command line.
+     * <p>
+     * Converts an electrical conductance string with unit to an {@link ElectricalConductance} quantity.
+     * </p>
      */
     public static class ELECTRICALCONDUCTANCE implements ITypeConverter<ElectricalConductance>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link ElectricalConductance} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ElectricalConductance} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public ElectricalConductance convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = ElectricalConductance.valueOf(value);
+            var result = ElectricalConductance.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an electrical current String with unit on the command line to an ElectricalCurrent scalar.
-     */
-    public static class ELECTRICALCURRENT implements ITypeConverter<ElectricalCurrent>
-    {
-        @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
-        public ElectricalCurrent convert(final String value) throws Exception
-        {
-            CliUtil.prepareLocale();
-            var ret = ElectricalCurrent.valueOf(value);
-            CliUtil.restoreLocale();
-            return ret;
-        }
-    }
-
-    /**
-     * Convert an electrical inductance String with unit on the command line to an ElectricalInductance scalar.
+     * Converter for ElectricalInductance values supplied on the command line.
+     * <p>
+     * Converts an electrical inductance string with unit to an {@link ElectricalInductance} quantity.
+     * </p>
      */
     public static class ELECTRICALINDUCTANCE implements ITypeConverter<ElectricalInductance>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link ElectricalInductance} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ElectricalInductance} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public ElectricalInductance convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = ElectricalInductance.valueOf(value);
+            var result = ElectricalInductance.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an electrical potential String with unit on the command line to an ElectricalPotential scalar.
-     */
-    public static class ELECTRICALPOTENTIAL implements ITypeConverter<ElectricalPotential>
-    {
-        @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
-        public ElectricalPotential convert(final String value) throws Exception
-        {
-            CliUtil.prepareLocale();
-            var ret = ElectricalPotential.valueOf(value);
-            CliUtil.restoreLocale();
-            return ret;
-        }
-    }
-
-    /**
-     * Convert an electrical resistance String with unit on the command line to an ElectricalResistance scalar.
+     * Converter for ElectricalResistance values supplied on the command line.
+     * <p>
+     * Converts an electrical resistance string with unit to an {@link ElectricalResistance} quantity.
+     * </p>
      */
     public static class ELECTRICALRESISTANCE implements ITypeConverter<ElectricalResistance>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link ElectricalResistance} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ElectricalResistance} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public ElectricalResistance convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = ElectricalResistance.valueOf(value);
+            var result = ElectricalResistance.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an energy String with unit on the command line to an Energy scalar.
+     * Converter for ElectricCharge values supplied on the command line.
+     * <p>
+     * Converts an electric charge string with unit to an {@link ElectricCharge} quantity.
+     * </p>
+     */
+    public static class ELECTRICCHARGE implements ITypeConverter<ElectricCharge>
+    {
+        /**
+         * Parses a textual value-with-unit into a {@link ElectricCharge} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ElectricCharge} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public ElectricCharge convert(final String value) throws Exception
+        {
+            CliUtil.prepareLocale();
+            var result = ElectricCharge.valueOf(value);
+            CliUtil.restoreLocale();
+            return result;
+        }
+    }
+
+    /**
+     * Converter for ElectricCurrent values supplied on the command line.
+     * <p>
+     * Converts an electric current string with unit to an {@link ElectricCurrent} quantity.
+     * </p>
+     */
+    public static class ELECTRICCURRENT implements ITypeConverter<ElectricCurrent>
+    {
+        /**
+         * Parses a textual value-with-unit into a {@link ElectricCurrent} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ElectricCurrent} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public ElectricCurrent convert(final String value) throws Exception
+        {
+            CliUtil.prepareLocale();
+            var result = ElectricCurrent.valueOf(value);
+            CliUtil.restoreLocale();
+            return result;
+        }
+    }
+
+    /**
+     * Converter for ElectricPotential values supplied on the command line.
+     * <p>
+     * Converts an electric potential string with unit to an {@link ElectricPotential} quantity.
+     * </p>
+     */
+    public static class ELECTRICPOTENTIAL implements ITypeConverter<ElectricPotential>
+    {
+        /**
+         * Parses a textual value-with-unit into a {@link ElectricPotential} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link ElectricPotential} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public ElectricPotential convert(final String value) throws Exception
+        {
+            CliUtil.prepareLocale();
+            var result = ElectricPotential.valueOf(value);
+            CliUtil.restoreLocale();
+            return result;
+        }
+    }
+
+    /**
+     * Converter for Energy values supplied on the command line.
+     * <p>
+     * Converts an energy string with unit to an {@link Energy} quantity.
+     * </p>
      */
     public static class ENERGY implements ITypeConverter<Energy>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Energy} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Energy} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Energy convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Energy.valueOf(value);
+            var result = Energy.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an equivalent dose String with unit on the command line to an EquivalentDose scalar.
+     * Converter for EquivalentDose values supplied on the command line.
+     * <p>
+     * Converts an equivalent dose string with unit to an {@link EquivalentDose} quantity.
+     * </p>
      */
     public static class EQUIVALENTDOSE implements ITypeConverter<EquivalentDose>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link EquivalentDose} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link EquivalentDose} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public EquivalentDose convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = EquivalentDose.valueOf(value);
+            var result = EquivalentDose.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a flow mass String with unit on the command line to a FlowMass scalar.
+     * Converter for FlowMass values supplied on the command line.
+     * <p>
+     * Converts a flow mass string with unit to a {@link FlowMass} quantity.
+     * </p>
      */
     public static class FLOWMASS implements ITypeConverter<FlowMass>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link FlowMass} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link FlowMass} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public FlowMass convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = FlowMass.valueOf(value);
+            var result = FlowMass.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a flow volume String with unit on the command line to a FlowVolume scalar.
+     * Converter for FlowVolume values supplied on the command line.
+     * <p>
+     * Converts a flow volume string with unit to a {@link FlowVolume} quantity.
+     * </p>
      */
     public static class FLOWVOLUME implements ITypeConverter<FlowVolume>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link FlowVolume} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link FlowVolume} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public FlowVolume convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = FlowVolume.valueOf(value);
+            var result = FlowVolume.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a force String with unit on the command line to a Force scalar.
+     * Converter for Force values supplied on the command line.
+     * <p>
+     * Converts a force string with unit to a {@link Force} quantity.
+     * </p>
      */
     public static class FORCE implements ITypeConverter<Force>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Force} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Force} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Force convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Force.valueOf(value);
+            var result = Force.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a frequency String with unit on the command line to a Frequency scalar.
+     * Converter for Frequency values supplied on the command line.
+     * <p>
+     * Converts a frequency string with unit to a {@link Frequency} quantity.
+     * </p>
      */
     public static class FREQUENCY implements ITypeConverter<Frequency>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Frequency} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Frequency} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Frequency convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Frequency.valueOf(value);
+            var result = Frequency.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert an illuminance String with unit on the command line to an Illuminance scalar.
+     * Converter for Illuminance values supplied on the command line.
+     * <p>
+     * Converts an illuminance string with unit to an {@link Illuminance} quantity.
+     * </p>
      */
     public static class ILLUMINANCE implements ITypeConverter<Illuminance>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Illuminance} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Illuminance} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Illuminance convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Illuminance.valueOf(value);
+            var result = Illuminance.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a length String with unit on the command line to a Length scalar.
+     * Converter for Length values supplied on the command line.
+     * <p>
+     * Converts a length string with unit to a {@link Length} quantity.
+     * </p>
      */
     public static class LENGTH implements ITypeConverter<Length>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Length} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Length} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Length convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Length.valueOf(value);
+            var result = Length.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a linear density String with unit on the command line to a LinearDensity scalar.
+     * Converter for LinearDensity values supplied on the command line.
+     * <p>
+     * Converts a linear density string with unit to a {@link LinearDensity} quantity.
+     * </p>
      */
     public static class LINEARDENSITY implements ITypeConverter<LinearDensity>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link LinearDensity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link LinearDensity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public LinearDensity convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = LinearDensity.valueOf(value);
+            var result = LinearDensity.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a luminous flux String with unit on the command line to a LuminousFlux scalar.
+     * Converter for LinearObjectDensity values supplied on the command line.
+     * <p>
+     * Converts a linear object density string with unit to a {@link LinearObjectDensity} quantity.
+     * </p>
+     */
+    public static class LINEAROBJECTDENSITY implements ITypeConverter<LinearObjectDensity>
+    {
+        /**
+         * Parses a textual value-with-unit into a {@link LinearObjectDensity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link LinearObjectDensity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public LinearObjectDensity convert(final String value) throws Exception
+        {
+            CliUtil.prepareLocale();
+            var result = LinearObjectDensity.valueOf(value);
+            CliUtil.restoreLocale();
+            return result;
+        }
+    }
+
+    /**
+     * Converter for LuminousFlux values supplied on the command line.
+     * <p>
+     * Converts a luminous flux string with unit to a {@link LuminousFlux} quantity.
+     * </p>
      */
     public static class LUMINOUSFLUX implements ITypeConverter<LuminousFlux>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link LuminousFlux} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link LuminousFlux} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public LuminousFlux convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = LuminousFlux.valueOf(value);
+            var result = LuminousFlux.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a luminous intensity String with unit on the command line to a LuminousIntensity scalar.
+     * Converter for LuminousIntensity values supplied on the command line.
+     * <p>
+     * Converts a luminous intensity string with unit to a {@link LuminousIntensity} quantity.
+     * </p>
      */
     public static class LUMINOUSINTENSITY implements ITypeConverter<LuminousIntensity>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link LuminousIntensity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link LuminousIntensity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public LuminousIntensity convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = LuminousIntensity.valueOf(value);
+            var result = LuminousIntensity.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a magnetic flux String with unit on the command line to a MagneticFlux scalar.
+     * Converter for MagneticFlux values supplied on the command line.
+     * <p>
+     * Converts a magnetic flux string with unit to a {@link MagneticFlux} quantity.
+     * </p>
      */
     public static class MAGNETICFLUX implements ITypeConverter<MagneticFlux>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link MagneticFlux} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link MagneticFlux} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public MagneticFlux convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = MagneticFlux.valueOf(value);
+            var result = MagneticFlux.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a magnetic flux density String with unit on the command line to a MagneticFluxDensity scalar.
+     * Converter for MagneticFluxDensity values supplied on the command line.
+     * <p>
+     * Converts a magnetic flux density string with unit to a {@link MagneticFluxDensity} quantity.
+     * </p>
      */
     public static class MAGNETICFLUXDENSITY implements ITypeConverter<MagneticFluxDensity>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link MagneticFluxDensity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link MagneticFluxDensity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public MagneticFluxDensity convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = MagneticFluxDensity.valueOf(value);
+            var result = MagneticFluxDensity.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a mass String with unit on the command line to a Mass scalar.
+     * Converter for Mass values supplied on the command line.
+     * <p>
+     * Converts a mass string with unit to a {@link Mass} quantity.
+     * </p>
      */
     public static class MASS implements ITypeConverter<Mass>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Mass} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Mass} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Mass convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Mass.valueOf(value);
+            var result = Mass.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a momentum String with unit on the command line to a Momentum scalar.
+     * Converter for Momentum values supplied on the command line.
+     * <p>
+     * Converts a momentum string with unit to a {@link Momentum} quantity.
+     * </p>
      */
     public static class MOMENTUM implements ITypeConverter<Momentum>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Momentum} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Momentum} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Momentum convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Momentum.valueOf(value);
+            var result = Momentum.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a position String with unit on the command line to a Position scalar.
-     */
-    public static class POSITION implements ITypeConverter<Position>
-    {
-        @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
-        public Position convert(final String value) throws Exception
-        {
-            CliUtil.prepareLocale();
-            var ret = Position.valueOf(value);
-            CliUtil.restoreLocale();
-            return ret;
-        }
-    }
-
-    /**
-     * Convert a power String with unit on the command line to a Power scalar.
+     * Converter for Power values supplied on the command line.
+     * <p>
+     * Converts a power string with unit to a {@link Power} quantity.
+     * </p>
      */
     public static class POWER implements ITypeConverter<Power>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Power} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Power} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Power convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Power.valueOf(value);
+            var result = Power.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a pressure String with unit on the command line to a Pressure scalar.
+     * Converter for Pressure values supplied on the command line.
+     * <p>
+     * Converts a pressure string with unit to a {@link Pressure} quantity.
+     * </p>
      */
     public static class PRESSURE implements ITypeConverter<Pressure>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Pressure} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Pressure} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Pressure convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Pressure.valueOf(value);
+            var result = Pressure.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a radio activity String with unit on the command line to a RadioActivity scalar.
+     * Converter for RadioActivity values supplied on the command line.
+     * <p>
+     * Converts a radio activity string with unit to a {@link RadioActivity} quantity.
+     * </p>
      */
     public static class RADIOACTIVITY implements ITypeConverter<RadioActivity>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link RadioActivity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link RadioActivity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public RadioActivity convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = RadioActivity.valueOf(value);
+            var result = RadioActivity.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a solid angle String with unit on the command line to a SolidAngle scalar.
+     * Converter for SIQuantity values supplied on the command line.
+     * <p>
+     * Converts a s i quantity string with unit to a {@link SIQuantity} quantity.
+     * </p>
+     */
+    public static class SIQUANTITY implements ITypeConverter<SIQuantity>
+    {
+        /**
+         * Parses a textual value-with-unit into a {@link SIQuantity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link SIQuantity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public SIQuantity convert(final String value) throws Exception
+        {
+            CliUtil.prepareLocale();
+            var result = SIQuantity.valueOf(value);
+            CliUtil.restoreLocale();
+            return result;
+        }
+    }
+
+    /**
+     * Converter for SolidAngle values supplied on the command line.
+     * <p>
+     * Converts a solid angle string with unit to a {@link SolidAngle} quantity.
+     * </p>
      */
     public static class SOLIDANGLE implements ITypeConverter<SolidAngle>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link SolidAngle} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link SolidAngle} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public SolidAngle convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = SolidAngle.valueOf(value);
+            var result = SolidAngle.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a speed String with unit on the command line to a Speed scalar.
+     * Converter for Speed values supplied on the command line.
+     * <p>
+     * Converts a speed string with unit to a {@link Speed} quantity.
+     * </p>
      */
     public static class SPEED implements ITypeConverter<Speed>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Speed} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Speed} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Speed convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Speed.valueOf(value);
+            var result = Speed.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a temperature String with unit on the command line to a Temperature scalar.
+     * Converter for Temperature values supplied on the command line.
+     * <p>
+     * Converts a temperature string with unit to a {@link Temperature} quantity.
+     * </p>
      */
     public static class TEMPERATURE implements ITypeConverter<Temperature>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Temperature} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Temperature} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Temperature convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Temperature.valueOf(value);
+            var result = Temperature.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a time String with unit on the command line to a Time scalar.
+     * Converter for TemperatureDifference values supplied on the command line.
+     * <p>
+     * Converts a temperature difference string with unit to a {@link TemperatureDifference} quantity.
+     * </p>
      */
-    public static class TIME implements ITypeConverter<Time>
+    public static class TEMPERATUREDIFFERENCE implements ITypeConverter<TemperatureDifference>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link TemperatureDifference} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link TemperatureDifference} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
-        public Time convert(final String value) throws Exception
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public TemperatureDifference convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Time.valueOf(value);
+            var result = TemperatureDifference.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a torque String with unit on the command line to a Torque scalar.
+     * Converter for Torque values supplied on the command line.
+     * <p>
+     * Converts a torque string with unit to a {@link Torque} quantity.
+     * </p>
      */
     public static class TORQUE implements ITypeConverter<Torque>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Torque} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Torque} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Torque convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Torque.valueOf(value);
+            var result = Torque.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
         }
     }
 
     /**
-     * Convert a volume String with unit on the command line to a Volume scalar.
+     * Converter for Volume values supplied on the command line.
+     * <p>
+     * Converts a volume string with unit to a {@link Volume} quantity.
+     * </p>
      */
     public static class VOLUME implements ITypeConverter<Volume>
     {
+        /**
+         * Parses a textual value-with-unit into a {@link Volume} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link Volume} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
         public Volume convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
-            var ret = Volume.valueOf(value);
+            var result = Volume.valueOf(value);
             CliUtil.restoreLocale();
-            return ret;
+            return result;
+        }
+    }
+
+    /**
+     * Converter for VolumetricObjectDensity values supplied on the command line.
+     * <p>
+     * Converts a volumetric object density string with unit to a {@link VolumetricObjectDensity} quantity.
+     * </p>
+     */
+    public static class VOLUMETRICOBJECTDENSITY implements ITypeConverter<VolumetricObjectDensity>
+    {
+        /**
+         * Parses a textual value-with-unit into a {@link VolumetricObjectDensity} instance.
+         * @param value the textual representation of the value and unit to parse; e.g., {@code "1.5 km"}.
+         * @return the parsed {@link VolumetricObjectDensity} instance.
+         * @throws Exception if the value cannot be parsed or the unit is not recognized.
+         */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2026-05-05T15:34:27.596533300Z")
+        public VolumetricObjectDensity convert(final String value) throws Exception
+        {
+            CliUtil.prepareLocale();
+            var result = VolumetricObjectDensity.valueOf(value);
+            CliUtil.restoreLocale();
+            return result;
         }
     }
 
