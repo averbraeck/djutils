@@ -3,8 +3,8 @@ package org.djutils.eval;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.djunits.value.vdouble.scalar.Position;
-import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.def.Quantity;
 
 /**
  * Calculator.java. Demonstrates use of the Eval class.
@@ -36,36 +36,40 @@ public class Calculator
         doEval("NEUTRONMASS()-ELECTRONMASS()");
         doEval("NEUTRONMASS()-PI()");
         doEval("12 [ms-1] / 123[/s]");
-        Map<String, DoubleScalar<?,?>> valuePool = new HashMap<>();
-        valuePool.put("position", Position.valueOf("100 m")); // Absolute
-        doEval("position-10[m]", new RetrieveValue() {
-
+        Map<String, Quantity<?>> valuePool = new HashMap<>();
+        valuePool.put("length", Length.valueOf("100 m"));
+        doEval("length-10[m]", new RetrieveValue()
+        {
             @Override
-            public DoubleScalar<?, ?> lookup(final String name)
+            public Quantity<?> lookup(final String name)
             {
                 return valuePool.get(name);
-            }});
-        doEval("position+10[m]", new RetrieveValue() {
-
+            }
+        });
+        doEval("length+10[m]", new RetrieveValue()
+        {
             @Override
-            public DoubleScalar<?, ?> lookup(final String name)
+            public Quantity<?> lookup(final String name)
             {
                 return valuePool.get(name);
-            }});
-        doEval("position-position", new RetrieveValue() {
-
+            }
+        });
+        doEval("length-length", new RetrieveValue()
+        {
             @Override
-            public DoubleScalar<?, ?> lookup(final String name)
+            public Quantity<?> lookup(final String name)
             {
                 return valuePool.get(name);
-            }});
-        doEval("position+position", new RetrieveValue() {
-
+            }
+        });
+        doEval("length+length", new RetrieveValue()
+        {
             @Override
-            public DoubleScalar<?, ?> lookup(final String name)
+            public Quantity<?> lookup(final String name)
             {
                 return valuePool.get(name);
-            }});
+            }
+        });
         doEval("5^3");
         doEval("5<5");
         doEval("!5<5");
@@ -77,7 +81,7 @@ public class Calculator
         doEval("FALSE()==5");
         doEval("(2>3)?5:1+100");
         doEval("PHI()");
-        doEval("-0==0");//FIXME
+        doEval("-0==0"); // FIXME
         doEval("2^-2");
         doEval("3e+5");
         doEval("12>4?TRUE():(9+5)");
@@ -94,7 +98,7 @@ public class Calculator
     {
         doEval(expression, null);
     }
-    
+
     /**
      * Print expression followed by the result.
      * @param expression the expression to evaluate
@@ -109,7 +113,7 @@ public class Calculator
         }
         catch (RuntimeException e)
         {
-            System.out.println(expression + ": ERROR: "+ e.getMessage());
+            System.out.println(expression + ": ERROR: " + e.getMessage());
         }
     }
 }
