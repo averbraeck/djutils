@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class ByteSerializer implements SpecificTextSerializer<Byte>
 {
     @Override
-    public String serialize(final Byte value, final String unit)
+    public String serialize(final Byte value)
     {
         return value == null ? null : String.valueOf(value.byteValue());
     }
 
     @Override
-    public Byte deserialize(final Class<Byte> type, final String text, final String unit)
+    public Byte deserialize(final Class<Byte> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : Byte.valueOf(text);
     }

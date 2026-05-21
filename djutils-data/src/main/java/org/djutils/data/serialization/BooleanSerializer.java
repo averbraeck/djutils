@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class BooleanSerializer implements SpecificTextSerializer<Boolean>
 {
     @Override
-    public String serialize(final Boolean value, final String unit)
+    public String serialize(final Boolean value)
     {
         return value == null ? null : value.toString();
     }
 
     @Override
-    public Boolean deserialize(final Class<Boolean> type, final String text, final String unit)
+    public Boolean deserialize(final Class<Boolean> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : Boolean.valueOf(text);
     }

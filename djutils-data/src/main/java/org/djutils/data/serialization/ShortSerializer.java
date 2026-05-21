@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class ShortSerializer implements SpecificTextSerializer<Short>
 {
     @Override
-    public String serialize(final Short value, final String unit)
+    public String serialize(final Short value)
     {
         return value == null ? null : String.valueOf(value.shortValue());
     }
 
     @Override
-    public Short deserialize(final Class<Short> type, final String text, final String unit)
+    public Short deserialize(final Class<Short> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : Short.valueOf(text);
     }

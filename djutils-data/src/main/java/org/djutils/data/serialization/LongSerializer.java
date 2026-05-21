@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class LongSerializer implements SpecificTextSerializer<Long>
 {
     @Override
-    public String serialize(final Long value, final String unit)
+    public String serialize(final Long value)
     {
         return value == null ? null : String.valueOf(value.longValue());
     }
 
     @Override
-    public Long deserialize(final Class<Long> type, final String text, final String unit)
+    public Long deserialize(final Class<Long> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : Long.valueOf(text);
     }

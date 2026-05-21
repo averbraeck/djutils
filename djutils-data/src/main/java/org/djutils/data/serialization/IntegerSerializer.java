@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class IntegerSerializer implements SpecificTextSerializer<Integer>
 {
     @Override
-    public String serialize(final Integer value, final String unit)
+    public String serialize(final Integer value)
     {
         return value == null ? null : String.valueOf(value.intValue());
     }
 
     @Override
-    public Integer deserialize(final Class<Integer> type, final String text, final String unit)
+    public Integer deserialize(final Class<Integer> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : Integer.valueOf(text);
     }

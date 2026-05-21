@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class FloatSerializer implements SpecificTextSerializer<Float>
 {
     @Override
-    public String serialize(final Float value, final String unit)
+    public String serialize(final Float value)
     {
         return value == null ? null : String.valueOf(value.floatValue());
     }
 
     @Override
-    public Float deserialize(final Class<Float> type, final String text, final String unit)
+    public Float deserialize(final Class<Float> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : Float.valueOf(text);
     }

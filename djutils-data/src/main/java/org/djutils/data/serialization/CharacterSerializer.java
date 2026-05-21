@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class CharacterSerializer implements SpecificTextSerializer<Character>
 {
     @Override
-    public String serialize(final Character value, final String unit)
+    public String serialize(final Character value)
     {
         return value == null ? null : String.valueOf(value.charValue());
     }
 
     @Override
-    public Character deserialize(final Class<Character> type, final String text, final String unit)
+    public Character deserialize(final Class<Character> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : text.charAt(0);
     }

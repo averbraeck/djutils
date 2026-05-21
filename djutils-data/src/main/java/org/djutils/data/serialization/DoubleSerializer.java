@@ -13,13 +13,13 @@ package org.djutils.data.serialization;
 public class DoubleSerializer implements SpecificTextSerializer<Double>
 {
     @Override
-    public String serialize(final Double value, final String unit)
+    public String serialize(final Double value)
     {
         return value == null ? null : String.valueOf(value.doubleValue());
     }
 
     @Override
-    public Double deserialize(final Class<Double> type, final String text, final String unit)
+    public Double deserialize(final Class<Double> type, final String text)
     {
         return (text == null || text.isEmpty()) ? null : Double.valueOf(text);
     }

@@ -24,7 +24,7 @@ public interface SpecificTextSerializer<T> extends TextSerializer<T>
      */
     default String serialize(final T value)
     {
-        return serialize(value, null);
+        return serialize(value);
     }
     
     /**
@@ -38,7 +38,7 @@ public interface SpecificTextSerializer<T> extends TextSerializer<T>
      */
     default T deserialize(final String text)
     {
-        return deserialize(null, text, null);
+        return deserialize(null, text);
     }
 
 }
