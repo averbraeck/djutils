@@ -4,7 +4,7 @@ The SWING project contains packages that provide extension components for user i
 
 The project consists of one package at the moment:
 
-* multislider: a slider with multiple thumbs. The slider can contain an integer scale, real valued scale, unit scale, or categorial scale. Several restrictions can be set on the thumbs of the slider, e.g., whether they can pass each other.
+* multislider: a slider with multiple thumbs. The slider can contain an integer scale, real valued scale, quantity scale, or categorial scale. Several restrictions can be set on the thumbs of the slider, e.g., whether they can pass each other.
 
 
 ## Maven use
