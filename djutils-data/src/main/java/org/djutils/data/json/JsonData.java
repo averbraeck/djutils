@@ -94,7 +94,6 @@ public final class JsonData
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
-    @SuppressWarnings("resource")
     public static void writeData(final Writer writer, final Table dataTable) throws IOException, TextSerializationException
     {
         try (JsonWriter jw = new JsonWriter(writer);)
