@@ -393,7 +393,7 @@ public class TestTextSerializers
      * @throws TextSerializationException when serializer could not be found
      */
     @Test
-    public void testScalarSerializersColumnUnits() throws TextSerializationException
+    public void testQuantitySerializersColumnUnits() throws TextSerializationException
     {
         Locale.setDefault(Locale.US);
 

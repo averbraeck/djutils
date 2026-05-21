@@ -10,7 +10,7 @@ import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;
 
 /**
- * DoubleScalarSerializer (de)serializes DJUNITS double scalars.
+ * QuantitySerializer (de)serializes DJUNITS double scalars.
  * <p>
  * Copyright (c) 2020-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.

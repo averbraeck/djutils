@@ -65,7 +65,7 @@ public class Column<T> implements Identifiable
                     | SecurityException exception)
             {
                 throw new IllegalArgumentException(
-                        "unit of the Column does not belong to Scalar of type " + valueType.getSimpleName());
+                        "unit of the Column does not belong to Quantity of type " + valueType.getSimpleName());
             }
         }
         this.unit = unit;
