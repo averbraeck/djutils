@@ -20,6 +20,7 @@ public class EvalDemo
     {
         run("100[m/s] * 10 [s]");
         run("100[m/s] + 10 [s]");
+        run("100[s] + 10 [s]");
         run("sqrt(-1)");
         run("1/0");
         
@@ -37,6 +38,7 @@ public class EvalDemo
         run("2 * PI()");
         run("sin(1)");
         run("CURRENTTIME()+5");
+        run("CURRENTTIME()+5[s]");
         run("CURRENTTIME()/86400[s]"); // Does not work; cannot divide absolute values by anything
     }
 
