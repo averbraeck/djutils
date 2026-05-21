@@ -7,18 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.djunits.unit.AbsoluteLinearUnit;
-import org.djunits.unit.DimensionlessUnit;
-import org.djunits.unit.TimeUnit;
+import org.djunits.quantity.Dimensionless;
+import org.djunits.quantity.SIQuantity;
+import org.djunits.quantity.Time;
+import org.djunits.quantity.def.AbsQuantity;
+import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;
-import org.djunits.unit.si.SIDimensions;
-import org.djunits.value.vdouble.scalar.Dimensionless;
-import org.djunits.value.vdouble.scalar.SIScalar;
-import org.djunits.value.vdouble.scalar.Time;
-import org.djunits.value.vdouble.scalar.base.Constants;
-import org.djunits.value.vdouble.scalar.base.DoubleScalar;
-import org.djunits.value.vdouble.scalar.base.DoubleScalarAbs;
-import org.djunits.value.vdouble.scalar.base.DoubleScalarRel;
+import org.djunits.unit.Unitless;
+import org.djunits.unit.si.SIUnit;
+import org.djunits.util.Constants;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
@@ -86,10 +83,10 @@ public class Eval
                 "The exact value of the Boltzmann constant in Joule per Kelvin", noArguments)),
         new F0("CESIUM133_FREQUENCY", Constants.CESIUM133_FREQUENCY, new MetaData("Cesium 133 frequency", 
                 "The exact value of the Cesium 133 ground state hyperfine structure transition frequency", noArguments)),
-        new F0("CURRENTTIME", Time.ZERO.getClass(),
+        new F0("CURRENTTIME", Time.ofSi(0.0, Time.Reference.UNIX).getClass(),
                 new MetaData("The current time in seconds since 1970 UTC", 
                         "The current time in seconds since 1970 UTC to the nearest ms as reported by the operating system", noArguments), 
-                (f) -> new Time(System.currentTimeMillis() / 1000d, TimeUnit.BASE_SECOND)),
+                (f) -> Time.ofSi(System.currentTimeMillis() / 1000d, Time.Reference.UNIX)),
         new F0("E", Constants.E, new MetaData("Euler\'s constant e", "Euler\'s constant e; the base of the natural logarithm")),
         new F0("ELECTRONCHARGE", Constants.ELECTRONCHARGE, new MetaData("Electrical charge of one electron", 
                 "The exact electrical charge of one electron", noArguments)),
@@ -124,47 +121,64 @@ public class Eval
         new F0("TRUE", Boolean.TRUE, new MetaData("The logical value TRUE", "The logical value TRUE", noArguments)),
         new F0("FALSE", Boolean.FALSE, new MetaData("The logical value FALSE", "The logical value FALSE", noArguments)),
         new F1("acos", Dimensionless.class, new MetaData("acos", "returns the angle of which the cosine equals the value of the argument",
-                new ObjectDescriptor("angle", "angle", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).acos()),
+                new ObjectDescriptor("angle", "angle", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.acos(checkDimensionless(i, a).si()))),
         new F1("asin", Dimensionless.class, new MetaData("asin", "returns the angle of which the sine equals the value of the argument",
-                new ObjectDescriptor("angle", "angle", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).asin()),
+                new ObjectDescriptor("angle", "angle", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.asin(checkDimensionless(i, a).si()))),
         new F1("atan", Dimensionless.class, new MetaData("atan", "returns the angle of which the tangent equals the value of the argument",
-                new ObjectDescriptor("angle", "angle", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).atan()),
+                new ObjectDescriptor("angle", "angle", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.atan(checkDimensionless(i, a).si()))),
         new F1("cbrt", Dimensionless.class, new MetaData("cbrt", "returns the cubic root of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).cbrt()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.cbrt(checkDimensionless(i, a).si()))),
         new F1("cos", Dimensionless.class, new MetaData("cos", "returns the cosine of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).cos()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.cos(checkDimensionless(i, a).si()))),
         new F1("cosh", Dimensionless.class, new MetaData("cosh", "returns the hyperbolic cosine of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).cosh()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.cosh(checkDimensionless(i, a).si()))),
         new F1("exp", Dimensionless.class, new MetaData("exp", "returns e to the power of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).exp()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.exp(checkDimensionless(i, a).si()))),
         new F1("expm1", Dimensionless.class, new MetaData("expm1", "returns e to the power of the argument minus 1",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).expm1()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.expm1(checkDimensionless(i, a).si()))),
         new F1("log", Dimensionless.class, new MetaData("log", "returns natural logarithm (logarithm base e) of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).log()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.log(checkDimensionless(i, a).si()))),
         new F1("log10", Dimensionless.class, new MetaData("log10", "returns logarithm base 10 of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).log10()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.log10(checkDimensionless(i, a).si()))),
         new F1("log1p", Dimensionless.class, new MetaData("log1p", "returns natural logarithm (logarithm base e) of the argument plus 1",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).log1p()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.log1p(checkDimensionless(i, a).si()))),
         new F1("signum", Dimensionless.class, new MetaData("signum", "returns sign of the argument (1 if positive, -1 if negative, 0 if zero)",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).signum()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.signum(checkDimensionless(i, a).si()))),
         new F1("sin", Dimensionless.class, new MetaData("cos", "returns the sine of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).sin()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.sin(checkDimensionless(i, a).si()))),
         new F1("sinh", Dimensionless.class, new MetaData("cosh", "returns the hyperbolic sine of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).sinh()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.sinh(checkDimensionless(i, a).si()))),
         new F1("sqrt", Dimensionless.class, new MetaData("cos", "returns the square root of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).sqrt()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.sqrt(checkDimensionless(i, a).si()))),
         new F1("tan", Dimensionless.class, new MetaData("cos", "returns the tangent of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).tan()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.tan(checkDimensionless(i, a).si()))),
         new F1("tanh", Dimensionless.class, new MetaData("cosh", "returns the hyperbolic tangent of the value of the argument",
-                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).tanh()),
+                new ObjectDescriptor("value", "value", Dimensionless.class)), 
+                (i, a) -> Dimensionless.ofSi(Math.tanh(checkDimensionless(i, a).si()))),
         new F2("pow", new MetaData("pow", "raises the first argument to the power of the second argument",                
                 new ObjectDescriptor("base", "base", Dimensionless.class), 
                 new ObjectDescriptor("exponent", "exponent", Dimensionless.class)),
                 (i, b, p)-> performPower(b, p) ),
         new F2("atan2", new MetaData("atan2", 
-                "atan2 function (needs two DoubleScalarRel parameters that have the same SI dimensions)", 
-                new ObjectDescriptor("y", "y", DoubleScalarRel.class),
-                new ObjectDescriptor("x", "x", DoubleScalarRel.class)), (i, y, x) -> performAtan2(y, x)),
+                "atan2 function (needs two Quantity parameters that have the same SI dimensions)", 
+                new ObjectDescriptor("y", "y", Quantity.class),
+                new ObjectDescriptor("x", "x", Quantity.class)), (i, y, x) -> performAtan2(y, x)),
         };
     
     // @formatter:on
@@ -183,10 +197,10 @@ public class Eval
     private Map<String, Function> userDefinedFunctions = null;
 
     /** User supplied unit parser. */
-    private UnitParser userSuppliedUnitParser = null;
+    private QuantityParser userSuppliedUnitParser = null;
 
-    /** Map from DoubleScalar sub classes to Quantities */
-    private Map<Class<?>, SIDimensions> siDimensionsMap = new HashMap<>();
+    /** Map from Quantity sub classes to Quantities */
+    private Map<Class<?>, SIUnit> siUnitsMap = new HashMap<>();
 
     /**
      * Construct a new evaluator with no RetrieveValue object and no added/overridden function and no added/overridden units.
@@ -209,11 +223,11 @@ public class Eval
 
     /**
      * Install a unit parser (or replace or remove a previously installed unit parser). A user supplied unit parser takes
-     * precedence over the built-in unit parser (that can only handle SI strings; see SIDimensions.of).
+     * precedence over the built-in unit parser (that can only handle SI strings; see SIUnit.of).
      * @param unitParser the new unit parser or null to remove a previously installed unit parser
      * @return this (for easy method chainging)
      */
-    public Eval setUnitParser(final UnitParser unitParser)
+    public Eval setUnitParser(final QuantityParser unitParser)
     {
         this.userSuppliedUnitParser = unitParser;
         return this;
@@ -256,11 +270,11 @@ public class Eval
     public double evaluateAsDouble(final String expression) throws RuntimeException
     {
         Object result = evaluateExpression(expression);
-        if (!(result instanceof DoubleScalar<?, ?>))
+        if (!(result instanceof Quantity<?>))
         {
             throwException("Result " + result + " can not be cast to a double");
         }
-        return ((DoubleScalar<?, ?>) result).si;
+        return ((Quantity<?>) result).si;
     }
 
     /**
@@ -287,7 +301,7 @@ public class Eval
     /**
      * Evaluate one expression.
      * @param expression the expression to evaluate
-     * @return the result of the evaluation (DoubleScalar or Boolean)
+     * @return the result of the evaluation (Quantity or Boolean)
      * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
      */
     public Object evaluateExpression(final String expression) throws RuntimeException
@@ -357,9 +371,9 @@ public class Eval
                 this.position++;
                 evalLhs(BIND_UMINUS);
                 Object value = pop();
-                if (value instanceof DoubleScalar<?, ?>)
+                if (value instanceof Quantity<?>)
                 {
-                    push(((DoubleScalar<?, ?>) value).neg());
+                    push(((Quantity<?>) value).negate());
                     break;
                 }
                 throwException("Cannot apply unary minus on " + value);
@@ -540,12 +554,12 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a <= b));
+                        compareQuantitys((a, b) -> (a <= b));
                     }
                     else
                     {
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a < b));
+                        compareQuantitys((a, b) -> (a < b));
                     }
                     break;
 
@@ -559,12 +573,12 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a >= b));
+                        compareQuantitys((a, b) -> (a >= b));
                     }
                     else
                     {
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a > b));
+                        compareQuantitys((a, b) -> (a > b));
                     }
                     break;
 
@@ -673,16 +687,16 @@ public class Eval
 
     /**
      * Pop two operands from the stack and compare them using the provided comparator lambda expression
-     * @param comparator a function that compares two DoubleScalar values.
+     * @param comparator a function that compares two Quantity values.
      */
-    private void compareDoubleScalars(final CompareValues comparator)
+    private void compareQuantitys(final CompareValues comparator)
     {
         Object right = pop();
         Object left = pop();
-        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
+        if ((left instanceof Quantity) && (right instanceof Quantity)
+                && getSiUnit((Quantity<?>) left).equals(getSiUnit((Quantity<?>) right)))
         {
-            push(comparator.execute(((DoubleScalar<?, ?>) left).si, ((DoubleScalar<?, ?>) right).si));
+            push(comparator.execute(((Quantity<?>) left).si, ((Quantity<?>) right).si));
             return;
         }
         throwException("Cannot compare " + left + " to " + right);
@@ -824,11 +838,11 @@ public class Eval
      */
     private Object performPower(final Object base, final Object exponent)
     {
-        if ((base instanceof DoubleScalarRel) && (exponent instanceof DoubleScalarRel)
-                && getDimensions((DoubleScalarRel<?, ?>) base).equals(getDimensions(DimensionlessUnit.SI))
-                && getDimensions((DoubleScalarRel<?, ?>) exponent).equals(getDimensions(DimensionlessUnit.SI)))
+        if ((base instanceof Quantity) && (exponent instanceof Quantity)
+                && getSiUnit((Quantity<?>) base).equals(getSiUnit(Unitless.BASE))
+                && getSiUnit((Quantity<?>) exponent).equals(getSiUnit(Unitless.BASE)))
         {
-            var result = Dimensionless.ofSI(Math.pow(((DoubleScalarRel<?, ?>) base).si, ((DoubleScalarRel<?, ?>) exponent).si));
+            var result = Dimensionless.ofSi(Math.pow(((Quantity<?>) base).si, ((Quantity<?>) exponent).si));
             // System.out.println(base + " ^ " + exponent + " = " + result);
             return result;
         }
@@ -838,16 +852,15 @@ public class Eval
 
     /**
      * Perform the atan2 function on the two arguments and return the result
-     * @param y should be some kind of DoubleScalarRel
-     * @param x should be some kind of DoubleScalarRel with the same SiDimensions as y
-     * @return in fact a DoubleScalarRel with a quantity matching Dimensionless
+     * @param y should be some kind of Quantity
+     * @param x should be some kind of Quantity with the same SiDimensions as y
+     * @return in fact a Quantity with a quantity matching Dimensionless
      */
     private Object performAtan2(final Object y, final Object x)
     {
-        if ((y instanceof DoubleScalarRel) && (x instanceof DoubleScalarRel)
-                && getDimensions((DoubleScalarRel<?, ?>) y).equals(getDimensions((DoubleScalarRel<?, ?>) x)))
+        if ((y instanceof Quantity) && (x instanceof Quantity) && getSiUnit((Quantity<?>) y).equals(getSiUnit((Quantity<?>) x)))
         {
-            var result = Dimensionless.ofSI(Math.atan2(((DoubleScalarRel<?, ?>) y).si, ((DoubleScalarRel<?, ?>) x).si));
+            var result = Dimensionless.ofSi(Math.atan2(((Quantity<?>) y).si, ((Quantity<?>) x).si));
             // System.out.println(base + " ^ " + exponent + " = " + result);
             return result;
         }
@@ -863,9 +876,9 @@ public class Eval
     {
         Object right = pop();
         Object left = pop();
-        if ((right instanceof DoubleScalarRel) && (left instanceof DoubleScalarRel))
+        if ((right instanceof Quantity) && (left instanceof Quantity))
         {
-            push(((DoubleScalarRel<?, ?>) left).times((DoubleScalarRel<?, ?>) right));
+            push(((Quantity<?>) left).multiply((Quantity<?>) right));
             return;
         }
         throwException("Cannot multiply with " + right + " as right hand operand");
@@ -878,13 +891,13 @@ public class Eval
     {
         Object right = pop();
         Object left = pop();
-        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
+        if ((left instanceof Quantity) && (right instanceof Quantity))
         {
-            if (0.0 == ((DoubleScalarRel<?, ?>) right).si)
+            if (0.0 == ((Quantity<?>) right).si)
             {
                 throwException("Division by 0");
             }
-            push(((DoubleScalarRel<?, ?>) left).divide((DoubleScalarRel<?, ?>) right));
+            push(((Quantity<?>) left).divide((Quantity<?>) right));
             return;
         }
         throwException("Cannot divide " + left + " by " + right);
@@ -898,47 +911,37 @@ public class Eval
     {
         Object right = pop();
         Object left = pop();
-        if (!(left instanceof DoubleScalar))
+        if (!(left instanceof Quantity))
         {
             throwException("Left operand of addition must be a scalar (got \"" + left + "\")");
         }
-        if (!(right instanceof DoubleScalar))
+        if (!(right instanceof Quantity))
         {
             throwException("Right operand of addition must be a scalar (got \"" + right + "\")");
         }
-        // Both operands are DoubleScalar
-        if (!((DoubleScalar<?, ?>) left).getDisplayUnit()
-            .getQuantity()
-            .getSiDimensions()
-            .equals(getDimensions((DoubleScalar<?, ?>) right)))
+        // Both operands are Quantity
+        if (!((Quantity<?>) left).siUnit().equals(((Quantity<?>) right).siUnit()))
         {
-            // System.out.println("left: " + getDimensions((DoubleScalar<?, ?>) left));
-            // System.out.println("right: " + getDimensions((DoubleScalar<?, ?>) right));
+            // System.out.println("left: " + getDimensions((Quantity<?>) left));
+            // System.out.println("right: " + getDimensions((Quantity<?>) right));
             throwException("Cannot add " + left + " to " + right + " because the types are incompatible");
         }
         // Operands are of compatible unit
-        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
+        if ((left instanceof Quantity) && (right instanceof Quantity))
         {
             // Rel + Rel -> Rel
-            var dsl = (DoubleScalarRel) left;
-            var dsr = (DoubleScalarRel) right;
-            var sum = dsl.plus(dsr);
+            var dsl = (Quantity) left;
+            var dsr = (Quantity) right;
+            var sum = dsl.add(dsr);
             // System.out.println(left + " + " + right + " = " + sum);
             // Set display unit???
             push(sum);
             return;
         }
-        if (right instanceof DoubleScalarAbs)
+        if (right instanceof AbsQuantity)
         {
             throwException("Cannot add an absolute value to some other value");
         }
-        // Abs + Rel -> Abs
-        var dsl = (DoubleScalarAbs) left;
-        var dsr = (DoubleScalarRel) right;
-        var sum = dsl.instantiateAbs(dsl.si + dsr.si, (AbsoluteLinearUnit) dsl.getDisplayUnit().getStandardUnit());
-        // System.out.println(left + " + " + right + " = " + sum);
-        // sum.setDisplayUnit(ds.getDisplayUnit());
-        push(sum);
     }
 
     /**
@@ -949,58 +952,33 @@ public class Eval
     {
         Object right = pop();
         Object left = pop();
-        if (!(left instanceof DoubleScalar))
+        if (!(left instanceof Quantity))
         {
             throwException("Left operand of subtraction must be a scalar (got \"" + left + "\")");
         }
-        if (!(right instanceof DoubleScalar))
+        if (!(right instanceof Quantity))
         {
             throwException("Right operand of subtraction must be a scalar (got \"" + right + "\")");
         }
-        // Now we know that we're dealing with DoubleScalar objects
-        if (!getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
+        // Now we know that we're dealing with Quantity objects
+        if (!getSiUnit((Quantity<?>) left).equals(getSiUnit((Quantity<?>) right)))
         {
             throwException("Cannot subtract " + right + " from " + left + " because the types are incompatible");
         }
-        if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarAbs))
-        {
-            // Abs - Abs -> Rel
-            var dsl = (DoubleScalarAbs) left;
-            var dsr = (DoubleScalarAbs) right;
-            var difference = dsl.minus(dsr);
-            // System.out.println(left + " - " + right + " = " + difference);
-            push(difference);
-            return;
-        }
-        if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarRel))
-        {
-            // Abs - Rel -> Abs
-            var dsl = (DoubleScalarAbs) left;
-            var dsr = (DoubleScalarRel) right;
-            var difference = dsl.instantiateAbs(dsl.si - dsr.si, (AbsoluteLinearUnit) dsl.getDisplayUnit().getStandardUnit());
-            // System.out.println(left + " - " + right + " = " + difference);
-            push(difference);
-            return;
-        }
-        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarAbs))
-        {
-            // Rel - Abs -> error
-            throwException("Cannot subtract " + right + " from " + left + " because the right operand is absolute");
-        }
         // Rel - Rel -> Rel
-        var dsl = (DoubleScalarRel) left;
-        var dsr = (DoubleScalarRel) right;
-        var difference = dsl.minus(dsr);
+        var dsl = (Quantity) left;
+        var dsr = (Quantity) right;
+        var difference = dsl.subtract(dsr);
         // System.out.println(left + " - " + right + " = " + difference);
         push(difference);
     }
 
     /**
-     * Parse a number and convert it to a SIScalar. If it is followed by an SI unit string inside square brackets, parse it into
-     * the correct type.
+     * Parse a number and convert it to a SIQuantity. If it is followed by an SI unit string inside square brackets, parse it
+     * into the correct type.
      * @return the value of the parsed number or value
      */
-    private DoubleScalar<?, ?> handleNumber()
+    private Quantity<?> handleNumber()
     {
         // Parse a number value
         int startPosition = this.position;
@@ -1074,14 +1052,14 @@ public class Eval
                 if (']' == c)
                 {
                     String unit = this.expression.substring(startPosition, this.position++);
-                    DoubleScalar<?, ?> result = null;
+                    Quantity<?> result = null;
                     if (null != this.userSuppliedUnitParser)
                     {
-                        result = this.userSuppliedUnitParser.parseUnit(Double.parseDouble(number), unit);
+                        result = this.userSuppliedUnitParser.parseQuantity(Double.parseDouble(number), unit);
                     }
                     if (null == result)
                     {
-                        result = SIScalar.valueOf(number + " " + unit);
+                        result = SIQuantity.valueOf(number + " " + unit);
                     }
                     return result;
                 }
@@ -1096,7 +1074,7 @@ public class Eval
                 throwException("Missing closing bracket (\']\')");
             }
         }
-        return SIScalar.valueOf(number); // No unit specified
+        return SIQuantity.valueOf(number); // No unit specified
     }
 
     /**
@@ -1185,30 +1163,29 @@ public class Eval
                 {
                     throwException(name + " does not take " + args[i] + " as parameter " + i);
                 }
-                else if ((args[i] instanceof DoubleScalar)
-                        && (DoubleScalar.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
+                else if ((args[i] instanceof Quantity) && (Quantity.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
                 {
-                    DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) args[i];
+                    Quantity<?> ds = (Quantity<?>) args[i];
                     Class<?> clazz = f.getMetaData().getObjectClass(i);
-                    if (!clazz.equals(DoubleScalarRel.class))
+                    if (!clazz.equals(Quantity.class))
                     {
-                        SIDimensions siDimensions = this.siDimensionsMap.get(clazz);
-                        if (null == siDimensions)
+                        SIUnit siUnits = this.siUnitsMap.get(clazz);
+                        if (null == siUnits)
                         {
                             // Not in the cache
                             try
                             {
-                                Field field = clazz.getDeclaredField("ZERO"); // Every DoubleScalar type has this
-                                DoubleScalar<?, ?> zero = (DoubleScalar<?, ?>) field.get(clazz);
-                                siDimensions = zero.getDisplayUnit().getQuantity().getSiDimensions();
-                                this.siDimensionsMap.put(clazz, siDimensions); // Add this one to our map
+                                Field field = clazz.getDeclaredField("ZERO"); // Every Quantity type has this
+                                Quantity<?> zero = (Quantity<?>) field.get(clazz);
+                                siUnits = zero.siUnit();
+                                this.siUnitsMap.put(clazz, siUnits); // Add this one to our map
                             }
                             catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException nsfe)
                             {
                                 throwException("ERROR: Cannot determine quantity for " + clazz.getCanonicalName());
                             }
                         }
-                        if (!siDimensions.equals(getDimensions(ds)))
+                        if (!siUnits.equals(getSiUnit(ds)))
                         {
                             throwException("parameter " + i + " of " + name + " has incompatible quantity");
                         }
@@ -1255,36 +1232,36 @@ public class Eval
      */
     private Dimensionless checkDimensionless(final Function functionData, final Object object)
     {
-        if (!(object instanceof DoubleScalar))
+        if (!(object instanceof Quantity))
         {
             throwException("Function " + functionData.getId() + " cannot be applied to " + object);
         }
-        DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
-        if (!getDimensions(ds).equals(getDimensions(DimensionlessUnit.SI)))
+        Quantity<?> ds = (Quantity<?>) object;
+        if (!getSiUnit(ds).equals(getSiUnit(Unitless.BASE)))
         {
             throwException("Function " + functionData.getId() + " cannot be applied to " + ds);
         }
-        return new Dimensionless(ds.si, DimensionlessUnit.SI);
+        return Dimensionless.ofSi(ds.si);
     }
 
     /**
-     * Retrieve the SIDimensions of a DoubleScalar.
-     * @param doubleScalar the DoubleScalar
-     * @return the SIDimensions object that describes the quantity of the DoubleScalar
+     * Retrieve the SIUnit of a Quantity.
+     * @param quantity the Quantity
+     * @return the SIUnit object that describes the SI unit of the Quantity
      */
-    private static SIDimensions getDimensions(final DoubleScalar<?, ?> doubleScalar)
+    private static SIUnit getSiUnit(final Quantity<?> quantity)
     {
-        return doubleScalar.getDisplayUnit().getQuantity().getSiDimensions();
+        return quantity.siUnit();
     }
 
     /**
-     * Retrieve the SIDimensions of a unit.
+     * Retrieve the SIUnit of a unit.
      * @param unit the unit
-     * @return the SIDimensions unit
+     * @return the SIUnit unit
      */
-    private static SIDimensions getDimensions(final Unit<?> unit)
+    private static SIUnit getSiUnit(final Unit<?, ?> unit)
     {
-        return unit.getQuantity().getSiDimensions();
+        return unit.siUnit();
     }
 
 }

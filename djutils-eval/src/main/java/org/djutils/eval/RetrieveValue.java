@@ -13,7 +13,7 @@ package org.djutils.eval;
 public interface RetrieveValue
 {
     /**
-     * Look up a variable and return its value. Numeric values should be returned as a DoubleScalar of some kind. Logical values
+     * Look up a variable and return its value. Numeric values should be returned as a Quantity of some kind. Logical values
      * should be returned as a Boolean.
      * @param name name of the variable
      * @return the value of the variable
