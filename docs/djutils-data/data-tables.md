@@ -88,7 +88,7 @@ This directory (C:/Temp) should exist and be writable for this to succeed (if no
       {
         "nr": 1,
         "id": "temperature",
-        "description": "engine temperature in Celcius",
+        "description": "engine temperature in Celsius",
         "type": "java.lang.Double",
         "unit": ""
       },
@@ -147,9 +147,9 @@ The [DJUNITS project](https://djunits.org/manual/) implements strongly typed qua
 ```java
 Column<Time> timeStamp = new Column<>("timeStamp", 
     "time rounded to nearest second", Time.class, "s");
-Column<AbsoluteTemperature> temperature =
+Column<Temperature> temperature =
     new Column<>("temperature", "engine temperature in Celcius", 
-        AbsoluteTemperature.class, "K");
+        Temperature.class, "K");
 Column<String> remark = new Column<>("remark", "remark", String.class, "");
 List<Column<?>> columns = new ArrayList<>();
 columns.add(timeStamp);
@@ -159,12 +159,12 @@ ListTable table = new ListTable("engineTemperatureData",
     "engine temperature samples", columns);
 ```
 
-Beware that the `Time` type in this code is `org.djunits.value.vdouble.scalar.Time`. To put in some data use code like:
+Beware that the `Time` type in this code is `org.djunits.quantity.Time`. To put in some data use code like:
 
 ```java
 Object[] record = new Object[] { 
-        new Time(600, TimeUnit.BASE_SECOND),
-        new AbsoluteTemperature(18.0, AbsoluteTemperatureUnit.DEGREE_CELSIUS),
+        new Time(600, Time.Unit.s),
+        Temperature.of(18.0, "degC"),
         "starting engine" };
 table.addRow(record);
 ```
@@ -174,12 +174,12 @@ or
 ```java
 Map<String, Object> map = new HashMap<>();
 map.put("remark", "leaving parking lot");
-map.put("temperature", new AbsoluteTemperature(28.5, AbsoluteTemperatureUnit.DEGREE_CELSIUS));
-map.put("timeStamp", new Time(660, TimeUnit.BASE_SECOND));
+map.put("temperature", new Temperature(28.5, Temperature.Unit.degC));
+map.put("timeStamp", new Time(660, Time.Unit.s));
 table.addRowByColumnIds(map);
 ```
 
-The code that prints the contents of the in-memory table is exactly the same. The output differs slightly:
+The code that prints the contents of the in-memory table is exactly the same:
 
 <pre>
 column 0: 600.000000 s
@@ -206,14 +206,14 @@ When stored in a JSON file, there are corresponding differences in the column de
         "nr": 0,
         "id": "timeStamp",
         "description": "time rounded to nearest second",
-        "type": "org.djunits.value.vdouble.scalar.Time",
+        "type": "org.djunits.quantity.Time",
         "unit": "s"
       },
       {
         "nr": 1,
         "id": "temperature",
         "description": "engine temperature in Celcius",
-        "type": "org.djunits.value.vdouble.scalar.AbsoluteTemperature",
+        "type": "org.djunits.quantity.Temperature",
         "unit": "K"
       },
       {
