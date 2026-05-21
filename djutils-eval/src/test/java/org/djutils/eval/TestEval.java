@@ -10,20 +10,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.djunits.quantity.Quantity;
-import org.djunits.unit.DimensionlessUnit;
-import org.djunits.unit.DurationUnit;
-import org.djunits.unit.ForceUnit;
-import org.djunits.unit.LengthUnit;
-import org.djunits.unit.PositionUnit;
-import org.djunits.unit.TimeUnit;
-import org.djunits.unit.si.SIDimensions;
-import org.djunits.value.vdouble.scalar.Dimensionless;
-import org.djunits.value.vdouble.scalar.Duration;
-import org.djunits.value.vdouble.scalar.Position;
-import org.djunits.value.vdouble.scalar.Speed;
-import org.djunits.value.vdouble.scalar.base.Constants;
-import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djunits.quantity.Dimensionless;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.Force;
+import org.djunits.quantity.Speed;
+import org.djunits.quantity.def.Quantity;
+import org.djunits.unit.Unitless;
+import org.djunits.unit.si.SIUnit;
+import org.djunits.util.Constants;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
 import org.junit.jupiter.api.Test;
@@ -325,7 +319,7 @@ public class TestEval
             assertTrue(rte.getMessage().toLowerCase().contains("needs 1 "), "Message describes the problem");
         }
 
-        verifyValueAndUnit("dot in unit", new Eval().evaluateExpression("20[kg.m/s2]"), 20, 0, ForceUnit.SI.getQuantity());
+        verifyValueAndUnit("dot in unit", new Eval().evaluateExpression("20[kg.m/s2]"), 20, 0, Force.ONE);
     }
 
     /**
@@ -334,16 +328,13 @@ public class TestEval
     @Test
     public void testBinaryOperations()
     {
-        verifyValueAndUnit("Dimensionless + Dimensionless", new Eval().evaluate("123+456"), 579, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("Dimensionless - Dimensionless", new Eval().evaluate("123-456"), -333, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("Dimensionless * Dimensionless", new Eval().evaluate("123*456"), 56088, 0,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("Dimensionless + Dimensionless", new Eval().evaluate("123+456"), 579, 0, Dimensionless.ONE);
+        verifyValueAndUnit("Dimensionless - Dimensionless", new Eval().evaluate("123-456"), -333, 0, Dimensionless.ONE);
+        verifyValueAndUnit("Dimensionless * Dimensionless", new Eval().evaluate("123*456"), 56088, 0, Dimensionless.ONE);
         verifyValueAndUnit("Dimensionless / Dimensionless", new Eval().evaluate("123/456"), 123.0 / 456, 0.00001,
-                DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
         verifyValueAndUnit("Dimensionless ^ Dimensionless", new Eval().evaluate("123^4.56"), Math.pow(123, 4.56), 0.1,
-                DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
         verifyBoolean("Dimensionless > Dimensionless", new Eval().evaluate("123>456"), false);
         verifyBoolean("Dimensionless > Dimensionless", new Eval().evaluate("456>123"), true);
         verifyBoolean("Dimensionless >= Dimensionless", new Eval().evaluate("123>=123"), true);
@@ -464,12 +455,12 @@ public class TestEval
     @Test
     public void testNumberParser()
     {
-        verifyValueAndUnit("E notation", new Eval().evaluate("2E6"), 2e6, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("E notation", new Eval().evaluate("2E-6"), 2e-6, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("e notation", new Eval().evaluate("2e6"), 2e6, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("e notation", new Eval().evaluate("2e-6"), 2e-6, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("E notation", new Eval().evaluate("2E+6"), 2e6, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("e notation", new Eval().evaluate("2e+6"), 2e6, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("E notation", new Eval().evaluate("2E6"), 2e6, 0, Dimensionless.ONE);
+        verifyValueAndUnit("E notation", new Eval().evaluate("2E-6"), 2e-6, 0, Dimensionless.ONE);
+        verifyValueAndUnit("e notation", new Eval().evaluate("2e6"), 2e6, 0, Dimensionless.ONE);
+        verifyValueAndUnit("e notation", new Eval().evaluate("2e-6"), 2e-6, 0, Dimensionless.ONE);
+        verifyValueAndUnit("E notation", new Eval().evaluate("2E+6"), 2e6, 0, Dimensionless.ONE);
+        verifyValueAndUnit("e notation", new Eval().evaluate("2e+6"), 2e6, 0, Dimensionless.ONE);
         try
         {
             new Eval().evaluate("123e45e6");
@@ -548,52 +539,43 @@ public class TestEval
             assertTrue(re.getMessage().contains("Unknown"), "exception is descriptive");
         }
         verifyValueAndUnit("Avogadro constant", new Eval().evaluate("AVOGADRO()"), Constants.AVOGADRO.si, 0.0,
-                Constants.AVOGADRO.getDisplayUnit().getQuantity());
+                Constants.AVOGADRO);
         verifyValueAndUnit("Boltzmann constant", new Eval().evaluate("BOLTZMANN()"), Constants.BOLTZMANN.si, 0.0,
-                Constants.BOLTZMANN.getDisplayUnit().getQuantity());
+                Constants.BOLTZMANN);
         verifyValueAndUnit("Cesium 133 frequency constant", new Eval().evaluate("CESIUM133_FREQUENCY()"),
-                Constants.CESIUM133_FREQUENCY.si, 0.0, Constants.CESIUM133_FREQUENCY.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Current time", new Eval().evaluate("CURRENTTIME()"), System.currentTimeMillis() / 1000, 1.0,
-                TimeUnit.BASE_SECOND.getQuantity());
-        verifyValueAndUnit("Base of natural logarithm", new Eval().evaluate("E()"), Constants.E.si, 0.0,
-                Constants.E.getDisplayUnit().getQuantity());
+                Constants.CESIUM133_FREQUENCY.si, 0.0, Constants.CESIUM133_FREQUENCY);
+        verifyValueAndUnit("Base of natural logarithm", new Eval().evaluate("E()"), Constants.E.si, 0.0, Constants.E);
         verifyValueAndUnit("Electrical charge of an electron", new Eval().evaluate("ELECTRONCHARGE()"),
-                Constants.ELECTRONCHARGE.si, 0.0, Constants.ELECTRONCHARGE.getDisplayUnit().getQuantity());
+                Constants.ELECTRONCHARGE.si, 0.0, Constants.ELECTRONCHARGE);
         verifyValueAndUnit("Mass of an electrong", new Eval().evaluate("ELECTRONMASS()"), Constants.ELECTRONMASS.si, 0.0,
-                Constants.ELECTRONMASS.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Gravitational constant at sea level", new Eval().evaluate("G()"), Constants.G.si, 0.0,
-                Constants.G.getDisplayUnit().getQuantity());
+                Constants.ELECTRONMASS);
+        verifyValueAndUnit("Gravitational constant at sea level", new Eval().evaluate("G()"), Constants.G.si, 0.0, Constants.G);
         verifyValueAndUnit("Speed of light in vacuum", new Eval().evaluate("LIGHTSPEED()"), Constants.LIGHTSPEED.si, 0.0,
-                Constants.LIGHTSPEED.getDisplayUnit().getQuantity());
+                Constants.LIGHTSPEED);
         verifyValueAndUnit("Luminous efficacy Kcd of monochromatic radiation of frequency 540×10^12 Hz (540 THz). ",
                 new Eval().evaluate("LUMINOUS_EFFICACY_540THZ()"), Constants.LUMINOUS_EFFICACY_540THZ.si, 0.0,
-                Constants.LUMINOUS_EFFICACY_540THZ.getDisplayUnit().getQuantity());
+                Constants.LUMINOUS_EFFICACY_540THZ);
         verifyValueAndUnit("Mass of a neutron", new Eval().evaluate("NEUTRONMASS()"), Constants.NEUTRONMASS.si, 0.0,
-                Constants.NEUTRONMASS.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Verify value of PI", new Eval().evaluate("PI()"), Constants.PI.si, 0.0,
-                Constants.PI.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Phi (the golden ratio)", new Eval().evaluate("PHI()"), Constants.PHI.si, 0.0,
-                Constants.PHI.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Planck constant", new Eval().evaluate("PLANCK()"), Constants.PLANCK.si, 0.0,
-                Constants.PLANCK.getDisplayUnit().getQuantity());
+                Constants.NEUTRONMASS);
+        verifyValueAndUnit("Verify value of PI", new Eval().evaluate("PI()"), Constants.PI.si, 0.0, Constants.PI);
+        verifyValueAndUnit("Phi (the golden ratio)", new Eval().evaluate("PHI()"), Constants.PHI.si, 0.0, Constants.PHI);
+        verifyValueAndUnit("Planck constant", new Eval().evaluate("PLANCK()"), Constants.PLANCK.si, 0.0, Constants.PLANCK);
         verifyValueAndUnit("Planck constant divided by 2 pi", new Eval().evaluate("PLANCKREDUCED()"),
-                Constants.PLANCKREDUCED.si, 0.0, Constants.PLANCKREDUCED.getDisplayUnit().getQuantity());
+                Constants.PLANCKREDUCED.si, 0.0, Constants.PLANCKREDUCED);
         verifyValueAndUnit("Electrical charge of a proton", new Eval().evaluate("PROTONCHARGE()"), Constants.PROTONCHARGE.si,
-                0.0, Constants.PROTONCHARGE.getDisplayUnit().getQuantity());
+                0.0, Constants.PROTONCHARGE);
         verifyValueAndUnit("Mass of a proton", new Eval().evaluate("PROTONMASS()"), Constants.PROTONMASS.si, 0.0,
-                Constants.PROTONMASS.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Tau (2 * pi)", new Eval().evaluate("TAU()"), Constants.TAU.si, 0.0,
-                Constants.TAU.getDisplayUnit().getQuantity());
+                Constants.PROTONMASS);
+        verifyValueAndUnit("Tau (2 * pi)", new Eval().evaluate("TAU()"), Constants.TAU.si, 0.0, Constants.TAU);
         verifyValueAndUnit("Impedance of vacuum", new Eval().evaluate("VACUUMIMPEDANCE()"), Constants.VACUUMIMPEDANCE.si, 0.0,
-                Constants.VACUUMIMPEDANCE.getDisplayUnit().getQuantity());
+                Constants.VACUUMIMPEDANCE);
         verifyValueAndUnit("Permeability of vacuum", new Eval().evaluate("VACUUMPERMEABILITY()"),
-                Constants.VACUUMPERMEABILITY.si, 0.0, Constants.VACUUMPERMEABILITY.getDisplayUnit().getQuantity());
+                Constants.VACUUMPERMEABILITY.si, 0.0, Constants.VACUUMPERMEABILITY);
         verifyValueAndUnit("Permittivity of vacuum", new Eval().evaluate("VACUUMPERMITTIVITY()"),
-                Constants.VACUUMPERMITTIVITY.si, 0.0, Constants.VACUUMPERMITTIVITY.getDisplayUnit().getQuantity());
+                Constants.VACUUMPERMITTIVITY.si, 0.0, Constants.VACUUMPERMITTIVITY);
         verifyBoolean("Logical value true", new Eval().evaluate("TRUE()"), true);
         verifyBoolean("Logical value false", new Eval().evaluate("FALSE()"), false);
-        verifyValueAndUnit("Number that starts with radix symbol", new Eval().evaluate(".345"), .345, 0,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("Number that starts with radix symbol", new Eval().evaluate(".345"), .345, 0, Dimensionless.ONE);
     }
 
     /**
@@ -676,76 +658,41 @@ public class TestEval
         {
             assertTrue(rte.getMessage().toLowerCase().contains("incompatible quantity"), "Message describes the problem");
         }
-        verifyValueAndUnit("acos(-1)", new Eval().evaluate("acos(-1)"), Math.acos(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("acos(0.5)", new Eval().evaluate("acos(0.5)"), Math.acos(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("asin(-1)", new Eval().evaluate("asin(-1)"), Math.asin(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("asin(0.5)", new Eval().evaluate("asin(0.5)"), Math.asin(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("atan(-1)", new Eval().evaluate("atan(-1)"), Math.atan(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("atan(0.5)", new Eval().evaluate("atan(0.5)"), Math.atan(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cbrt(50)", new Eval().evaluate("cbrt(50)"), Math.cbrt(50), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cbrt(0.5)", new Eval().evaluate("cbrt(0.5)"), Math.cbrt(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cos(-1)", new Eval().evaluate("cos(-1)"), Math.cos(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cos(0.5)", new Eval().evaluate("cos(0.5)"), Math.cos(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cosh(-1)", new Eval().evaluate("cosh(-1)"), Math.cosh(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cosh(0.5)", new Eval().evaluate("cosh(0.5)"), Math.cosh(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("exp(-1)", new Eval().evaluate("exp(-1)"), Math.exp(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("exp(0.5)", new Eval().evaluate("exp(0.5)"), Math.exp(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("expm1(-1)", new Eval().evaluate("expm1(-1)"), Math.expm1(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("expm1(0.5)", new Eval().evaluate("expm1(0.5)"), Math.expm1(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log(50)", new Eval().evaluate("log(50)"), Math.log(50), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log(0.5)", new Eval().evaluate("log(0.5)"), Math.log(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log10(50)", new Eval().evaluate("log10(50)"), Math.log10(50), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log10(0.5)", new Eval().evaluate("log10(0.5)"), Math.log10(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log1p(50)", new Eval().evaluate("log1p(50)"), Math.log1p(50), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log1p(0.5)", new Eval().evaluate("log1p(0.5)"), Math.log1p(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("signum(0)", new Eval().evaluate("signum(0)"), Math.signum(0), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("signum(0.5)", new Eval().evaluate("signum(0.5)"), Math.signum(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("signum(-0.5)", new Eval().evaluate("signum(-0.5)"), Math.signum(-0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sin(-1)", new Eval().evaluate("sin(-1)"), Math.sin(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sin(0.5)", new Eval().evaluate("sin(0.5)"), Math.sin(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sinh(-1)", new Eval().evaluate("sinh(-1)"), Math.sinh(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sinh(0.5)", new Eval().evaluate("sinh(0.5)"), Math.sinh(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sqrt(50)", new Eval().evaluate("sqrt(50)"), Math.sqrt(50), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sqrt(0.5)", new Eval().evaluate("sqrt(0.5)"), Math.sqrt(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tan(-1)", new Eval().evaluate("tan(-1)"), Math.tan(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tan(0.5)", new Eval().evaluate("tan(0.5)"), Math.tan(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tanh(-1)", new Eval().evaluate("tanh(-1)"), Math.tanh(-1), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tanh(0.5)", new Eval().evaluate("tanh(0.5)"), Math.tanh(0.5), 0.000001,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("acos(-1)", new Eval().evaluate("acos(-1)"), Math.acos(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("acos(0.5)", new Eval().evaluate("acos(0.5)"), Math.acos(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("asin(-1)", new Eval().evaluate("asin(-1)"), Math.asin(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("asin(0.5)", new Eval().evaluate("asin(0.5)"), Math.asin(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("atan(-1)", new Eval().evaluate("atan(-1)"), Math.atan(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("atan(0.5)", new Eval().evaluate("atan(0.5)"), Math.atan(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("cbrt(50)", new Eval().evaluate("cbrt(50)"), Math.cbrt(50), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("cbrt(0.5)", new Eval().evaluate("cbrt(0.5)"), Math.cbrt(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("cos(-1)", new Eval().evaluate("cos(-1)"), Math.cos(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("cos(0.5)", new Eval().evaluate("cos(0.5)"), Math.cos(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("cosh(-1)", new Eval().evaluate("cosh(-1)"), Math.cosh(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("cosh(0.5)", new Eval().evaluate("cosh(0.5)"), Math.cosh(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("exp(-1)", new Eval().evaluate("exp(-1)"), Math.exp(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("exp(0.5)", new Eval().evaluate("exp(0.5)"), Math.exp(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("expm1(-1)", new Eval().evaluate("expm1(-1)"), Math.expm1(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("expm1(0.5)", new Eval().evaluate("expm1(0.5)"), Math.expm1(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("log(50)", new Eval().evaluate("log(50)"), Math.log(50), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("log(0.5)", new Eval().evaluate("log(0.5)"), Math.log(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("log10(50)", new Eval().evaluate("log10(50)"), Math.log10(50), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("log10(0.5)", new Eval().evaluate("log10(0.5)"), Math.log10(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("log1p(50)", new Eval().evaluate("log1p(50)"), Math.log1p(50), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("log1p(0.5)", new Eval().evaluate("log1p(0.5)"), Math.log1p(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("signum(0)", new Eval().evaluate("signum(0)"), Math.signum(0), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("signum(0.5)", new Eval().evaluate("signum(0.5)"), Math.signum(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("signum(-0.5)", new Eval().evaluate("signum(-0.5)"), Math.signum(-0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("sin(-1)", new Eval().evaluate("sin(-1)"), Math.sin(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("sin(0.5)", new Eval().evaluate("sin(0.5)"), Math.sin(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("sinh(-1)", new Eval().evaluate("sinh(-1)"), Math.sinh(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("sinh(0.5)", new Eval().evaluate("sinh(0.5)"), Math.sinh(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("sqrt(50)", new Eval().evaluate("sqrt(50)"), Math.sqrt(50), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("sqrt(0.5)", new Eval().evaluate("sqrt(0.5)"), Math.sqrt(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("tan(-1)", new Eval().evaluate("tan(-1)"), Math.tan(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("tan(0.5)", new Eval().evaluate("tan(0.5)"), Math.tan(0.5), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("tanh(-1)", new Eval().evaluate("tanh(-1)"), Math.tanh(-1), 0.000001, Dimensionless.ONE);
+        verifyValueAndUnit("tanh(0.5)", new Eval().evaluate("tanh(0.5)"), Math.tanh(0.5), 0.000001, Dimensionless.ONE);
     }
 
     /**
@@ -754,8 +701,7 @@ public class TestEval
     @Test
     public void testTwoArgumentFunctions()
     {
-        verifyValueAndUnit("pow(3.4,5.2)", new Eval().evaluate("pow(3.4,5.2)"), Math.pow(3.4, 5.2), 0.1,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("pow(3.4,5.2)", new Eval().evaluate("pow(3.4,5.2)"), Math.pow(3.4, 5.2), 0.1, Dimensionless.ONE);
 
         try
         {
@@ -827,10 +773,8 @@ public class TestEval
             assertTrue(rte.getMessage().toLowerCase().contains("cannot raise "), "Message describes the problem");
         }
 
-        verifyValueAndUnit("atan2(1,2)", new Eval().evaluate("atan2(1,2)"), Math.atan2(1, 2), 0.00001,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("atan2(-2,-1)", new Eval().evaluate("atan2(-2,-1)"), Math.atan2(-2, -1), 0.00001,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("atan2(1,2)", new Eval().evaluate("atan2(1,2)"), Math.atan2(1, 2), 0.00001, Dimensionless.ONE);
+        verifyValueAndUnit("atan2(-2,-1)", new Eval().evaluate("atan2(-2,-1)"), Math.atan2(-2, -1), 0.00001, Dimensionless.ONE);
         try
         {
             new Eval().evaluate("atan2(TRUE(),1)");
@@ -852,7 +796,7 @@ public class TestEval
         }
 
         verifyValueAndUnit("atan2(1[m],2[m])", new Eval().evaluate("atan2(1[m],2[m])"), Math.atan2(1, 2), 0.00001,
-                DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
 
         try
         {
@@ -899,13 +843,13 @@ public class TestEval
     public void testEvaluationOrder()
     {
         verifyValueAndUnit("13+17-19+23-31", new Eval().evaluate("13+17-19+23-31"), 13 + 17 - 19 + 23 - 31, 0,
-                DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
         verifyValueAndUnit("13+17-19/23-31", new Eval().evaluate("13+17-19/23-31"), 13 + 17 - 19.0 / 23 - 31, 0,
-                DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
         verifyValueAndUnit("13+17-19/23^3-31", new Eval().evaluate("13+17-19/23^3-31"), 13 + 17 - 19.0 / Math.pow(23, 3) - 31,
-                0.0000001, DimensionlessUnit.SI.getQuantity());
+                0.0000001, Dimensionless.ONE);
         verifyValueAndUnit("13*17/19*23/31", new Eval().evaluate("13*17/19*23/31"), 13.0 * 17 / 19 * 23 / 31, 0.000001,
-                DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
         verifyBoolean("TRUE()&&TRUE()&&TRUE()", new Eval().evaluate("TRUE()&&TRUE()&&TRUE()"), true);
         verifyBoolean("TRUE()&&TRUE()&&FALSE()", new Eval().evaluate("TRUE()&&TRUE()&&FALSE()"), false);
         verifyBoolean("TRUE()&&FALSE()&&TRUE()", new Eval().evaluate("TRUE()&&FALSE()&&TRUE()"), false);
@@ -942,8 +886,7 @@ public class TestEval
         verifyBoolean("FALSE()||FALSE()||TRUE()", new Eval().evaluate("FALSE()||FALSE()||TRUE()"), true);
         verifyBoolean("FALSE()||FALSE()||FALSE()", new Eval().evaluate("FALSE()||FALSE()||FALSE()"), false);
 
-        verifyValueAndUnit("2^3^5", new Eval().evaluate("2^3^5"), Math.pow(2, Math.pow(3, 5)), 1,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("2^3^5", new Eval().evaluate("2^3^5"), Math.pow(2, Math.pow(3, 5)), 1, Dimensionless.ONE);
     }
 
     /**
@@ -952,32 +895,24 @@ public class TestEval
     @Test
     public void testConditionalExpressions()
     {
-        verifyValueAndUnit("TRUE()?3:(1/0)", new Eval().evaluate("TRUE()?3:(1/0)"), 3, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("FALSE()?1/0:3", new Eval().evaluate("FALSE()?1/0:3"), 3, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("TRUE()?3:((1/0))", new Eval().evaluate("TRUE()?3:(1/0)"), 3, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("FALSE()?((1/0)):3", new Eval().evaluate("FALSE()?1/0:3"), 3, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("TRUE()?TRUE()?1:2:3", new Eval().evaluate("TRUE()?TRUE()?1:2:3"), 1, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("TRUE()?FALSE()?1:2:3", new Eval().evaluate("TRUE()?FALSE()?1:2:3"), 2, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("FALSE()?TRUE()?1:2:3", new Eval().evaluate("FALSE()?TRUE()?1:2:3"), 3, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("FALSE()?FALSE()?1:2:3", new Eval().evaluate("FALSE()?FALSE()?1:2:3"), 3, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("TRUE()?1:TRUE()?2:3", new Eval().evaluate("TRUE()?1:TRUE()?2:3"), 1, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("TRUE()?1:FALSE()?2:3", new Eval().evaluate("TRUE()?1:FALSE()?2:3"), 1, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("FALSE()?1:TRUE()?2:3", new Eval().evaluate("FALSE()?1:TRUE()?2:3"), 2, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("FALSE()?1:FALSE()?2:3", new Eval().evaluate("FALSE()?1:FALSE()?2:3"), 3, 0,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("TRUE()?3:(1/0)", new Eval().evaluate("TRUE()?3:(1/0)"), 3, 0, Dimensionless.ONE);
+        verifyValueAndUnit("FALSE()?1/0:3", new Eval().evaluate("FALSE()?1/0:3"), 3, 0, Dimensionless.ONE);
+        verifyValueAndUnit("TRUE()?3:((1/0))", new Eval().evaluate("TRUE()?3:(1/0)"), 3, 0, Dimensionless.ONE);
+        verifyValueAndUnit("FALSE()?((1/0)):3", new Eval().evaluate("FALSE()?1/0:3"), 3, 0, Dimensionless.ONE);
+        verifyValueAndUnit("TRUE()?TRUE()?1:2:3", new Eval().evaluate("TRUE()?TRUE()?1:2:3"), 1, 0, Dimensionless.ONE);
+        verifyValueAndUnit("TRUE()?FALSE()?1:2:3", new Eval().evaluate("TRUE()?FALSE()?1:2:3"), 2, 0, Dimensionless.ONE);
+        verifyValueAndUnit("FALSE()?TRUE()?1:2:3", new Eval().evaluate("FALSE()?TRUE()?1:2:3"), 3, 0, Dimensionless.ONE);
+        verifyValueAndUnit("FALSE()?FALSE()?1:2:3", new Eval().evaluate("FALSE()?FALSE()?1:2:3"), 3, 0, Dimensionless.ONE);
+        verifyValueAndUnit("TRUE()?1:TRUE()?2:3", new Eval().evaluate("TRUE()?1:TRUE()?2:3"), 1, 0, Dimensionless.ONE);
+        verifyValueAndUnit("TRUE()?1:FALSE()?2:3", new Eval().evaluate("TRUE()?1:FALSE()?2:3"), 1, 0, Dimensionless.ONE);
+        verifyValueAndUnit("FALSE()?1:TRUE()?2:3", new Eval().evaluate("FALSE()?1:TRUE()?2:3"), 2, 0, Dimensionless.ONE);
+        verifyValueAndUnit("FALSE()?1:FALSE()?2:3", new Eval().evaluate("FALSE()?1:FALSE()?2:3"), 3, 0, Dimensionless.ONE);
         verifyValueAndUnit("TRUE()?(((3))):(((1/0)))", new Eval().evaluate("TRUE()?(((3))):(((1/0)))"), 3, 0,
-                DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
         verifyValueAndUnit("FALSE()?(((1/0))):(((5)))", new Eval().evaluate("FALSE()?(((1/0))):(((5)))"), 5, 0,
-                DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("FALSE()?1:2+3", new Eval().evaluate("FALSE()?1:2+3"), 5, 0, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("TRUE()?1:2+3", new Eval().evaluate("TRUE()?1:2+3"), 4, 0, DimensionlessUnit.SI.getQuantity());
+                Dimensionless.ONE);
+        verifyValueAndUnit("FALSE()?1:2+3", new Eval().evaluate("FALSE()?1:2+3"), 5, 0, Dimensionless.ONE);
+        verifyValueAndUnit("TRUE()?1:2+3", new Eval().evaluate("TRUE()?1:2+3"), 4, 0, Dimensionless.ONE);
         try
         {
             new Eval().evaluate("TRUE()?1:(");
@@ -1064,49 +999,6 @@ public class TestEval
         {
             assertTrue(rte.getMessage().toLowerCase().contains("cannot resolve variable "), "Message describes the problem");
         }
-
-        map.put("booleanTrue", Boolean.TRUE);
-        Position position = new Position(456, PositionUnit.INCH);
-        map.put("position", position);
-        Position otherPosition = new Position(135, PositionUnit.YARD);
-        map.put("otherPosition", otherPosition);
-        verifyBoolean("Retrieve a logical value from the value store",
-                new Eval().setRetrieveValue(valueStore).evaluate("booleanTrue"), true);
-        verifyValueAndUnit("Retrieve a Position from the value store",
-                new Eval().setRetrieveValue(valueStore).evaluate("position"), new Position(456, PositionUnit.INCH).si, 0.0001,
-                PositionUnit.INCH.getQuantity());
-
-        verifyValueAndUnit("Abs+Rel->Abs", new Eval().setRetrieveValue(valueStore).evaluate("position+12[m]"),
-                new Position(456, PositionUnit.INCH).si + 12, 0.0001, PositionUnit.BASE);
-
-        try
-        {
-            new Eval().setRetrieveValue(valueStore).evaluate("456[m]+position");
-            fail("Using an absolute as RHS for addition should have thrown a RuntimeException");
-        }
-        catch (RuntimeException rte)
-        {
-            assertTrue(rte.getMessage().toLowerCase().contains("cannot add an absolute value to some other value"),
-                    "Message describes the problem");
-        }
-
-        verifyValueAndUnit("Abs-Abs->Rel", new Eval().setRetrieveValue(valueStore).evaluate("position-otherPosition"),
-                position.minus(otherPosition).si, 0.00001, LengthUnit.SI.getQuantity());
-        verifyValueAndUnit("Abs-Rel->Abs", new Eval().setRetrieveValue(valueStore).evaluate("position-200[m]"),
-                position.si - 200, 0.0001, PositionUnit.BASE);
-
-        map.put("@ab@c", new Position(321, PositionUnit.ANGSTROM));
-        map.put("#pq#r", new Position(456, PositionUnit.CENTIMETER));
-        map.put("__pk_wjs_avb", new Position(999, PositionUnit.LIGHTYEAR));
-        verifyValueAndUnit("@variable", new Eval().setRetrieveValue(valueStore).evaluate("@ab@c"), 321e-10, 1e-16,
-                PositionUnit.ANGSTROM.getQuantity());
-        verifyValueAndUnit("#variable", new Eval().setRetrieveValue(valueStore).evaluate("#pq#r"), 4.56, 0.001,
-                PositionUnit.CENTIMETER.getQuantity());
-        verifyValueAndUnit("_variable", new Eval().setRetrieveValue(valueStore).evaluate("__pk_wjs_avb"), 9.45E18, 1E16,
-                PositionUnit.LIGHTYEAR.getQuantity());
-        String string = "Bla";
-        map.put("theString", string);
-        assertEquals(string, new Eval().setRetrieveValue(valueStore).evaluate("theString"), "evaluator can return other objects");
     }
 
     /**
@@ -1117,20 +1009,20 @@ public class TestEval
     {
         Eval eval = new Eval();
         Object resultObject = eval.evaluate("123[ms]");
-        assertTrue(resultObject instanceof DoubleScalar, "result is a DoubleScalar");
-        DoubleScalar<?, ?> resultds = (DoubleScalar<?, ?>) resultObject;
+        assertTrue(resultObject instanceof Quantity, "result is a Quantity");
+        Quantity<?> resultds = (Quantity<?>) resultObject;
         assertEquals(123, resultds.si, 0, "value is 123");
-        SIDimensions siDimensions = resultds.getDisplayUnit().getQuantity().getSiDimensions();
-        assertTrue(siDimensions.equals(new SIDimensions(new byte[] {0, 0, 0, 1, 1, 0, 0, 0, 0})), "SI dimensions match");
+        SIUnit siDimensions = resultds.siUnit();
+        assertTrue(siDimensions.equals(new SIUnit(new int[] {0, 0, 0, 1, 1, 0, 0, 0, 0})), "SI dimensions match");
         // Create and install a user parser for milli seconds
-        UnitParser unitParser = new UnitParser()
+        QuantityParser unitParser = new QuantityParser()
         {
             @Override
-            public DoubleScalar<?, ?> parseUnit(final double value, final String unit)
+            public Quantity<?> parseQuantity(final double value, final String unit)
             {
                 if (unit.equals("ms"))
                 {
-                    return new Duration(value, DurationUnit.MILLISECOND);
+                    return new Duration(value, Duration.Unit.ms);
                 }
                 // Anything else is not handled by this UnitParser
                 return null;
@@ -1138,11 +1030,11 @@ public class TestEval
         };
         eval.setUnitParser(unitParser);
         Object newResultObject = eval.evaluate("123[ms]");
-        assertEquals(0.123, ((DoubleScalar<?, ?>) newResultObject).si, 0.0000001, "value is 0.123");
-        assertEquals(DurationUnit.MILLISECOND, ((DoubleScalar<?, ?>) newResultObject).getDisplayUnit(), "unit is ms");
+        assertEquals(0.123, ((Quantity<?>) newResultObject).si, 0.0000001, "value is 0.123");
+        assertEquals(Duration.Unit.ms, ((Quantity<?>) newResultObject).getDisplayUnit(), "unit is ms");
         // Parse something that is not handled by the user unit parser
         verifyValueAndUnit("Parse something that is not handled by the user unit parser", eval.evaluate("123[m/s]"), 123, 0.0,
-                Speed.ZERO.getDisplayUnit().getQuantity());
+                Speed.ZERO);
         // Uninstall the user parser
         eval.setUnitParser(null);
         Object oldResult = eval.evaluate("123[ms]");
@@ -1236,16 +1128,15 @@ public class TestEval
                 {
                     throw new RuntimeException("ceil requires one argument (got " + arguments.length + ")");
                 }
-                if (!(arguments[0] instanceof DoubleScalar))
+                if (!(arguments[0] instanceof Quantity))
                 {
-                    throw new RuntimeException("argument of ceil should be a DoubleScalar");
+                    throw new RuntimeException("argument of ceil should be a Quantity");
                 }
-                return new Dimensionless(Math.ceil(((DoubleScalar<?, ?>) (arguments[0])).si), DimensionlessUnit.SI);
+                return new Dimensionless(Math.ceil(((Quantity<?>) (arguments[0])).si), Unitless.BASE);
             }
         };
         map.put(ceil.getId(), ceil);
-        verifyValueAndUnit("ceil should now work", eval.evaluateExpression("ceil(5.1)"), 6, 0.0000001,
-                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("ceil should now work", eval.evaluateExpression("ceil(5.1)"), 6, 0.0000001, Dimensionless.ONE);
         // Remove all user defined functions
         eval.setUserDefinedFunctions(null);
         try
@@ -1317,8 +1208,8 @@ public class TestEval
 
         /**
          * Create a new ValueStore.
-         * @param map map that translates names to value (not deep-copied; therefore, if this map is
-         *            changed at a later time that will affect subsequent lookup results).
+         * @param map map that translates names to value (not deep-copied; therefore, if this map is changed at a later time
+         *            that will affect subsequent lookup results).
          */
         ValueStore(final Map<String, Object> map)
         {
@@ -1334,9 +1225,9 @@ public class TestEval
     }
 
     /**
-     * Verify the class, value and unit of a DoubleScalar value.
+     * Verify the class, value and unit of a Quantity value.
      * @param description description of the test
-     * @param object the DoubleScalar
+     * @param object the Quantity
      * @param expectedValue the expected SI value
      * @param tolerance the maximum error of the SI value
      * @param expectedQuantity the expected quantity
@@ -1344,14 +1235,14 @@ public class TestEval
     private void verifyValueAndUnit(final String description, final Object object, final double expectedValue,
             final double tolerance, final Quantity<?> expectedQuantity)
     {
-        if (!(object instanceof DoubleScalar))
+        if (!(object instanceof Quantity))
         {
             System.out.println("object: " + object.getClass().getCanonicalName());
         }
-        assertTrue(object instanceof DoubleScalar, description);
-        DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
+        assertTrue(object instanceof Quantity, description);
+        Quantity<?> ds = (Quantity<?>) object;
         assertEquals(ds.si, expectedValue, tolerance, description);
-        assertEquals(ds.getDisplayUnit().getQuantity().getSiDimensions(), expectedQuantity.getSiDimensions(), description);
+        assertEquals(ds.siUnit(), expectedQuantity.siUnit(), description);
     }
 
     /**

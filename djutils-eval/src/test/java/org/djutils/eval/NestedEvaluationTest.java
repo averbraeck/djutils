@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 
-import org.djunits.value.vdouble.scalar.Dimensionless;
-import org.djunits.value.vdouble.scalar.SIScalar;
+import org.djunits.quantity.Dimensionless;
+import org.djunits.quantity.SIQuantity;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -28,7 +28,7 @@ public class NestedEvaluationTest
     public void nestedEvaluation()
     {
         Eval eval = new Eval();
-        Map<String, Object> map = Map.of("param1", "{param2}", "param2", Dimensionless.ofSI(0.3));
+        Map<String, Object> map = Map.of("param1", "{param2}", "param2", Dimensionless.ofSi(0.3));
         eval.setRetrieveValue(new RetrieveValue()
         {
             @Override
@@ -44,6 +44,6 @@ public class NestedEvaluationTest
         });
         //System.out.println(eval.evaluate("1.0 - param2")); // 0,70000000
         //System.out.println(eval.evaluate("1.0 - param1")); // RuntimeException: Stack empty at position 6
-        assertEquals(0.7,  ((SIScalar) eval.evaluate("1.0 - param1")).si, 0.000001, "Nested call succeeded");
+        assertEquals(0.7,  ((SIQuantity) eval.evaluate("1.0 - param1")).si, 0.000001, "Nested call succeeded");
     }
 }
