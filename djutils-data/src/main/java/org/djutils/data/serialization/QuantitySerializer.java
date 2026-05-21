@@ -10,7 +10,7 @@ import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;
 
 /**
- * QuantitySerializer (de)serializes DJUNITS double scalars.
+ * QuantitySerializer (de)serializes DJUNITS quantities.
  * <p>
  * Copyright (c) 2020-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -23,7 +23,7 @@ import org.djunits.unit.Unit;
  */
 public class QuantitySerializer<Q extends Quantity<Q>, U extends Unit<U, Q>> implements TextSerializer<Q>
 {
-    /** cache of the retrieved valueOf(String) methods for scalars based on the stored string. */
+    /** cache of the retrieved valueOf(String) methods for quantities based on the stored string. */
     private static Map<Class<? extends Quantity<?>>, Method> valueOfMethodCache = new LinkedHashMap<>();
 
     /** format of the textual representation. */
@@ -31,7 +31,7 @@ public class QuantitySerializer<Q extends Quantity<Q>, U extends Unit<U, Q>> imp
 
     /**
      * Serialize a Quantity value to text in such a way that it can be deserialized with the corresponding deserializer.
-     * @param value the scalar to serialize
+     * @param value the quantity to serialize
      * @return a string representation of the value that can later be deserialized
      */
     @Override
@@ -47,7 +47,7 @@ public class QuantitySerializer<Q extends Quantity<Q>, U extends Unit<U, Q>> imp
     /**
      * Deserialize a String to the correct Quantity value. The method caches the valueOf(String) method for repeated use.
      * @param text the text to deserialize
-     * @return the reconstructed scalar
+     * @return the reconstructed quantity
      */
     @SuppressWarnings("unchecked")
     @Override

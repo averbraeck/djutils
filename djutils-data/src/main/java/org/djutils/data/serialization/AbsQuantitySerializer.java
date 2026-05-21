@@ -44,7 +44,7 @@ public class AbsQuantitySerializer<A extends AbsQuantity<A, Q, R>, Q extends Qua
     /**
      * Serialize an absolute Quantity value to text in such a way that it can be deserialized with the corresponding
      * deserializer.
-     * @param value the scalar to serialize
+     * @param value the absolute quantity to serialize
      * @return a string representation of the value that can later be deserialized
      */
     @Override
@@ -61,7 +61,7 @@ public class AbsQuantitySerializer<A extends AbsQuantity<A, Q, R>, Q extends Qua
      * Deserialize a String to the correct absolute Quantity value. The method caches the valueOf(String, Reference) method for
      * repeated use.
      * @param text the text to deserialize
-     * @return the reconstructed scalar
+     * @return the reconstructed absolute quantity
      */
     @SuppressWarnings("unchecked")
     @Override

@@ -46,7 +46,7 @@ import com.google.gson.stream.JsonWriter;
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nr": "0",
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": "time",
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "time in [s]",
- * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"class": "org.djtils.vdouble.scalar.Time",
+ * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"class": "org.djunits.quantity.Time",
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nr": "1",
