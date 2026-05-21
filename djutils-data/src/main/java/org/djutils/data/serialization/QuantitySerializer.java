@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.djunits.formatter.QuantityFormat;
 import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;
 
@@ -23,42 +24,34 @@ import org.djunits.unit.Unit;
 public class QuantitySerializer<Q extends Quantity<Q>, U extends Unit<U, Q>> implements TextSerializer<Q>
 {
     /** cache of the retrieved valueOf(String) methods for scalars based on the stored string. */
-    private static Map<String, Method> valueOfMethodCache = new LinkedHashMap<>();
+    private static Map<Class<? extends Quantity<?>>, Method> valueOfMethodCache = new LinkedHashMap<>();
 
-    /** cache of the retrieved unit instances based on the unit string. */
-    private static Map<String, Unit<?, ?>> unitCache = new LinkedHashMap<>();
+    /** format of the textual representation. */
+    private static final QuantityFormat FORMAT = QuantityFormat.instance().setTextual().setVariableLength().setMaxSigDigits(20);
 
     /**
-     * Serialize an Scalar value to text in such a way that it can be deserialized with the corresponding deserializer.
+     * Serialize a Quantity value to text in such a way that it can be deserialized with the corresponding deserializer.
      * @param value the scalar to serialize
      * @return a string representation of the value that can later be deserialized
      */
     @Override
-    public String serialize(final Q value, final String unitString)
+    public String serialize(final Q value)
     {
         if (value == null)
         {
             return null;
         }
-
-        String key = value.getClass().getSimpleName() + "_" + unitString;
-        Unit<?, ?> unit = unitCache.get(key);
-        if (unit == null)
-        {
-            unit = value.setDisplayUnit(unitString).getDisplayUnit();
-            unitCache.put(key, unit);
-        }
-        return String.valueOf(value.setDisplayUnit(unitString));
+        return value.format(FORMAT);
     }
 
     /**
-     * Deserialize a String to the correct Scalar value. The method caches the valueOf(String) method for repeated use.
+     * Deserialize a String to the correct Quantity value. The method caches the valueOf(String) method for repeated use.
      * @param text the text to deserialize
      * @return the reconstructed scalar
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Q deserialize(final Class<Q> type, final String text, final String unit)
+    public Q deserialize(final Class<Q> type, final String text)
     {
         if (text == null || text.isEmpty())
         {
@@ -66,13 +59,13 @@ public class QuantitySerializer<Q extends Quantity<Q>, U extends Unit<U, Q>> imp
         }
         try
         {
-            Method valueOfMethod = valueOfMethodCache.get(type.getName());
+            Method valueOfMethod = valueOfMethodCache.get(type);
             if (valueOfMethod == null)
             {
                 valueOfMethod = type.getDeclaredMethod("valueOf", String.class);
-                valueOfMethodCache.put(type.getName(), valueOfMethod);
+                valueOfMethodCache.put(type, valueOfMethod);
             }
-            return (Q) valueOfMethod.invoke(null, text + unit);
+            return (Q) valueOfMethod.invoke(null, text);
         }
         catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
                 | SecurityException exception)
