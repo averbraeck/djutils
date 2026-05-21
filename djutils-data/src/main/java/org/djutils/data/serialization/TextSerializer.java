@@ -23,12 +23,10 @@ public interface TextSerializer<T>
      * {@code null} values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a
      * missing tag in an XML-file, etc.
      * @param value the value to serialize, may be {@code null}
-     * @param unit the unit used to convert the data to and store, so all valus in a column may have the same unit. The
-     *            value may be {@code null} or blank
      * @return a string representation of the value that can later be deserialized, or {@code null}to denote a missing
      *         value
      */
-    String serialize(T value, String unit);
+    String serialize(T value);
 
     /**
      * Deserialize a value from text that has been created with the corresponding serializer. Note that {@code null} values for
@@ -38,11 +36,10 @@ public interface TextSerializer<T>
      * SpecificTextSerializer}, where no class needs to be provided (although it can).
      * @param type class of the value type, may be {@code null}
      * @param text the string to deserialize, may be {@code null} or blank
-     * @param unit unit with the value, may be {@code null} or blank
      * @return an instance of the object created with the corresponding serializer, may be {@code null} when a value was not
      *         specified in the source from which the deserializer was called
      */
-    T deserialize(Class<T> type, String text, String unit);
+    T deserialize(Class<T> type, String text);
 
     /**
      * Resolve the correct (de)serializer for the given class, and return an instance of the (de)serializer.
@@ -119,10 +116,11 @@ public interface TextSerializer<T>
             {
                 return new QuantitySerializer<>();
             }
-            else if (AbsQuantity.class.isAssignableFrom(valueClass))
-            {
-                return new AbsQuantitySerializer<>();
-            }
+        }
+
+        else if (AbsQuantity.class.isAssignableFrom(valueClass)) // AbsQuantity is not a Number
+        {
+            return new AbsQuantitySerializer<>();
         }
 
         else if (valueClass.equals(Boolean.class))
@@ -151,14 +149,12 @@ public interface TextSerializer<T>
      * @param <T> value type
      * @param serializer serializer
      * @param value value, may be {@code null}
-     * @param unit the unit used to convert the data to and store, so all valus in a column may have the same unit. The
-     *            value may be {@code null} or blank
      * @return serialized value, or {@code null}to denote a missing value
      */
     @SuppressWarnings("unchecked")
-    static <T> String serialize(final TextSerializer<?> serializer, final Object value, final String unit)
+    static <T> String serialize(final TextSerializer<?> serializer, final Object value)
     {
-        return ((TextSerializer<T>) serializer).serialize((T) value, unit);
+        return ((TextSerializer<T>) serializer).serialize((T) value);
     }
 
     /**
@@ -176,7 +172,7 @@ public interface TextSerializer<T>
     @SuppressWarnings("unchecked")
     static <T> T deserialize(final TextSerializer<?> serializer, final String text, final Column<?> column)
     {
-        return ((TextSerializer<T>) serializer).deserialize((Class<T>) column.getValueType(), text, column.getUnit());
+        return ((TextSerializer<T>) serializer).deserialize((Class<T>) column.getValueType(), text);
     }
 
 }
