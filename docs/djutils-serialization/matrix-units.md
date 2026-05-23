@@ -4,9 +4,9 @@
 
 After the byte with value 29, the matrix types have a 32-bit big-endian int indicating the number of rows in 
 the matrix that follows, followed by a 32-bit big-endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type 
-(see [Display types for units](../display-types)). The internal storage of the values that are 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type 
+(see [Unit types](../unit-types)). The internal storage of the values that are 
 transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows
 (assuming *big-endian* encoding):
 
@@ -26,9 +26,9 @@ columns by the second index: matrix\[row\]\[col\].
 
 After the byte with value 29, the matrix types have a 32-bit little-endian int indicating the number of rows in 
 the matrix that follows, followed by a 32-bit little-endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type 
-(see [Display types for units](../display-types)). The internal storage of the values that are 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type 
+(see [Unit types](../unit-types)). The internal storage of the values that are 
 transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows
 (assuming *little-endian* encoding):
 
@@ -48,9 +48,9 @@ columns by the second index: matrix\[row\]\[col\].
 
 After the byte with value 30, the matrix types have a 32-bit big endian int indicating the number of rows in 
 the matrix that follows, followed by a 32-bit big endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type 
-(see [Display types for units](../display-types)). The internal storage of the values that are 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type 
+(see [Unit types](../unit-types)). The internal storage of the values that are 
 transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows (assuming *big-endian* encoding):
 
 <pre>
@@ -69,9 +69,9 @@ columns by the inner index: matrix\[row\]\[col\].
 
 After the byte with value 30, the matrix types have a 32-bit little endian int indicating the number of rows in 
 the matrix that follows, followed by a 32-bit little endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type 
-(see [Display types for units](../display-types)). The internal storage of the values that are 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type 
+(see [Unit types](../unit-types)). The internal storage of the values that are 
 transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows (assuming *little-endian* encoding):
 
 <pre>
@@ -90,9 +90,9 @@ columns by the inner index: matrix\[row\]\[col\].
 
 After the byte with value 31, the matrix types have a 32-bit big endian int indicating the number of rows in 
 the matrix that follows, followed by a 32-bit big endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type for column 1 follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type for column 1 
-(see  [Display types for units](../display-types)). Then the unit type and display type for 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type for column 1 follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type for column 1 
+(see  [Unit types](../unit-types)). Then the unit type and display type for 
 column 2, etc. The internal storage of the values that are transmitted after that always use the SI 
 (or standard) unit. Summarized, the coding is as follows:
 
@@ -127,9 +127,9 @@ the time, and column 2 the value. Suppose that we have a time series of 4 values
 
 After the byte with value 31, the matrix types have a 32-bit little endian int indicating the number of rows in 
 the matrix that follows, followed by a 32-bit little endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type for column 1 follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type for column 1 
-(see  [Display types for units](../display-types)). Then the unit type and display type for 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type for column 1 follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type for column 1 
+(see  [Unit types](../unit-types)). Then the unit type and display type for 
 column 2, etc. The internal storage of the values that are transmitted after that always use the SI 
 (or standard) unit. Summarized, the coding is as follows:
 
@@ -164,9 +164,9 @@ the time, and column 2 the value. Suppose that we have a time series of 4 values
 
 After the byte with value 32, the matrix types have a 32-bit big endian int indicating the number of rows in 
 the array that follows, followed by a 32-bit big endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type for column 1 follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type for column 1 
-(see [Display types for units](../display-types)). Then the unit type and display type for 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type for column 1 follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type for column 1 
+(see [Unit types](../unit-types)). Then the unit type and display type for 
 column 2, etc. The internal storage of the values that are transmitted after that always use the SI 
 (or standard) unit. Summarized, the coding is as follows:
 
@@ -205,9 +205,9 @@ then the coding is as follows (assuming *big-endian* encoding):
 
 After the byte with value 32, the matrix types have a 32-bit little endian int indicating the number of rows in 
 the array that follows, followed by a 32-bit little endian int indicating the number of columns. These integers 
-are not preceded by a byte indicating it is an int. Then a one-byte unit type for column 1 follows 
-(see the table in [Coding of units](../coding-units) ) and a one-byte display type for column 1 
-(see [Display types for units](../display-types)). Then the unit type and display type for 
+are not preceded by a byte indicating it is an int. Then a one-byte quantity type for column 1 follows 
+(see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type for column 1 
+(see [Unit types](../unit-types)). Then the unit type and display type for 
 column 2, etc. The internal storage of the values that are transmitted after that always use the SI 
 (or standard) unit. Summarized, the coding is as follows:
 

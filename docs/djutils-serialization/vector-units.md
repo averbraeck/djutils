@@ -2,7 +2,7 @@
 
 ## 27. Float array with unit
 
-After the byte with value 27, the array types have a 32-bit int indicating the number of values in the array that follows. This int is itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows (see the table in [Coding of units](../coding-units) ) and a one-byte display type (see  [Display types for units](../display-types)). The internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example: when we send an array of two durations, 2.0 minutes and 2.5 minutes, this is coded as follows (assuming *big-endian* encoding):
+After the byte with value 27, the array types have a 32-bit int indicating the number of values in the array that follows. This int is itself not preceded by a byte indicating it is an int. Then a one-byte quantity type follows (see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type (see  [Unit types](../unit-types)). The internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example: when we send an array of two durations, 2.0 minutes and 2.5 minutes, this is coded as follows (assuming *big-endian* encoding):
 
 <pre>
 |27|0|0|0|2|25|7|
@@ -24,7 +24,7 @@ In *little-endian* encoding, the dense float array is preceded by a little-endia
 
 ## 28. Double array with unit
 
-After the byte with value 28, the array types have a 32-bit int indicating the number of values in the array that follows. This int is itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows (see the table in [Coding of units](../coding-units) ) and a one-byte display type (see  [Display types for units](../display-types)). The internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example: when we send an array of two durations, 21.2 minutes and 21.5 minutes, this is coded as follows (assuming *big-endian* encoding):
+After the byte with value 28, the array types have a 32-bit int indicating the number of values in the array that follows. This int is itself not preceded by a byte indicating it is an int. Then a one-byte quantity type follows (see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type (see  [Unit types](../unit-types)). The internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example: when we send an array of two durations, 21.2 minutes and 21.5 minutes, this is coded as follows (assuming *big-endian* encoding):
 
 <pre>
 |28|0|0|0|2|25|7|

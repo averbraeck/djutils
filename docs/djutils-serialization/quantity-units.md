@@ -2,7 +2,7 @@
 
 ## 25. Float with unit
 
-The internal storage of the value that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte unit type (see the table in [Coding of units](../coding-units) ) and a one-byte display type (see  [Display types for units](../display-types)). As an example: suppose the unit indicates that the type is a length, whereas the display type indicates that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows (assuming *big-endian* encoding):
+The internal storage of the value that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte quantity type (see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type (see  [Unit types](../unit-types)). As an example: suppose the unit indicates that the type is a length, whereas the display type indicates that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows (assuming *big-endian* encoding):
 
 <pre>
 |25|16|11|0x47|0x6A|0x60|0x00|
@@ -18,7 +18,7 @@ In *little-endian* encoding, it looks as follows:
 
 ## 26. Double with unit
 
-The internal storage of the value that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte unit type (see the table in [Coding of units](../coding-units) ) and a one-byte display type (see  [Display types for units](../display-types)). As an example: suppose the unit indicates that the type is a length, whereas the display type indicates that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows (assuming *big-endian* encoding):
+The internal storage of the value that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte quantity type (see the table in [Coding of quantities](../coding-quantities) ) and a one-byte display unit type (see  [Unit types](../unit-types)). As an example: suppose the unit indicates that the type is a length, whereas the display type indicates that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows (assuming *big-endian* encoding):
 
 <pre>
 |26|16|11|0x47|0x6A|0x60|0x00|0x00|0x00|0x00|0x00|
