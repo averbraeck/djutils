@@ -4,8 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteOrder;
 
 /**
- * Method to help with Little Endian / Big Endian conversions for the Sim0MQ messages. All Sim0MQ messages are encoded Big
- * Endian over the wire.
+ * Method to help with Little Endian / Big Endian conversions for the serialization.
  * <p>
  * Copyright (c) 2016-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">Sim0MQ License</a>.
@@ -14,7 +13,7 @@ import java.nio.ByteOrder;
  */
 public final class Endianness
 {
-    /** Does this EndianUtil encode and decode messages in bigEndian? */
+    /** Does this Endianness encode and decode messages in bigEndian? */
     private final boolean bigEndian;
 
     /** Is this platform bigEndian? */
@@ -29,14 +28,14 @@ public final class Endianness
         return PLATFORM_BIG_ENDIAN;
     }
 
-    /** Directly usable bigEndian EndianUtil. */
+    /** Directly usable bigEndian Endianness. */
     public static final Endianness BIG_ENDIAN = new Endianness(true);
 
-    /** Directly usable littleEndian EndianUtil. */
+    /** Directly usable littleEndian Endianness. */
     public static final Endianness LITTLE_ENDIAN = new Endianness(false);
 
     /**
-     * Construct an EndianUtil object with user specified endianness.
+     * Construct an Endianness object with user specified endianness.
      * @param bigEndian if true encoding and decoding use big endian style; if false; encoding and decoding use little
      *            endian style
      */
@@ -46,8 +45,8 @@ public final class Endianness
     }
 
     /**
-     * Construct an EndianUtil object that uses bigEndian encoding.
-     * @return EndianUtil that uses bigEndian encoding
+     * Construct an Endianness object that uses bigEndian encoding.
+     * @return Endianness that uses bigEndian encoding
      */
     public static Endianness bigEndian()
     {
@@ -55,8 +54,8 @@ public final class Endianness
     }
 
     /**
-     * Construct an EndianUtil object that uses littleEndian encoding.
-     * @return EndianUtil that uses littleEndian encoding
+     * Construct an Endianness object that uses littleEndian encoding.
+     * @return Endianness that uses littleEndian encoding
      */
     public static Endianness littleEndian()
     {
@@ -64,8 +63,8 @@ public final class Endianness
     }
 
     /**
-     * Report if this EndianUtil is bigEndian.
-     * @return true if this EndianUtil is bigEndian; false if this EndianUtil is littleEndian
+     * Report if this Endianness is bigEndian.
+     * @return true if this Endianness is bigEndian; false if this Endianness is littleEndian
      */
     public boolean isBigEndian()
     {
@@ -74,7 +73,7 @@ public final class Endianness
 
     /**
      * Decode a short.
-     * @param message the ZeroMQ byte array to decode
+     * @param message the byte array to decode
      * @param pointer the first byte to consider
      * @return the short value
      */
@@ -92,7 +91,7 @@ public final class Endianness
 
     /**
      * Decode a int.
-     * @param message the ZeroMQ byte array to decode
+     * @param message the byte array to decode
      * @param pointer the first byte to consider
      * @return the integer value
      */
@@ -112,7 +111,7 @@ public final class Endianness
 
     /**
      * Decode a long.
-     * @param message the ZeroMQ byte array to decode
+     * @param message the byte array to decode
      * @param pointer the first byte to consider
      * @return the long value
      */
@@ -136,7 +135,7 @@ public final class Endianness
 
     /**
      * Decode a float.
-     * @param message the ZeroMQ byte array to decode
+     * @param message the byte array to decode
      * @param pointer the first byte to consider
      * @return the float value
      */
@@ -148,7 +147,7 @@ public final class Endianness
 
     /**
      * Decode a double.
-     * @param message the ZeroMQ byte array to decode
+     * @param message the byte array to decode
      * @param pointer the first byte to consider
      * @return the double value
      */
@@ -160,7 +159,7 @@ public final class Endianness
 
     /**
      * Decode a char (16 bits).
-     * @param message the ZeroMQ byte array to decode
+     * @param message the byte array to decode
      * @param pointer the first byte to consider
      * @return the short value
      */
@@ -334,7 +333,7 @@ public final class Endianness
     @Override
     public String toString()
     {
-        return "EndianUtil [bigEndian=" + this.bigEndian + "]";
+        return "Endianness [bigEndian=" + this.bigEndian + "]";
     }
 
 }
