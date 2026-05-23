@@ -1,8 +1,8 @@
-# Display types for units
+# Unit types
 
 ## Display units
 
-All units are internally stored and transmitted using the SI unit (for relative units) or the BASE unit (for absolute units). They can, however, be displayed in a certain unit that we want to save in the serialization. An example is when we store the value of 248 kilometer and we want the deserialized field to also display as 248 kilometer, and not as 248000 meter. The following display unit categoriess have been defined:
+All quantity values are internally stored and transmitted using the SI unit or the BASE unit. They can, however, be displayed using a certain unit that we want to save in the serialization. An example is when we store the value of 248 kilometer and we want the deserialized field to also display as 248 kilometer, and not as 248000 meter. The following quantity types with units have been defined:
 
 <table><tr><td><ul>
 <li><a href="#0-dimensionless">0. Dimensionless</a></li>
@@ -59,7 +59,7 @@ All units are internally stored and transmitted using the SI unit (for relative 
 
 ## 0. Dimensionless <a id="0-dimensionless"></a>
 
-The Dimensionless unit does not have any display codes, except the default one, indicated with code number 0.
+The Dimensionless quantity does not have any display codes, except the default one, indicated with code number 0.
 
 
 ## 1. Acceleration <a id="1-acceleration"></a>
@@ -104,10 +104,14 @@ The Dimensionless unit does not have any display codes, except the default one, 
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
-| 0 | RADIAN (BASE) | rad (NORTH if received as relative) |
-| 1 | DEGREE | deg (NORTH if received as relative) |
-| 2 | RADIAN | rad (EAST if received as relative) |
-| 3 | DEGREE | deg (EAST if received as relative) |
+| 0 | RADIAN (SI) | rad |
+| 1 | ARCMINUTE | arcmin / ' |
+| 2 | ARCSECOND | arcsec / " |
+| 3 | CENTESIMAL_ARCMINUTE | centesimal_arcmin |
+| 4 | CENTESIMAL_ARCSECOND | centesimal_arcsec |
+| 5 | DEGREE | deg |
+| 6 | GRAD | grad |
+| 7 | PERCENT | % |
  
 
 ## 5. Area <a id="5-area"></a>
@@ -378,8 +382,6 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 20 | LIGHT_YEAR | ly |
 | 21 | ANGSTROM | &angst; |
 
-> **Note** that position is taken relative to a reference point called "origin". 
-
 
 ## 18. LinearDensity <a id="18-lineardensity"></a>
 
@@ -529,21 +531,17 @@ The Dimensionless unit does not have any display codes, except the default one, 
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
-| 0 | BASE_SECOND | s |
-| 1 | BASE_MICROSECOND | &mu;s |
-| 2 | BASE_MILLISECOND | ms |
-| 3 | BASE_MINUTE | min |
-| 4 | BASE_HOUR | hr |
-| 5 | BASE_DAY | day |
-| 6 | BASE_WEEK | wk |
-| 7 | EPOCH_SECOND (since 1-1-70 UTC) | s (POSIX) |
-| 8 | EPOCH_MICROSECOND (since 1-1-1970 UTC) | &mu;s (POSIX) |
-| 9 | EPOCH_MILLISECOND (since 1-1-1970 UTC) | ms (POSIX) |
-| 10 | EPOCH_MINUTE (since 1-1-1970 UTC) | min (POSIX) |
-| 11 | EPOCH_HOUR (since 1-1-1970 UTC) | hr (POSIX) |
-| 12 | EPOCH_DAY (since 1-1-1970 UTC) | day (POSIX) |
-| 13 | EPOCH_WEEK (since 1-1-1970 UTC) | wk (POSIX) |
-| 14 | YEAR1_SECOND (since 1-1-0001 UTC) | s(1-1-0001) |
+| 0 | SECOND (SI) | s |
+| 1 | ATTOSECOND | as |
+| 2 | FEMTOSECOND | fs |
+| 3 | PICOSECOND | ps |
+| 4 | NANOSECOND | ns |
+| 5 | MICROSECOND | &mu;s |
+| 6 | MILLISECOND | ms |
+| 7 | MINUTE | min |
+| 8 | HOUR | hr |
+| 9 | DAY | day |
+| 10 | WEEK | wk |
 
 
 ## 27. Torque <a id="27-torque"></a>
@@ -726,6 +724,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 9 | NANOCURIE | nCi |
 | 10 | RUTHERFORD | Rd |
 
+
 ## 42. AngularAcceleration <a href="#42-angularacceleration"></a>
 
 | Code | Name of display unit | Unit |
@@ -737,6 +736,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 4 | GRAD_PER_SECOND_2 | grad/s<sup>2</sup> |
 | 5 | CENTECIMALARCMINUTE_PER_SECOND_2 | cdm/s<sup>2</sup> |
 | 6 | CENTECIMALARCSECOND_PER_SECOND_2 | cds/s<sup>2</sup> |
+
 
 ## 43. AngularVelocity <a href="#43-angularvelocity"></a>
 
@@ -750,11 +750,13 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 5 | CENTECIMALARCMINUTE_PER_SECOND | cdm/s |
 | 6 | CENTECIMALARCSECOND_PER_SECOND | cds/s |
 
+
 ## 44. Momentum <a href="#44-momentum"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
 | 0 | SI | kgm/s |
+
 
 ## 45. LinearObjectDensity <a href="#45-linearobjectdensity"></a>
 
@@ -778,20 +780,17 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 15 | PER_YARD | 1/yd |
 | 16 | PER_MILE | 1/mi |
 
+
 ## 46. ArealObjectDensity <a href="#46-arealobjectdensity"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
 | 0 | PER_SQUARE_METER | /m2 |
 
+
 ## 47. VolumetricObjectDensity <a href="#47-volumetricobjectdensity"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
 | 0 | PER_CUBIC_METER | /m3 |
-
-
-
-
-
 
