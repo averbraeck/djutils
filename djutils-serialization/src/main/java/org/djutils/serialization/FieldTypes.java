@@ -3,123 +3,96 @@ package org.djutils.serialization;
 /**
  * Type numbers to encode different data types within djutils-serialization.
  * <p>
- * Copyright (c) 2016-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2016-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">Sim0MQ License</a>.
- * </p>
+ * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
 public final class FieldTypes
 {
 
     /**
-     * <p>
-     * <b>Big endian and Little endian encoding</b>
-     * </p>
+     * <b>Big endian and Little endian encoding</b> <br>
      * Byte, 8 bit signed two's complement integer.
      */
     public static final byte BYTE_8 = 0;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Short, 16 bit signed two's complement integer.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Short, 16 bit signed two's complement integer, little endian order.
      */
     public static final byte SHORT_16 = 1;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Integer, 32 bit signed two's complement integer.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Integer, 32 bit signed two's complement integer, little endian order.
      */
     public static final byte INT_32 = 2;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Long, 64 bit signed two's complement integer.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Long, 64 bit signed two's complement integer, little endian order.
      */
     public static final byte LONG_64 = 3;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Float, single-precision 32-bit IEEE 754 floating point.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Float, single-precision 32-bit IEEE 754 floating point, little endian order.
      */
     public static final byte FLOAT_32 = 4;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Float, double-precision 64-bit IEEE 754 floating point.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Float, double-precision 64-bit IEEE 754 floating point, little endian order.
      */
     public static final byte DOUBLE_64 = 5;
 
     /**
-     * <p>
-     * <b>Big endian and Little endian encoding</b>
-     * </p>
+     * <b>Big endian and Little endian encoding</b> <br>
      * Boolean, sent / received as a byte; 0 = false, 1 = true.
      */
     public static final byte BOOLEAN_8 = 6;
 
     /**
-     * <p>
-     * <b>Big endian and Little endian encoding</b>
-     * </p>
+     * <b>Big endian and Little endian encoding</b> <br>
      * Char, 8-bit ASCII character. Note that not all characters can be represented in 8 bits.
      */
     public static final byte CHAR_8 = 7;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Char, 16-bit Unicode character, big endian order. Note that not all characters can be represented in two bytes using
      * UTF-16.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Char, 16-bit Unicode character, little-endian order for the 2 bytes.
      */
     public static final byte CHAR_16 = 8;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * String, number-preceded byte array of 8-bits characters. The string types are preceded by a 32-bit int indicating the
      * number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is an int. An ASCII
      * string "Hello" is therefore coded as follows: |9|0|0|0|5|H|e|l|l|o|. Note that the int indicates the number of bytes, not
      * the number of characters. The string itself is coded with the first character at the start of the array and the last
      * character at the end.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * String, 32-bit little-endian number indicating the number of bytes, followed by a byte array of UTF-8 encoded characters.
      * Note that the length indicates the number of bytes in the encoding, not the number of characters in the string. The
      * string itself is coded with the first character at the start of the array and the last character at the end.
@@ -127,17 +100,14 @@ public final class FieldTypes
     public static final byte STRING_UTF8 = 9;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * String, number-preceded char array of 16-bits characters, big-endian order. The string types are preceded by a 32-bit int
      * indicating the number of shorts in the array that follows. This int is itself not preceded by a byte indicating it is an
      * int. Note that the int indicates the number of shorts, not the number of characters; the number of bytes is therefore
      * equal to 2 * length. The string itself is coded with the first character at the start of the array and the last character
      * at the end.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * String, 32-bit little-endian number indicating the number of shorts in the encoding, followed by a byte array of UTF-16
      * encoded characters. Each 2-byte character is represented in little-endian order. Note that the length indicates the
      * number of shorts (2 bytes) in the encoding, not the number of characters in the string. The number of bytes to represent
@@ -147,104 +117,81 @@ public final class FieldTypes
     public static final byte STRING_UTF16 = 10;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number-preceded byte array. The array types are preceded by a 32-bit int indicating the number of values in the array
      * that follows. This int is itself not preceded by a byte indicating it is an int. An array of 8 bytes with numbers 1
      * through 8 is therefore coded as follows: |11|0|0|0|8|1|2|3|4|5|6|7|8|
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Byte array, preceded by a 32-bit little-endian number indicating the number of bytes.
      */
     public static final byte BYTE_8_ARRAY = 11;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number-preceded short array. The array types are preceded by a 32-bit int indicating the number of values in the array
      * that follows. This int is itself not preceded by a byte indicating it is an int. An array of 8 shorts with numbers 100
      * through 107 is therefore coded as follows: |12|0|0|0|8|0|100|0|101|0|102|0|103|0|104|0|105|0|106|0|107|
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Short array, preceded by a 32-bit little-endian number indicating the number of shorts, little-endian coded shorts.
      */
     public static final byte SHORT_16_ARRAY = 12;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number-preceded int array. The array types are preceded by a 32-bit int indicating the number of values in the array that
      * follows. This int is itself not preceded by a byte indicating it is an int. An array of 4 ints with numbers 100 through
      * 103 is therefore coded as follows: |13|0|0|0|4|0|0|0|100|0|0|0|101|0|0|0|102|0|0|0|103|
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Integer array, preceded by a 32-bit little-endian number indicating the number of integers, little-endian coded ints.
      */
     public static final byte INT_32_ARRAY = 13;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number-preceded long array. The array types are preceded by a 32-bit int indicating the number of values in the array
      * that follows. This int is itself not preceded by a byte indicating it is an int. An array of 3 longs with numbers 100
      * through 102 is therefore coded as follows: |14|0|0|0|3|0|0|0|0|0|0|0|100|0|0|0|0|0|0|0|101|0|0|0|0|0|0|0|102|
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Long array, preceded by a 32-bit little-endian number indicating the number of longs, little-endian coded longs.
      */
     public static final byte LONG_64_ARRAY = 14;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number-preceded float array. The array types are preceded by a 32-bit int indicating the number of values in the array
      * that follows. This int is itself not preceded by a byte indicating it is an int.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Float array, preceded by a 32-bit little-endian number indicating the number of floats, little-endian coded floats.
      */
     public static final byte FLOAT_32_ARRAY = 15;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number-preceded double array. The array types are preceded by a 32-bit int indicating the number of values in the array
      * that follows. This int is itself not preceded by a byte indicating it is an int.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Double array, preceded by a 32-bit little-endian number indicating the number of doubles, little-endian coded doubles.
      */
     public static final byte DOUBLE_64_ARRAY = 16;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number-preceded boolean array. The array types are preceded by a 32-bit int indicating the number of values in the array
      * that follows. This int is itself not preceded by a byte indicating it is an int.
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Boolean array, preceded by a 32-bit little-endian number indicating the number of booleans.
      */
     public static final byte BOOLEAN_8_ARRAY = 17;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number of rows and number of columns preceded byte matrix. The matrix types are preceded by a 32-bit int indicating the
      * number of rows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte
      * indicating it is an int. The number of values in the matrix that follows is rows * columns. The data is stored row by
@@ -253,16 +200,13 @@ public final class FieldTypes
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Byte matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column count.
      */
     public static final byte BYTE_8_MATRIX = 18;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number of rows and number of columns preceded short matrix. The matrix types are preceded by a 32-bit int indicating the
      * number of rows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte
      * indicating it is an int. The number of values in the matrix that follows is rows * columns. The data is stored row by
@@ -271,17 +215,14 @@ public final class FieldTypes
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Short matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column count,
      * little-endian coded shorts.
      */
     public static final byte SHORT_16_MATRIX = 19;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number of rows and number of columns preceded int matrix. The matrix types are preceded by a 32-bit int indicating the
      * number of rows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte
      * indicating it is an int. The number of values in the matrix that follows is rows * columns. The data is stored row by
@@ -291,16 +232,14 @@ public final class FieldTypes
      * index: matrix[row][col].
      * <p>
      * <b>Little-endian encoding</b>
-     * </p>
+     * <p>
      * Integer matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column count,
      * little-endian coded ints.
      */
     public static final byte INT_32_MATRIX = 20;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number of rows and number of columns preceded long matrix. The matrix types are preceded by a 32-bit int indicating the
      * number of rows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte
      * indicating it is an int. The number of values in the matrix that follows is rows * columns. The data is stored row by
@@ -310,17 +249,14 @@ public final class FieldTypes
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Long matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column count,
      * little-endian coded longs.
      */
     public static final byte LONG_64_MATRIX = 21;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number of rows and number of columns preceded float matrix. The matrix types are preceded by a 32-bit int indicating the
      * number of rows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte
      * indicating it is an int. The number of values in the matrix that follows is rows * columns. The data is stored row by
@@ -328,17 +264,14 @@ public final class FieldTypes
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Float matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column count,
      * little-endian coded floats.
      */
     public static final byte FLOAT_32_MATRIX = 22;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number of rows and number of columns preceded double matrix. The matrix types are preceded by a 32-bit int indicating the
      * number of rows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte
      * indicating it is an int. The number of values in the matrix that follows is rows * columns. The data is stored row by
@@ -346,17 +279,14 @@ public final class FieldTypes
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Double matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column count,
      * little-endian doubles.
      */
     public static final byte DOUBLE_64_MATRIX = 23;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Number of rows and number of columns preceded boolean matrix. The matrix types are preceded by a 32-bit int indicating
      * the number of rows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte
      * indicating it is an int. The number of values in the matrix that follows is rows * columns. The data is stored row by
@@ -364,91 +294,86 @@ public final class FieldTypes
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Boolean matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column count.
      */
     public static final byte BOOLEAN_8_MATRIX = 24;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Float, stored internally in the SI unit, with a unit type and display type attached. The internal storage of the value
-     * that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte unit type, and a one-byte
-     * display type. As an example: suppose the unit indicates that the type is a length, whereas the display type indicates
-     * that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows:
+     * <b>Big endian encoding</b> <br>
+     * Float, stored internally in the SI unit, with a quantity type and unit type attached. The internal storage of the value
+     * that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte quantity type, and a
+     * one-byte unit type. As an example: suppose the quantity indicates that the type is a length, whereas the display type
+     * indicates that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows:
      * |25|16|11|0x47|0x6A|0x60|0x00|
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
-     * Float stored internally as a little-endian float in the corresponding SI unit, with unit type and display unit attached.
+     * <b>Little-endian encoding</b> <br>
+     * Float stored internally as a little-endian float in the corresponding SI unit, with quantity type and unit type attached.
      * The total size of the object is 7 bytes.
      */
     public static final byte FLOAT_32_UNIT = 25;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Double, stored internally in the SI unit, with a unit type and display type attached. The internal storage of the value
-     * that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte unit type and a one-byte
-     * display type. As an example: suppose the unit indicates that the type is a length, whereas the display type indicates
-     * that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows:
+     * <b>Big endian encoding</b> <br>
+     * Double, stored internally in the SI unit, with a quantity type and unit type attached. The internal storage of the value
+     * that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte quantity type and a
+     * one-byte display type. As an example: suppose the quantity indicates that the type is a length, whereas the display type
+     * indicates that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows:
      * |26|16|11|0x47|0x6A|0x60|0x00|0x00|0x00|0x00|0x00|
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
-     * Double stored internally as a little-endian double in the corresponding SI unit, with unit type and display unit
+     * <b>Little-endian encoding</b> <br>
+     * Double stored internally as a little-endian double in the corresponding SI unit, with quantity type and unit type
      * attached. The total size of the object is 11 bytes.
      */
     public static final byte DOUBLE_64_UNIT = 26;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Number-preceded dense float array, stored internally in the SI unit, with a unit type and display type. After the byte
+     * <b>Big endian encoding</b> <br>
+     * Number-preceded dense float array, stored internally in the SI unit, with a quantity type and unit type. After the byte
      * with value 27, the array types have a 32-bit int indicating the number of values in the array that follows. This int is
-     * itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows and a one-byte display type .
+     * itself not preceded by a byte indicating it is an int. Then a one-byte quantity type follows and a one-byte unit type.
      * The internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example:
      * when we send an array of two durations, 2.0 minutes and 2.5 minutes, this is coded as follows:
-     * |27|0|0|0|2|25|7|0x40|0x00|0x00|0x00|0x40|0x20|0x00|0x00|
-     * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
-     * Dense float array, preceded by a little-endian 32-bit number indicating the number of floats, with unit type and display
-     * unit attached to the entire float array. Each float is stored in little-endian order.
+     * 
+     * <pre>
+     * |27|0|0|0|2|25|7|
+     * |0x40|0x00|0x00|0x00|
+     * |0x40|0x20|0x00|0x00|
+     * </pre>
+     * 
+     * <b>Little-endian encoding</b> <br>
+     * Dense float array, preceded by a little-endian 32-bit number indicating the number of floats, with quantity type and unit
+     * type attached to the entire float array. Each float is stored in little-endian order.
      */
     public static final byte FLOAT_32_UNIT_ARRAY = 27;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Number-preceded dense double array, stored internally in the SI unit, with a unit type and display type. After the byte
+     * <b>Big endian encoding</b> <br>
+     * Number-preceded dense double array, stored internally in the SI unit, with a quantity type and unit type. After the byte
      * with value 28, the array types have a 32-bit int indicating the number of values in the array that follows. This int is
-     * itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows and a one-byte display type. The
-     * internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example: when
-     * we send an array of two durations, 21.2 minutes and 21.5 minutes, this is coded as follows:
-     * |28|0|0|0|2|25|7|0x40|0x35|0x33|0x33|0x3|0x33|0x33|0x33|0x40|0x35|0x80|0x00|0x00|0x00|0x00|0x00|
-     * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * itself not preceded by a byte indicating it is an int. Then a one-byte quantity type follows and a one-byte unit type.
+     * The internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example:
+     * when we send an array of two durations, 21.2 minutes and 21.5 minutes, this is coded as follows:
+     * 
+     * <pre>
+     * |28|0|0|0|2|25|7|
+     * |0x40|0x35|0x33|0x33|0x33|0x33|0x33|0x33|
+     * |0x40|0x35|0x80|0x00|0x00|0x00|0x00|0x00|
+     * </pre>
+     * 
+     * <b>Little-endian encoding</b> <br>
      * Dense double array, preceded by a little-endian 32-bit number indicating the number of doubles, little-endian order, with
-     * unit type and display unit attached to the entire double array. Each double is stored in little-endian order.
+     * quantity type and unit type attached to the entire double array. Each double is stored in little-endian order.
      */
     public static final byte DOUBLE_64_UNIT_ARRAY = 28;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Rows/Cols-preceded dense float array, stored internally in the SI unit, with a unit type and display type. After the byte
-     * with value 29, the matrix types have a 32-bit int indicating the number of rows in the array that follows, followed by a
-     * 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an int. Then a
-     * one-byte unit type follows and a one-byte display type The internal storage of the values that are transmitted after that
-     * always use the SI (or standard) unit. Summarized, the coding is as follows:
+     * <b>Big endian encoding</b> <br>
+     * Rows/Cols-preceded dense float array, stored internally in the SI unit, with a quantity type and unit type. After the
+     * byte with value 29, the matrix types have a 32-bit int indicating the number of rows in the array that follows, followed
+     * by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an int. Then
+     * a one-byte quantity type follows and a one-byte unit type The internal storage of the values that are transmitted after
+     * that always use the SI (or standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
      * |29|  |R|O|W|S|  |C|O|L|S|  |UT|  |DT|
@@ -461,21 +386,18 @@ public final class FieldTypes
      * In the language sending ore receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Dense float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column count int, with
-     * unit type and display unit attached to the entire float matrix. Each float is stored in little-endian order.
+     * quantity type and unit type attached to the entire float matrix. Each float is stored in little-endian order.
      */
     public static final byte FLOAT_32_UNIT_MATRIX = 29;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Rows/Cols-preceded dense double array, stored internally in the SI unit, with a unit type and display type. After the
+     * <b>Big endian encoding</b> <br>
+     * Rows/Cols-preceded dense double array, stored internally in the SI unit, with a quantity type and unit type. After the
      * byte with value 30, the matrix types have a 32-bit int indicating the number of rows in the array that follows, followed
      * by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an int. Then
-     * a one-byte unit type follows and a one-byte display type The internal storage of the values that are transmitted after
+     * a one-byte quantity type follows and a one-byte unit type The internal storage of the values that are transmitted after
      * that always use the SI (or standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
@@ -489,23 +411,20 @@ public final class FieldTypes
      * In the language sending ore receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col].
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Dense double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column count int, with
-     * unit type and display unit attached to the entire double matrix. Each double is stored in little-endian order.
+     * quantity type and unit type attached to the entire double matrix. Each double is stored in little-endian order.
      */
     public static final byte DOUBLE_64_UNIT_MATRIX = 30;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Number-preceded dense float array, stored internally in the SI unit, with a unique unit type and display type per row.
-     * After the byte with value 31, the matrix types have a 32-bit int indicating the number of rows in the array that follows,
-     * followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an
-     * int. Then a one-byte unit type for column 1 follows and a one-byte display type for column 1. Then the unit type and
-     * display type for column 2, etc. The internal storage of the values that are transmitted after that always use the SI (or
-     * standard) unit. Summarized, the coding is as follows:
+     * <b>Big endian encoding</b> <br>
+     * Number-preceded dense float array, stored internally in the SI unit, with a unique quantity type and unit type per
+     * column. After the byte with value 31, the matrix types have a 32-bit int indicating the number of rows in the array that
+     * follows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating
+     * it is an int. Then a one-byte quantity type for column 1 follows and a one-byte unit type for column 1. Then the quantity
+     * type and unit type for column 2, etc. The internal storage of the values that are transmitted after that always use the
+     * SI (or standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
      * |31|  |R|O|W|S|  |C|O|L|S|
@@ -530,23 +449,20 @@ public final class FieldTypes
      * |0x40|0x80|0x00|0x00|  |0x42|0x70|0x00|0x00|
      * </pre>
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Dense little-endian float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column
-     * count int, with a unique unit type and display unit per column of the float matrix.
+     * count int, with a unique quantity type and unit type per column of the float matrix.
      */
     public static final byte FLOAT_32_UNIT_COLUMN_MATRIX = 31;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
-     * Number-preceded dense double array, stored internally in the SI unit, with a unique unit type and display type per row.
-     * After the byte with value 32, the matrix types have a 32-bit int indicating the number of rows in the array that follows,
-     * followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an
-     * int. Then a one-byte unit type for column 1 follows (see the table above) and a one-byte display type for column 1 (see
-     * Appendix A). Then the unit type and display type for column 2, etc. The internal storage of the values that are
-     * transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows:
+     * <b>Big endian encoding</b> <br>
+     * Number-preceded dense double array, stored internally in the SI unit, with a unique quantity type and unit type per
+     * column. After the byte with value 32, the matrix types have a 32-bit int indicating the number of rows in the array that
+     * follows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating
+     * it is an int. Then a one-byte quantity type for column 1 follows (see the table above) and a one-byte unit type for
+     * column 1 (see Appendix A). Then the quantity type and unit type for column 2, etc. The internal storage of the values
+     * that are transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
      * |32|  |R|O|W|S|  |C|O|L|S|
@@ -575,17 +491,14 @@ public final class FieldTypes
      * |0x40|0x7A|0x91|0x99|0x99|0x99|0x99|0x9A|
      * </pre>
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Dense little-endian double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column
-     * count int, with a unique unit type and display unit per column of the double matrix.
+     * count int, with a unique quantity type and unit type per column of the double matrix.
      */
     public static final byte DOUBLE_64_UNIT_COLUMN_MATRIX = 32;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Array of UTF-8 Strings. The number of strings is provided in a 32-bit big-endian integer. Each string is preceded by a
      * 32-bit int indicating the number of bytes in the array that follows. This int is itself not preceded by a byte indicating
      * it is an int. Note that the int to code the length for each string indicates the number of bytes, not the number of
@@ -597,8 +510,7 @@ public final class FieldTypes
      * | 0 | 0 | 0 | 7 | S | e | r | i | e | s | 2 |
      * </pre>
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Little-endian array of UTF-8 Strings. The number of strings is provided in a 32-bit little-endian integer. Each string is
      * preceded by a 32-bit int indicating the number of bytes in the array that follows. This int is itself not preceded by a
      * byte indicating it is an int. Note that the int to code the length for each string indicates the number of bytes, not the
@@ -613,9 +525,7 @@ public final class FieldTypes
     public static final byte STRING_UTF8_ARRAY = 33;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Array of UTF-16 Strings. The number of strings is provided in a 32-bit big-endian integer. Each string is preceded by a
      * 32-bit int indicating the number of shorts (2-byte UTF-16 encoding) in the array that follows. This int is itself not
      * preceded by a byte indicating it is an int. Note that the int to code the length for each string indicates the number of
@@ -628,8 +538,7 @@ public final class FieldTypes
      * |0x00|0x00|0x00|0x07|0x00|0x53|0x00|0x65|0x00|0x72|0x00|0x69|0x00|0x65|0x00|0x73|0x00|0x32|
      * </pre>
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Little-endian array of UTF-16 Strings. The number of strings is provided in a 32-bit little-endian integer. Each string
      * is preceded by a 32-bit int indicating the number of shorts (2-byte UTF-16 encoding) in the array that follows. This int
      * is itself not preceded by a byte indicating it is an int. Note that the int to code the length for each string indicates
@@ -645,9 +554,7 @@ public final class FieldTypes
     public static final byte STRING_UTF16_ARRAY = 34;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Matrix of UTF-8 Strings. First, the number of rows is provided in a 32-bit big-endian integer, followed by the number of
      * columns encoded in a 32-bit big-endian integer. Each string is preceded by a 32-bit int indicating the number of bytes in
      * the array that follows. This int is itself not preceded by a byte indicating it is an int. The strings are provided
@@ -666,8 +573,7 @@ public final class FieldTypes
      * |  0 | 0 | 0 | 4 | R | m | C | n |
      * </pre>
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Little-endian matrix of UTF-8 Strings. First, the number of rows is provided in a 32-bit little-endian integer, followed
      * by the number of columns encoded in a 32-bit little-endian integer. Each string is preceded by a 32-bit int indicating
      * the number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is an int. The
@@ -689,9 +595,7 @@ public final class FieldTypes
     public static final byte STRING_UTF8_MATRIX = 35;
 
     /**
-     * <p>
-     * <b>Big endian encoding</b>
-     * </p>
+     * <b>Big endian encoding</b> <br>
      * Matrix of UTF-16 Strings. First, the number of rows is provided in a 32-bit big-endian integer, followed by the number of
      * columns encoded in a 32-bit big-endian integer. Each string is preceded by a 32-bit int indicating the number of bytes in
      * the array that follows. This int is itself not preceded by a byte indicating it is an int. The strings are provided
@@ -710,8 +614,7 @@ public final class FieldTypes
      * |  0 | 0 | 0 | 4 | . | R | . | m | . | C | . | n |
      * </pre>
      * <p>
-     * <b>Little-endian encoding</b>
-     * </p>
+     * <b>Little-endian encoding</b> <br>
      * Little-endian matrix of UTF-16 Strings. First, the number of rows is provided in a 32-bit little-endian integer, followed
      * by the number of columns encoded in a 32-bit little-endian integer. Each string is preceded by a 32-bit int indicating
      * the number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is an int. The
@@ -732,6 +635,145 @@ public final class FieldTypes
      * </pre>
      */
     public static final byte STRING_UTF16_MATRIX = 36;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Float, stored internally in the SI unit, with a quantity type, unit type and reference attached. The internal storage of
+     * the value that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte quantity type,
+     * and a one-byte unit type, as well as the reference that is stored as a UTF-8 or UTF-16 String, preceded by code 9 or 10
+     * to indicate the type of string. As an example: suppose the quantity indicates that the type is a Position, where the
+     * internally stored value 60000.0 should be displayed as 60.0 km, relative to the reference called "origin" that is coded
+     * as UTF-8. this is endcoded as follows:
+     * 
+     * <pre>
+     * |37|17|11|9|0|0|0|6|o|r|i|g|i|n|0x47|0x6A|0x60|0x00|
+     * </pre>
+     * 
+     * <b>Little-endian encoding</b> <br>
+     * Float stored internally as a little-endian float in the corresponding SI unit, with quantity type, unit type and
+     * reference attached. The total size of the object can vary due to the length of the reference string.
+     */
+    public static final byte FLOAT_32_UNIT_ABS = 37;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Double, stored internally in the SI unit, with a quantity type, unit type and reference attached. The internal storage of
+     * the value that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte quantity type,
+     * and a one-byte unit type, as well as the reference that is stored as a UTF-8 or UTF-16 String, preceded by code 9 or 10
+     * to indicate the type of string. As an example: suppose the quantity indicates that the type is a Position, where the
+     * internally stored value 60000.0 should be displayed as 60.0 km, relative to the reference called "origin" that is coded
+     * as UTF-8. this is endcoded as follows:
+     * 
+     * <pre>
+     * |38|17|11|9|0|0|0|6|o|r|i|g|i|n|0x47|0x6A|0x60|0x00|0x00|0x00|0x00|0x00|
+     * </pre>
+     * 
+     * <b>Little-endian encoding</b> <br>
+     * Double stored internally as a little-endian double in the corresponding SI unit, with quantity type, unit type and
+     * reference attached. The total size of the object can vary due to the length of the reference string.
+     */
+    public static final byte DOUBLE_64_UNIT_ABS = 38;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Number-preceded dense float array of absolute quantity values, stored internally in the SI unit, with a quantity type, a
+     * unit type and a String reference. After the byte with value 39, the array types have a 32-bit int indicating the number
+     * of values in the array that follows. This int is itself not preceded by a byte indicating it is an int. Then a one-byte
+     * quantity type follows and a one-byte unit type. After that, the reference is stored as a UTF-8 or UTF-16 String, preceded
+     * by code 9 or 10 to indicate the type of string. The internal storage of the values that are transmitted after that always
+     * use the SI (or standard) unit. As an example: when we send an array of two absolute times, 2.0 minutes and 2.5 minutes,
+     * relative to the UNIX epoch, this is coded as follows:
+     * 
+     * <pre>
+     * |39|0|0|0|2|26|7|9|0|0|0|4|U|N|I|X|
+     * |0x40|0x00|0x00|0x00|
+     * |0x40|0x20|0x00|0x00|
+     * </pre>
+     * 
+     * <b>Little-endian encoding</b> <br>
+     * Dense float array, preceded by a little-endian 32-bit number indicating the number of floats, with quantity type, unit
+     * type and reference string attached to the entire float array. Each float is stored in little-endian order.
+     */
+    public static final byte FLOAT_32_UNIT_ABS_ARRAY = 39;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Number-preceded dense double array of absolute quantity values, stored internally in the SI unit, with a quantity type, a
+     * unit type and a String reference. After the byte with value 40, the array types have a 32-bit int indicating the number
+     * of values in the array that follows. This int is itself not preceded by a byte indicating it is an int. Then a one-byte
+     * quantity type follows and a one-byte unit type. After that, the reference is stored as a UTF-8 or UTF-16 String, preceded
+     * by code 9 or 10 to indicate the type of string. The internal storage of the values that are transmitted after that always
+     * use the SI (or standard) unit. As an example: when we send an array of two absolute times, 21.2 minutes and 21.5 minutes,
+     * relative to the UNIX epoch, this is coded as follows:
+     * 
+     * <pre>
+     * |40|0|0|0|2|26|7|9|0|0|0|4|U|N|I|X|
+     * |0x40|0x35|0x33|0x33|0x33|0x33|0x33|0x33|
+     * |0x40|0x35|0x80|0x00|0x00|0x00|0x00|0x00|
+     * </pre>
+     * 
+     * <b>Little-endian encoding</b> <br>
+     * Dense double array, preceded by a little-endian 32-bit number indicating the number of doubles, little-endian order, with
+     * quantity type, unit type and reference string attached to the entire double array. Each double is stored in little-endian
+     * order.
+     */
+    public static final byte DOUBLE_64_UNIT_ABS_ARRAY = 40;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Rows/Cols-preceded dense float array of absolute quantity values, stored internally in the SI unit, with a quantity type,
+     * a unit type and a String reference. After the byte with value 41, the matrix types have a 32-bit int indicating the
+     * number of rows in the array that follows, followed by a 32-bit int indicating the number of columns. These integers are
+     * not preceded by a byte indicating it is an int. Then a one-byte quantity type follows and a one-byte unit type. After
+     * that, the reference is stored as a UTF-8 or UTF-16 String, preceded by code 9 or 10 to indicate the type of string. The
+     * internal storage of the values that are transmitted after that always use the SI (or standard) unit. Summarized, the
+     * coding is as follows:
+     * 
+     * <pre>
+     * |41|  |R|O|W|S|  |C|O|L|S|  |UT|  |DT|  |9|0|0|0|9|r|e|f|e|r|e|n|c|e|
+     * |R|1|C|1|  |R|1|C|2| ... |R|1|C|n| 
+     * |R|2|C|1|  |R|2|C|2| ... |R|2|C|n| 
+     * ... 
+     * |R|m|C|1|  |R|m|C|2| ... |R|m|C|n|
+     * </pre>
+     * 
+     * In the language sending ore receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
+     * index: matrix[row][col].
+     * <p>
+     * <b>Little-endian encoding</b> <br>
+     * Dense float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column count int, with
+     * quantity type, unit type and reference string attached to the entire float matrix. Each float is stored in little-endian
+     * order.
+     */
+    public static final byte FLOAT_32_UNIT_ABS_MATRIX = 41;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Rows/Cols-preceded dense double array of absolute quantity values, stored internally in the SI unit, with a quantity
+     * type, a unit type and a String reference. After the byte with value 42, the matrix types have a 32-bit int indicating the
+     * number of rows in the array that follows, followed by a 32-bit int indicating the number of columns. These integers are
+     * not preceded by a byte indicating it is an int. Then a one-byte quantity type follows and a one-byte unit type. After
+     * that, the reference is stored as a UTF-8 or UTF-16 String, preceded by code 9 or 10 to indicate the type of string. The
+     * internal storage of the values that are transmitted after that always use the SI (or standard) unit. Summarized, the
+     * coding is as follows:
+     * 
+     * <pre>
+     * |42|  |R|O|W|S|  |C|O|L|S|  |UT|  |DT|  |9|0|0|0|9|r|e|f|e|r|e|n|c|e|
+     * |R|1|C|1|.|.|.|.|  |R|1|C|2|.|.|.|.| ... |R|1|C|n|.|.|.|.| 
+     * |R|2|C|1|.|.|.|.|  |R|2|C|2|.|.|.|.| ... |R|2|C|n|.|.|.|.| 
+     * ... 
+     * |R|m|C|1|.|.|.|.|  |R|m|C|2|.|.|.|.| ... |R|m|C|n|.|.|.|.|
+     * </pre>
+     * 
+     * In the language sending ore receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
+     * index: matrix[row][col].
+     * <p>
+     * <b>Little-endian encoding</b> <br>
+     * Dense double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column count int, with
+     * quantity type, unit type and reference string attached to the entire double matrix. Each double is stored in
+     * little-endian order.
+     */
+    public static final byte DOUBLE_64_UNIT_ABS_MATRIX = 42;
 
     /**
      * Utility class, cannot be instantiated.
