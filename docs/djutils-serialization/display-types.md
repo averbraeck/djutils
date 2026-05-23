@@ -378,6 +378,8 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 20 | LIGHT_YEAR | ly |
 | 21 | ANGSTROM | &angst; |
 
+> **Note** that position is taken relative to a reference point called "origin". 
+
 
 ## 18. LinearDensity <a id="18-lineardensity"></a>
 
@@ -542,7 +544,6 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 12 | EPOCH_DAY (since 1-1-1970 UTC) | day (POSIX) |
 | 13 | EPOCH_WEEK (since 1-1-1970 UTC) | wk (POSIX) |
 | 14 | YEAR1_SECOND (since 1-1-0001 UTC) | s(1-1-0001) |
-| 15 | J2000_SECOND (since 1-1-2000 UTC, 12:00) | s(1-1-2000) |
 
 
 ## 27. Torque <a id="27-torque"></a>
