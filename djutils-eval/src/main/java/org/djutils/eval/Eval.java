@@ -28,7 +28,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * The precedence of binary operators follows the list of the
  * <a href="https://www.cs.bilkent.edu.tr/~guvenir/courses/CS101/op_precedence.html">Java Operator Precedence Table</a>,
  * skipping bitwise and other operators that make no sense for this evaluator and adding the exponentiation (^) operator.
- * </p>
+ * <p>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
 public class Eval
