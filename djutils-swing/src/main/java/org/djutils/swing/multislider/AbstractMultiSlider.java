@@ -39,17 +39,17 @@ import org.djutils.logger.CategoryLogger;
  * individual sliders underneath.
  * <p>
  * Several models exist to indicate whether thumbs can pass each other or not, or be on top of each other or not.
- * </p>
+ * <p>
  * <p>
  * The {@code AbstractMultiSlider} stores all values internally as int. Only when getting or setting values (or, e.g., the
  * minimum or maximum), the generic type T is used.
- * </p>
+ * <p>
  * <p>
  * Copyright (c) 2024-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
+ * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of values that the {@code AbstractMultiSlider} stores and returns
  */
@@ -587,7 +587,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * of the underlying sliders.
      * <p>
      * The event instance is created if necessary, and stored in {@code changeEvent}.
-     * </p>
+     * <p>
      */
     protected void fireStateChanged()
     {
@@ -655,7 +655,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * NOT fired when a value of an underlying slider is changed directly. The regular ChangeListener does fire these changes.
      * <p>
      * The event instance is created if necessary, and stored in {@code changeEvent}.
-     * </p>
+     * <p>
      */
     protected void fireFinalValueChanged()
     {
@@ -727,7 +727,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * <p>
      * The data model (an instance of {@code BoundedRangeModel}) handles any mathematical issues arising from assigning faulty
      * values. See the {@code BoundedRangeModel} documentation for details.
-     * </p>
+     * <p>
      * If the new value is different from the previous value, all change listeners are notified.
      * @param i the thumb to set the value for
      * @param n the new index value
@@ -758,7 +758,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * <p>
      * The data model (an instance of {@code BoundedRangeModel}) handles any mathematical issues arising from assigning faulty
      * values. See the {@code BoundedRangeModel} documentation for details.
-     * </p>
+     * <p>
      * If the new minimum value is different from the previous minimum value, all change listeners are notified.
      * @param minimum the new minimum
      */
@@ -815,7 +815,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * <p>
      * The data model (an instance of {@code BoundedRangeModel}) handles any mathematical issues arising from assigning faulty
      * values. See the {@code BoundedRangeModel} documentation for details.
-     * </p>
+     * <p>
      * If the new maximum value is different from the previous maximum value, all change listeners are notified.
      * @param maximum the new maximum
      */
@@ -873,7 +873,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * <p>
      * The data model (an instance of {@code BoundedRangeModel}) handles any mathematical issues arising from assigning faulty
      * values. See the {@code BoundedRangeModel} documentation for details.
-     * </p>
+     * <p>
      * If the new extent value is different from the previous extent value, all change listeners are notified.
      * @param extent the new extent
      */
@@ -1073,7 +1073,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * will get major ticks next to the following values: 0, 10, 20, 30, 40, 50.
      * <p>
      * In order for major ticks to be painted, {@code setPaintTicks} must be set to {@code true}.
-     * </p>
+     * <p>
      * This method will also set up a label table for you. If there is not already a label table, and the major tick spacing is
      * {@code > 0}, and {@code getPaintLabels} returns {@code true}, a standard label table will be generated (by calling
      * {@code createStandardLabels}) with labels at the major tick marks. For the example above, you would get text labels: "0",
@@ -1214,7 +1214,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      * This method will also set up a label table for you. If there is not already a label table, and the major tick spacing is
      * {@code > 0}, a standard label table will be generated (by calling {@code createStandardLabels}) with labels at the major
      * tick marks. The label table is then set on the slider by calling {@code setLabelTable}.
-     * </p>
+     * <p>
      * By default, this property is {@code false}.
      * @param b whether or not to paint labels
      */
