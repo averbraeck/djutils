@@ -1,11 +1,13 @@
 package org.djutils.serialization.serializers;
 
+import org.djutils.serialization.FieldTypes;
+
 /**
- * Basics of the serializer
+ * Basic functions of the serializer.
  * <p>
- * Copyright (c) 2019-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2019-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
- * </p>
+ * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  * @param <T> class
@@ -20,8 +22,8 @@ public abstract class BasicSerializer<T extends Object> implements Serializer<T>
 
     /**
      * Construct the BasicSerializer.
-     * @param type the field type (returned by the <code>fieldType</code> method)
-     * @param dataClassName returned by the dataClassName method
+     * @param type the field type as defined by the {@link FieldTypes} class
+     * @param dataClassName the name of the data type (not the class name)
      */
     public BasicSerializer(final byte type, final String dataClassName)
     {
