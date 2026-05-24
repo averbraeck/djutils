@@ -33,16 +33,16 @@ import org.junit.jupiter.api.Test;
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
+ * <p>
  * <p>
  * TODO test flattener Beziers that are not based on just two DirectedPoint objects.
- * </p>
+ * <p>
  * <p>
  * TODO also with maxAngle flattener and non-declared knot.
- * </p>
+ * <p>
  * <p>
  * TODO test flattener with curve that has a knot.
- * </p>
+ * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
