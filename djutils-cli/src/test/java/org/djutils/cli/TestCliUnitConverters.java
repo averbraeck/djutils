@@ -58,7 +58,7 @@ import picocli.CommandLine.Option;
  * <p>
  * This test is generated at 2026-05-05T15:42:40.310257200Z by org.djunits.generator.GenerateCliConvertersTest and validates
  * that each {@code @Option} field parses its default and an explicit override by comparing SI values with a small tolerance.
- * </p>
+ * <p>
  */
 @SuppressWarnings("checkstyle:visibilitymodifier")
 public class TestCliUnitConverters
