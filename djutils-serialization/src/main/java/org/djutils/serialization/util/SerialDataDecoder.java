@@ -1,16 +1,16 @@
-package org.djutils.serialization;
+package org.djutils.serialization.util;
 
 import java.io.IOException;
 
+import org.djunits.formatter.QuantityFormat;
+import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;
-import org.djunits.value.vdouble.scalar.SIScalar;
-import org.djunits.value.vdouble.scalar.base.DoubleScalar;
-import org.djunits.value.vfloat.scalar.FloatSIScalar;
-import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djutils.decoderdumper.Decoder;
 import org.djutils.logger.CategoryLogger;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.serializers.ArrayOrMatrixWithUnitSerializer;
 import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
+import org.djutils.serialization.serializers.Codec;
 import org.djutils.serialization.serializers.FixedSizeObjectSerializer;
 import org.djutils.serialization.serializers.Pointer;
 import org.djutils.serialization.serializers.Serializer;
@@ -21,11 +21,11 @@ import org.djutils.serialization.serializers.StringMatrixSerializer;
  * Decoder for inspection of serialized data. The SerialDataDecoder implements a state machine that processes one byte at a
  * time. Output is sent to the buffer (a StringBuilder).
  * <p>
- * Copyright (c) 2013-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2013-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * <p>
+ * @author Alexander Verbraeck
+ * @author Peter Knoppers
  */
 public class SerialDataDecoder implements Decoder
 {
@@ -143,7 +143,7 @@ public class SerialDataDecoder implements Decoder
     private boolean processFieldTypeByte(final byte fieldType)
     {
         this.currentFieldType = fieldType;
-        this.currentSerializer = TypedObject.PRIMITIVE_DATA_DECODERS.get(this.currentFieldType);
+        this.currentSerializer = Codec.DECODERS.get(this.currentFieldType);
         if (this.currentSerializer == null)
         {
             this.buffer.append(String.format("Error: Bad field type %02x - resynchronizing", this.currentFieldType));
@@ -443,12 +443,10 @@ public class SerialDataDecoder implements Decoder
      * Append one (row) element in an array of (column) vectors.
      * @return whether the line is full or not
      * @param <U> the unit type
-     * @param <FS> the float scalar type
-     * @param <DS> the double scalar type
+     * @param <Q> the quantity type
      */
     @SuppressWarnings("unchecked")
-    private <U extends Unit<U>, FS extends FloatScalar<U, FS>,
-            DS extends DoubleScalar<U, DS>> boolean appendDjunitsVectorArrayElement()
+    private <U extends Unit<U, Q>, Q extends Quantity<Q>> boolean appendDjunitsVectorArrayElement()
     {
         boolean result = false;
         try
@@ -457,16 +455,16 @@ public class SerialDataDecoder implements Decoder
             if (this.currentFieldType == 31)
             {
                 float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
-                FloatScalar<U, FS> afs = FloatSIScalar.instantiateAnonymous(f, unit.getStandardUnit());
-                afs.setDisplayUnit(unit);
-                this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
+                Quantity<Q> quantity = unit.ofSi(f);
+                quantity.setDisplayUnit(unit);
+                this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
-                DoubleScalar<U, DS> ads = SIScalar.instantiateAnonymous(d, unit.getStandardUnit());
-                ads.setDisplayUnit(unit);
-                this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
+                Quantity<Q> quantity = unit.ofSi(d);
+                quantity.setDisplayUnit(unit);
+                this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
         }
         catch (Exception e)
@@ -501,11 +499,10 @@ public class SerialDataDecoder implements Decoder
      * Process one element of a djunits vector or array.
      * @return whether the line is full or not
      * @param <U> the unit type
-     * @param <FS> the float scalar type
-     * @param <DS> the double scalar type
+     * @param <Q> the quantity type
      */
     @SuppressWarnings("unchecked")
-    private <U extends Unit<U>, FS extends FloatScalar<U, FS>, DS extends DoubleScalar<U, DS>> boolean appendDjunitsElement()
+    private <U extends Unit<U, Q>, Q extends Quantity<Q>> boolean appendDjunitsElement()
     {
         boolean result = false;
         try
@@ -513,16 +510,16 @@ public class SerialDataDecoder implements Decoder
             if (this.dataElementBytes.length == 4)
             {
                 float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
-                FloatScalar<U, FS> afs = FloatSIScalar.instantiateAnonymous(f, this.displayUnit.getStandardUnit());
-                afs.setDisplayUnit((U) this.displayUnit);
-                this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
+                Q quantity = (Q) this.displayUnit.ofSi(f);
+                quantity.setDisplayUnit((U) this.displayUnit);
+                this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
-                DoubleScalar<U, DS> ads = SIScalar.instantiateAnonymous(d, this.displayUnit.getStandardUnit());
-                ads.setDisplayUnit((U) this.displayUnit);
-                this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
+                Q quantity = (Q) this.displayUnit.ofSi(d);
+                quantity.setDisplayUnit((U) this.displayUnit);
+                this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
         }
         catch (Exception e)
