@@ -23,8 +23,7 @@ public interface TextSerializer<T>
      * {@code null} values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a
      * missing tag in an XML-file, etc.
      * @param value the value to serialize, may be {@code null}
-     * @return a string representation of the value that can later be deserialized, or {@code null}to denote a missing
-     *         value
+     * @return a string representation of the value that can later be deserialized, or {@code null}to denote a missing value
      */
     String serialize(T value);
 
@@ -166,8 +165,8 @@ public interface TextSerializer<T>
      * @param serializer serializer
      * @param text value, may be {@code null}
      * @param column columns
-     * @return deserialized value, may be {@code null} when a value was not specified in the source for which the
-     *         deserializer was called
+     * @return deserialized value, may be {@code null} when a value was not specified in the source for which the deserializer
+     *         was called
      */
     @SuppressWarnings("unchecked")
     static <T> T deserialize(final TextSerializer<?> serializer, final String text, final Column<?> column)

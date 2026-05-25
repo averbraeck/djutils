@@ -83,7 +83,7 @@ public abstract class Table implements Iterable<Row>, Identifiable
      * Return a specific column.
      * @param columnNumber number of the column.
      * @return column.
-     * @throws IllegalArgumentException if the column number is &lt; 0 or &gt; {@code getNumberOfColumns() - 1}. 
+     * @throws IllegalArgumentException if the column number is &lt; 0 or &gt; {@code getNumberOfColumns() - 1}.
      */
     public Column<?> getColumn(final int columnNumber)
     {
@@ -144,7 +144,7 @@ public abstract class Table implements Iterable<Row>, Identifiable
         }
         return headers;
     }
-    
+
     /**
      * Return the column descriptions as a String[].
      * @return String[] the column headers
@@ -159,7 +159,7 @@ public abstract class Table implements Iterable<Row>, Identifiable
         }
         return descriptions;
     }
-    
+
     /**
      * Return the column data types as a Class&lt;?&gt;[].
      * @return Class&lt;?&gt;[] the column data types
@@ -174,7 +174,7 @@ public abstract class Table implements Iterable<Row>, Identifiable
         }
         return dataTypes;
     }
-    
+
     /**
      * Return the column data types as a String[]. Each data type is presented as the full class name or the primitive name. In
      * case of an array, the result is preceded by an "[" for each dimension. After one or more "[" symbols, the class name is
@@ -194,7 +194,7 @@ public abstract class Table implements Iterable<Row>, Identifiable
         }
         return dataTypes;
     }
-    
+
     /**
      * Returns whether the table is empty.
      * @return whether the table is empty

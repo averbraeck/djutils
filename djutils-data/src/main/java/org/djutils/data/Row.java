@@ -17,7 +17,7 @@ public class Row
 
     /** Table. */
     private final Table table;
-    
+
     /** Values. */
     private final Object[] values;
 
@@ -53,7 +53,7 @@ public class Row
     {
         return this.values[this.table.getColumnNumber(id)];
     }
-    
+
     /**
      * Returns the column value in this row.
      * @param columnNumber column number.
@@ -63,7 +63,7 @@ public class Row
     {
         return this.values[columnNumber];
     }
-    
+
     /**
      * Returns the column values of this record in the natural order of the columns.
      * @return the column value in this record
@@ -72,7 +72,7 @@ public class Row
     {
         return this.values;
     }
-    
+
     @Override
     public int hashCode()
     {

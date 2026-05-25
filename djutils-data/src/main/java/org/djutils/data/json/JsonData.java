@@ -144,9 +144,10 @@ public final class JsonData
                 jw.setIndent("");
                 for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
                 {
-                    jw.beginObject().name(String.valueOf(i))
-                            .value(TextSerializer.serialize(serializers[i], values[i]))
-                            .endObject();
+                    jw.beginObject()
+                        .name(String.valueOf(i))
+                        .value(TextSerializer.serialize(serializers[i], values[i]))
+                        .endObject();
                 }
                 jw.endArray(); // record
                 jw.setIndent("  ");
@@ -249,18 +250,14 @@ public final class JsonData
             {
                 ListTable listTable = new ListTable(tableProperties[0], tableProperties[1], columns);
                 table = listTable;
-                unserializableTable = (
-                        data
-                ) -> listTable.addRow(data);
+                unserializableTable = (data) -> listTable.addRow(data);
             }
             else
             {
                 // fallback
                 ListTable listTable = new ListTable(tableProperties[0], tableProperties[1], columns);
                 table = listTable;
-                unserializableTable = (
-                        data
-                ) -> listTable.addRow(data);
+                unserializableTable = (data) -> listTable.addRow(data);
             }
 
             // obtain the serializers

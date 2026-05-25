@@ -60,26 +60,22 @@ public class TestTextSerializers
         float f = 11.4f;
         serializer = TextSerializer.resolve(float.class);
         column = new Column<>("c", "d", float.class, "");
-        assertEquals(Float.valueOf(f),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, f), column));
+        assertEquals(Float.valueOf(f), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, f), column));
 
         long l = 100_456_678L;
         serializer = TextSerializer.resolve(long.class);
         column = new Column<>("c", "d", long.class, "");
-        assertEquals(Long.valueOf(l),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, l), column));
+        assertEquals(Long.valueOf(l), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, l), column));
 
         short s = (short) 12.34;
         serializer = TextSerializer.resolve(short.class);
         column = new Column<>("c", "d", short.class, "");
-        assertEquals(Short.valueOf(s),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, s), column));
+        assertEquals(Short.valueOf(s), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, s), column));
 
         byte b = (byte) 67;
         serializer = TextSerializer.resolve(byte.class);
         column = new Column<>("c", "d", byte.class, "");
-        assertEquals(Byte.valueOf(b),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, b), column));
+        assertEquals(Byte.valueOf(b), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, b), column));
 
         char c = 'a';
         serializer = TextSerializer.resolve(char.class);
@@ -116,26 +112,22 @@ public class TestTextSerializers
         float f = 11.4f;
         serializer = TextSerializer.resolve(Float.class);
         column = new Column<>("c", "d", Float.class, "");
-        assertEquals(Float.valueOf(f),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, f), column));
+        assertEquals(Float.valueOf(f), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, f), column));
 
         long l = 100_456_678L;
         serializer = TextSerializer.resolve(Long.class);
         column = new Column<>("c", "d", Long.class, "");
-        assertEquals(Long.valueOf(l),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, l), column));
+        assertEquals(Long.valueOf(l), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, l), column));
 
         short s = (short) 12.34;
         serializer = TextSerializer.resolve(Short.class);
         column = new Column<>("c", "d", Short.class, "");
-        assertEquals(Short.valueOf(s),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, s), column));
+        assertEquals(Short.valueOf(s), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, s), column));
 
         byte b = (byte) 67;
         serializer = TextSerializer.resolve(Byte.class);
         column = new Column<>("c", "d", Byte.class, "");
-        assertEquals(Byte.valueOf(b),
-                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, b), column));
+        assertEquals(Byte.valueOf(b), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, b), column));
 
         char c = 'a';
         serializer = TextSerializer.resolve(Character.class);
@@ -192,8 +184,8 @@ public class TestTextSerializers
         TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
         Column<?> lengthColumn = new Column<>("c", "d", Length.class, "m");
         Length length = Length.of(10.0, "m");
-        assertEquals(length, TextSerializer.deserialize(lengthSerializer,
-                TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
 
         TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(Length.class);
         Column<?> floatLengthColumn = new Column<>("c", "d", Length.class, "m");
@@ -289,15 +281,15 @@ public class TestTextSerializers
 
         TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
         Column<?> lengthColumn = new Column<>("c", "d", Length.class, "m");
-        assertNull(TextSerializer.deserialize(lengthSerializer,
-                TextSerializer.serialize(lengthSerializer, null), lengthColumn));
+        assertNull(
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, null), lengthColumn));
         assertNull(TextSerializer.deserialize(lengthSerializer, "", lengthColumn));
         assertNull(TextSerializer.deserialize(lengthSerializer, null, lengthColumn));
 
         TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(Length.class);
         Column<?> floatLengthColumn = new Column<>("c", "d", Length.class, "m");
-        assertNull(TextSerializer.deserialize(floatLengthSerializer,
-                TextSerializer.serialize(floatLengthSerializer, null), floatLengthColumn));
+        assertNull(TextSerializer.deserialize(floatLengthSerializer, TextSerializer.serialize(floatLengthSerializer, null),
+                floatLengthColumn));
         assertNull(TextSerializer.deserialize(floatLengthSerializer, "", lengthColumn));
         assertNull(TextSerializer.deserialize(floatLengthSerializer, null, lengthColumn));
 
@@ -370,11 +362,11 @@ public class TestTextSerializers
         Time time = new Time(10.0, Duration.Unit.day, Time.Reference.UNIX);
         AbsQuantitySerializer<Time, Duration, Time.Reference> timeSerializer = new AbsQuantitySerializer<>();
         assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time)));
-        
+
         // repeat to test caching
         time = new Time(12.0, Duration.Unit.s, Time.Reference.UNIX);
         assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time)));
-        
+
         // check other reference
         time = new Time(100.0, Duration.Unit.wk, Time.Reference.GREGORIAN);
         assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time)));
@@ -400,13 +392,13 @@ public class TestTextSerializers
         TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
         Column<Length> lengthColumn = new Column<>("c", "d", Length.class, "km");
         Length length = new Length(30.0, Length.Unit.m);
-        assertEquals(length, TextSerializer.deserialize(lengthSerializer,
-                TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
         length = new Length(20.0, Length.Unit.km);
-        assertEquals(length, TextSerializer.deserialize(lengthSerializer,
-                TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
         length = new Length(Math.PI, Length.Unit.mi);
-        assertEquals(length, TextSerializer.deserialize(lengthSerializer,
-                TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
     }
 }

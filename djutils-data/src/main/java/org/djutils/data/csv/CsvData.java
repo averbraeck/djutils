@@ -136,8 +136,11 @@ public final class CsvData
         CsvWriter csvMetaWriter = null;
         try
         {
-            csvMetaWriter = CsvWriter.builder().fieldSeparator(separator).quoteCharacter(quotechar).lineDelimiter(lineDelimiter)
-                    .build(metaWriter);
+            csvMetaWriter = CsvWriter.builder()
+                .fieldSeparator(separator)
+                .quoteCharacter(quotechar)
+                .lineDelimiter(lineDelimiter)
+                .build(metaWriter);
             csvMetaWriter.writeRow("id", "description", "className", "unit");
             csvMetaWriter.writeRow(table.getId(), table.getDescription(), table.getClass().getName(), "");
             for (Column<?> column : table.getColumns())
@@ -188,8 +191,11 @@ public final class CsvData
         CsvWriter csvWriter = null;
         try
         {
-            csvWriter = CsvWriter.builder().fieldSeparator(separator).quoteCharacter(quotechar).lineDelimiter(lineDelimiter)
-                    .build(writer);
+            csvWriter = CsvWriter.builder()
+                .fieldSeparator(separator)
+                .quoteCharacter(quotechar)
+                .lineDelimiter(lineDelimiter)
+                .build(writer);
             csvWriter.writeRow(table.getColumnIds());
             String[] textFields = new String[table.getNumberOfColumns()];
             for (Row row : table)
