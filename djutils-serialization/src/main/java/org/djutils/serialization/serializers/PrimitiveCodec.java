@@ -21,7 +21,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     private final int dataSize;
 
     /**
-     * Construct the FixedSizeObjectCodec.
+     * Construct a PrimitiveCodec.
      * @param fieldType the field type as defined by the {@link FieldTypes} class
      * @param serializedDataSize number of bytes required for the serialized object
      */
