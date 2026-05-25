@@ -86,8 +86,12 @@ public class TestPolynomialRoots2
                         for (Complex root : roots)
                         {
                             // System.out.print(" " + root);
-                            Complex result = root.times(root).times(root).times(a).plus(root.times(root).times(b))
-                                    .plus(root.times(c)).plus(d);
+                            Complex result = root.times(root)
+                                .times(root)
+                                .times(a)
+                                .plus(root.times(root).times(b))
+                                .plus(root.times(c))
+                                .plus(d);
                             double margin = Math.max(root.norm() / 1e6, 1E-300);
                             assertEquals(0, result.re, margin, "root is a root of the equation; re");
                             assertEquals(0, result.im, margin, "root is a root of the equation; im");
@@ -126,14 +130,19 @@ public class TestPolynomialRoots2
                             {
                                 // System.out.print(" " + root);
                                 // TODO compute result with less chance of loss of precision
-                                Complex result = root.times(root).times(root).times(root).times(a)
-                                        .plus(root.times(root).times(root).times(b)).plus(root.times(root).times(c))
-                                        .plus(root.times(d)).plus(e);
+                                Complex result = root.times(root)
+                                    .times(root)
+                                    .times(root)
+                                    .times(a)
+                                    .plus(root.times(root).times(root).times(b))
+                                    .plus(root.times(root).times(c))
+                                    .plus(root.times(d))
+                                    .plus(e);
                                 double margin = Math.max(root.norm() / 2e5, 1E-300);
-                                assertEquals(0, result.re, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                                + " = 0 : root is a root of the equation; re");
-                                assertEquals(0, result.im, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                                + " = 0 : root is a root of the equation; im");
+                                assertEquals(0, result.re, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + "
+                                        + e + " = 0 : root is a root of the equation; re");
+                                assertEquals(0, result.im, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + "
+                                        + e + " = 0 : root is a root of the equation; im");
                             }
                             // System.out.println();
                         }
@@ -167,8 +176,12 @@ public class TestPolynomialRoots2
                         for (Complex root : roots)
                         {
                             // System.out.print(" " + root);
-                            Complex result = root.times(root).times(root).times(a).plus(root.times(root).times(b))
-                                    .plus(root.times(c)).plus(d);
+                            Complex result = root.times(root)
+                                .times(root)
+                                .times(a)
+                                .plus(root.times(root).times(b))
+                                .plus(root.times(c))
+                                .plus(d);
                             double margin = Math.max(root.norm() / 1e6, 1E-300);
                             assertEquals(0, result.re, margin, "root is a root of the equation; re");
                             assertEquals(0, result.im, margin, "root is a root of the equation; im");
@@ -207,14 +220,19 @@ public class TestPolynomialRoots2
                             {
                                 // System.out.print(" " + root);
                                 // TODO compute result with less chance of loss of precision
-                                Complex result = root.times(root).times(root).times(root).times(a)
-                                        .plus(root.times(root).times(root).times(b)).plus(root.times(root).times(c))
-                                        .plus(root.times(d)).plus(e);
+                                Complex result = root.times(root)
+                                    .times(root)
+                                    .times(root)
+                                    .times(a)
+                                    .plus(root.times(root).times(root).times(b))
+                                    .plus(root.times(root).times(c))
+                                    .plus(root.times(d))
+                                    .plus(e);
                                 double margin = Math.max(root.norm() / 2e5, 1E-300);
-                                assertEquals(0, result.re, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                                + " = 0 : root is a root of the equation; re");
-                                assertEquals(0, result.im, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                                + " = 0 : root is a root of the equation; im");
+                                assertEquals(0, result.re, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + "
+                                        + e + " = 0 : root is a root of the equation; re");
+                                assertEquals(0, result.im, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + "
+                                        + e + " = 0 : root is a root of the equation; im");
                             }
                             // System.out.println();
                         }
@@ -248,8 +266,12 @@ public class TestPolynomialRoots2
                         for (Complex root : roots)
                         {
                             // System.out.print(" " + root);
-                            Complex result = root.times(root).times(root).times(a).plus(root.times(root).times(b))
-                                    .plus(root.times(c)).plus(d);
+                            Complex result = root.times(root)
+                                .times(root)
+                                .times(a)
+                                .plus(root.times(root).times(b))
+                                .plus(root.times(c))
+                                .plus(d);
                             double margin = Math.max(root.norm() / 1e4, 1E-3);
                             String eq = a + " x^3 + " + b + " x^2 + " + c + " x + " + d + " = 0";
                             assertEquals(0, result.re, margin, eq + ", root=" + root + ", result=" + result + "; re");

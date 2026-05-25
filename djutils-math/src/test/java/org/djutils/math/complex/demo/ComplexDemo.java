@@ -60,7 +60,7 @@ public final class ComplexDemo
         System.out.println("re=" + z.re + ", im=" + z.im + ", getRe:" + z.getRe() + ", getIm:" + z.getIm() + ", norm:"
                 + z.norm() + ", phi:" + z.phi());
     }
-    
+
     /**
      * Constants.
      */
@@ -72,7 +72,7 @@ public final class ComplexDemo
         System.out.println("I=" + Complex.I);
         System.out.println("MINUS_I=" + Complex.MINUS_I);
     }
-    
+
     /**
      * Binary operations.
      */
@@ -118,5 +118,5 @@ public final class ComplexDemo
         System.out.println(ComplexMath.acosh(z));
         System.out.println(ComplexMath.atanh(z));
     }
-    
+
 }

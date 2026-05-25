@@ -197,8 +197,8 @@ public class AngleUtilTest
                     {
                         if (Math.abs(check1) > 0.00001 && Math.abs(check2) > 0.00001)
                         {
-                            assertEquals(fraction / (1 - fraction), check1 / check2,
-                                    0.0001, "angle should be divided in parts with ratio fraction");
+                            assertEquals(fraction / (1 - fraction), check1 / check2, 0.0001,
+                                    "angle should be divided in parts with ratio fraction");
                         }
                     }
                     else

@@ -20,7 +20,7 @@ public final class SuperScript
 {
     /** The translation map. */
     private final Map<Character, Character> translate;
-    
+
     /**
      * Create the SuperScript converter.
      */

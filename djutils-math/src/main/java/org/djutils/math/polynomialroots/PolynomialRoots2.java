@@ -300,16 +300,16 @@ public final class PolynomialRoots2
             }
             while (s1 != 0 && s2 != 0 && s1 == s2);
             root1 = rootBisection(args, min, max, 0.0);
-//            if (Double.isNaN(root1))
-//            {
-//                throw new RuntimeException(
-//                        String.format("cannot find first root for %fx^3 + %fx^2 + %fx + %f = 0", a, b, c, d));
-//            }
-//            if (Math.abs(f(args, root1)) > 1E-6)
-//            {
-//                throw new RuntimeException(String.format("f(first root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0, but %f]", a, b,
-//                        c, d, f(args, root1)));
-//            }
+            // if (Double.isNaN(root1))
+            // {
+            // throw new RuntimeException(
+            // String.format("cannot find first root for %fx^3 + %fx^2 + %fx + %f = 0", a, b, c, d));
+            // }
+            // if (Math.abs(f(args, root1)) > 1E-6)
+            // {
+            // throw new RuntimeException(String.format("f(first root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0, but %f]", a, b,
+            // c, d, f(args, root1)));
+            // }
         }
 
         /*-
@@ -320,16 +320,16 @@ public final class PolynomialRoots2
          */
 
         Complex[] rootsQuadaratic = quadraticRoots(a, b + root1 * a, c + root1 * (b + root1 * a));
-//        if (Math.abs(f(args, rootsQuadaratic[0]).norm()) > 1E-6)
-//        {
-//            throw new RuntimeException(String.format("f(second root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0], but %f", a, b, c,
-//                    d, f(args, root1)));
-//        }
-//        if (Math.abs(f(args, rootsQuadaratic[1]).norm()) > 1E-6)
-//        {
-//            throw new RuntimeException(String.format("f(second root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0], but %f", a, b, c,
-//                    d, f(args, root1)));
-//        }
+        // if (Math.abs(f(args, rootsQuadaratic[0]).norm()) > 1E-6)
+        // {
+        // throw new RuntimeException(String.format("f(second root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0], but %f", a, b, c,
+        // d, f(args, root1)));
+        // }
+        // if (Math.abs(f(args, rootsQuadaratic[1]).norm()) > 1E-6)
+        // {
+        // throw new RuntimeException(String.format("f(second root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0], but %f", a, b, c,
+        // d, f(args, root1)));
+        // }
 
         return new Complex[] {new Complex(root1), rootsQuadaratic[0], rootsQuadaratic[1]};
     }
@@ -394,10 +394,14 @@ public final class PolynomialRoots2
         }
         Complex C = ComplexMath.cbrt(s);
         Complex x1 = C.plus(b).plus((C.reciprocal().times(D0))).times(-1.0 / (3.0 * a));
-        Complex x2 = C.rotate(Math.toRadians(120.0)).plus(b).plus((C.rotate(Math.toRadians(120.0)).reciprocal().times(D0)))
-                .times(-1.0 / (3.0 * a));
-        Complex x3 = C.rotate(Math.toRadians(-120.0)).plus(b).plus((C.rotate(Math.toRadians(-120.0)).reciprocal().times(D0)))
-                .times(-1.0 / (3.0 * a));
+        Complex x2 = C.rotate(Math.toRadians(120.0))
+            .plus(b)
+            .plus((C.rotate(Math.toRadians(120.0)).reciprocal().times(D0)))
+            .times(-1.0 / (3.0 * a));
+        Complex x3 = C.rotate(Math.toRadians(-120.0))
+            .plus(b)
+            .plus((C.rotate(Math.toRadians(-120.0)).reciprocal().times(D0)))
+            .times(-1.0 / (3.0 * a));
         return new Complex[] {x1, x2, x3};
     }
 
@@ -509,8 +513,7 @@ public final class PolynomialRoots2
      * Polynomial root finder using the Durand-Kerner method, with complex coefficients for the polynomial equation. Own
      * implementation. See <a href="https://en.wikipedia.org/wiki/Durand%E2%80%93Kerner_method">
      * https://en.wikipedia.org/wiki/Durand%E2%80%93Kerner_method</a> for brief information.
-     * @param a the complex factors of the polynomial, where the index i indicate the factor for x^i, so the
-     *            polynomial is<br>
+     * @param a the complex factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
      *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
      * @return Complex[] all roots of the equation, where real roots are coded with Im = 0
      */
@@ -580,8 +583,7 @@ public final class PolynomialRoots2
      * Polynomial root finder using the Aberth-Ehrlich method or Aberth method, with complex coefficients for the polynomial
      * equation. Own implementation. See <a href="https://en.wikipedia.org/wiki/Aberth_method">
      * https://en.wikipedia.org/wiki/Aberth_method</a> for brief information.
-     * @param a the complex factors of the polynomial, where the index i indicate the factor for x^i, so the
-     *            polynomial is<br>
+     * @param a the complex factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
      *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
      * @return Complex[] all roots of the equation, where real roots are coded with Im = 0
      */

@@ -85,7 +85,7 @@ public class Product implements MathFunction
         }
         Collections.sort(result);
         // Aggregate all Constant functions and scale factors together and multiply their values
-        // Merge all functions that can be merged 
+        // Merge all functions that can be merged
         for (int index = 0; index < result.size(); index++)
         {
             MathFunction function = result.get(index);
@@ -255,11 +255,11 @@ public class Product implements MathFunction
         }
         return result;
     }
-    
+
     @Override
     public SortedSet<Double> getKnots(final Interval<?> interval)
     {
-        SortedSet<Double> result = new TreeSet<>(); 
+        SortedSet<Double> result = new TreeSet<>();
         for (MathFunction factor : this.factors)
         {
             result.addAll(factor.getKnots(interval));

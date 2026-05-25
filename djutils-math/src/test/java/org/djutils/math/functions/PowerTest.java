@@ -259,7 +259,7 @@ public class PowerTest
         assertEquals(2, knots.size(), "two knots");
         assertEquals(0.5, knots.first(), "first knot at 0.5");
         assertEquals(1.0, knots.last(), "last knot at 1.0");
-        
+
     }
 
     /**

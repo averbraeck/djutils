@@ -231,7 +231,7 @@ public class ConcatenationTest
         {
             // Ignore expected exception
         }
-        
+
         assertTrue(c.equals(c), "equal to itself");
     }
 }

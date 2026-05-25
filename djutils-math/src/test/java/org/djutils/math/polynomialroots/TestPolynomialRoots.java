@@ -25,7 +25,7 @@ public class TestPolynomialRoots
     @Test
     public void quadraticTest()
     {
-        double[] paramValues = new double[] { 0, 1, 2, 3, 4, Math.PI, -Math.E, 0.0001, 10000 };
+        double[] paramValues = new double[] {0, 1, 2, 3, 4, Math.PI, -Math.E, 0.0001, 10000};
         for (double a : paramValues)
         {
             for (double b : paramValues)
@@ -68,7 +68,7 @@ public class TestPolynomialRoots
     @Test
     public void cubicTest()
     {
-        double[] paramValues = new double[] { 0, 1, 2, 3, 4, Math.PI, -Math.E, 0.001, 1000 };
+        double[] paramValues = new double[] {0, 1, 2, 3, 4, Math.PI, -Math.E, 0.001, 1000};
         for (double a : paramValues)
         {
             for (double b : paramValues)
@@ -86,8 +86,12 @@ public class TestPolynomialRoots
                         for (Complex root : roots)
                         {
                             // System.out.print(" " + root);
-                            Complex result = root.times(root).times(root).times(a).plus(root.times(root).times(b))
-                                    .plus(root.times(c)).plus(d);
+                            Complex result = root.times(root)
+                                .times(root)
+                                .times(a)
+                                .plus(root.times(root).times(b))
+                                .plus(root.times(c))
+                                .plus(d);
                             double margin = root.norm() / 1e6;
                             assertEquals(0, result.re, margin, "root is a root of the equation; re");
                             assertEquals(0, result.im, margin, "root is a root of the equation; im");
@@ -105,7 +109,7 @@ public class TestPolynomialRoots
     @Test
     public void quarticTest()
     {
-        double[] paramValues = new double[] { 0, 1, 2, 3, 4, Math.PI, -Math.E, 0.01, 100 };
+        double[] paramValues = new double[] {0, 1, 2, 3, 4, Math.PI, -Math.E, 0.01, 100};
         for (double a : paramValues)
         {
             for (double b : paramValues)
@@ -126,9 +130,14 @@ public class TestPolynomialRoots
                             {
                                 // System.out.print(" " + root);
                                 // TODO compute result with less chance of loss of precision
-                                Complex result = root.times(root).times(root).times(root).times(a)
-                                        .plus(root.times(root).times(root).times(b)).plus(root.times(root).times(c))
-                                        .plus(root.times(d)).plus(e);
+                                Complex result = root.times(root)
+                                    .times(root)
+                                    .times(root)
+                                    .times(a)
+                                    .plus(root.times(root).times(root).times(b))
+                                    .plus(root.times(root).times(c))
+                                    .plus(root.times(d))
+                                    .plus(e);
                                 double margin = root.norm() / 2e5;
                                 assertEquals(0, result.re, margin, "root is a root of the equation; re");
                                 assertEquals(0, result.im, margin, "root is a root of the equation; im");

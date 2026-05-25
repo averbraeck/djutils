@@ -73,7 +73,7 @@ public final class PerformanceTests
         durationNanos = nowNanos - startNanos - baseNanos;
         System.out.println(String.format("             Math.hypot: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
-        
+
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
@@ -85,7 +85,7 @@ public final class PerformanceTests
         durationNanos = nowNanos - startNanos - baseNanos;
         System.out.println(String.format("PerformanceTests.hypotA: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
-        
+
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
@@ -97,7 +97,7 @@ public final class PerformanceTests
         durationNanos = nowNanos - startNanos - baseNanos;
         System.out.println(String.format("PerformanceTests.hypotB: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
-        
+
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
@@ -109,7 +109,7 @@ public final class PerformanceTests
         durationNanos = nowNanos - startNanos - baseNanos;
         System.out.println(String.format("PerformanceTests.hypotC: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
-       
+
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
@@ -121,7 +121,7 @@ public final class PerformanceTests
         durationNanos = nowNanos - startNanos - baseNanos;
         System.out.println(String.format("          Complex.hypot: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
-  
+
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
@@ -132,7 +132,7 @@ public final class PerformanceTests
         durationNanos = nowNanos - startNanos - baseNanos;
         System.out.println(String.format("               Math.sin: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
-   
+
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
@@ -142,8 +142,8 @@ public final class PerformanceTests
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos - baseNanos;
         System.out.println(String.format("               Math.cos: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
-                durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));  
-   
+                durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
+
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
@@ -153,8 +153,8 @@ public final class PerformanceTests
         }
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos - baseNanos;
-        System.out.println(String.format("     Math.sqrt(x*x+y*y): %d invocations in %.6f s (%.1f ns/invocation)",
-                iterations, durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
+        System.out.println(String.format("     Math.sqrt(x*x+y*y): %d invocations in %.6f s (%.1f ns/invocation)", iterations,
+                durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
     }
 
     /** 2^450. */
@@ -227,11 +227,10 @@ public final class PerformanceTests
      * <b>hypot</b>.
      * @param px x
      * @param py y
-     * @return sqrt(x*x +y*y) without intermediate overflow or underflow.
-     * Note {@link Math#hypot} is unnecessarily slow. This returns the identical result to Math.hypot with reasonable run times
-     *       (~40 nsec vs. 800 nsec).
-     *       The logic for computing z is copied from "Freely Distributable Math Library" fdlibm's e_hypot.c. This minimizes
-     *       rounding error to provide 1 ulb accuracy.
+     * @return sqrt(x*x +y*y) without intermediate overflow or underflow. Note {@link Math#hypot} is unnecessarily slow. This
+     *         returns the identical result to Math.hypot with reasonable run times (~40 nsec vs. 800 nsec). The logic for
+     *         computing z is copied from "Freely Distributable Math Library" fdlibm's e_hypot.c. This minimizes rounding error
+     *         to provide 1 ulb accuracy.
      */
     public static double hypotB(final double px, final double py)
     {
@@ -298,14 +297,16 @@ public final class PerformanceTests
             return Math.scalb(z, bias);
         }
     }
-    
+
     /** Precision limit. */
     private static final double EPSILONSQRT = Math.sqrt(Math.ulp(1.0) / 2);
+
     /** Square root of smallest floating point value. */
     private static final double SQRT_OF_MIN_VALUE = Math.sqrt(Double.MIN_VALUE);
+
     /** Square root of biggest floating point value. */
     private static final double SQRT_OF_MAX_VALUE = Math.sqrt(Double.MAX_VALUE);
-    
+
     /**
      * Better implementation of the hypotenuse function (faster and more accurate than the one in the java Math library). <br>
      * Derived from <a href="https://arxiv.org/abs/1904.09481">An improved algorithm for hypot(a, b) by Carlos F. Borges</a>.

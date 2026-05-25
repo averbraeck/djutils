@@ -30,7 +30,7 @@ public class KnotReportTest
         assertFalse(KnotReport.KNOWN_INFINITE.isFinite(), "infinite");
         assertTrue(KnotReport.NONE.isFinite(), "is zero (therefore finite)");
         assertFalse(KnotReport.UNKNOWN.isFinite(), "not known is not finite");
-        
+
         assertEquals(KnotReport.NONE, KnotReport.NONE.combineWith(KnotReport.NONE));
         assertEquals(KnotReport.KNOWN_FINITE, KnotReport.NONE.combineWith(KnotReport.KNOWN_FINITE));
         assertEquals(KnotReport.KNOWN_INFINITE, KnotReport.NONE.combineWith(KnotReport.KNOWN_INFINITE));

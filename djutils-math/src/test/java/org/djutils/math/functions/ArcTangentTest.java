@@ -107,7 +107,7 @@ public class ArcTangentTest
                 "no knots");
         assertEquals(0,
                 at1.getKnots(new Interval<String>(Double.NEGATIVE_INFINITY, true, Double.POSITIVE_INFINITY, true, "string"))
-                        .size(),
+                    .size(),
                 "no knots");
         assertEquals(KnotReport.UNKNOWN,
                 new ArcTangent(new Power(1, 2), 1, 1).getKnotReport(new Interval<String>(0, true, 1, true, "string")),

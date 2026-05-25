@@ -64,7 +64,7 @@ public final class PolynomialRoots
      */
     public static Complex[] linearRoots(final double q0)
     {
-        return new Complex[] { new Complex(-q0, 0) };
+        return new Complex[] {new Complex(-q0, 0)};
     }
 
     /**
@@ -120,14 +120,14 @@ public final class PolynomialRoots
         if (q0 == 0.0 && q1 == 0.0)
         {
             // Two real roots at 0,0
-            return new Complex[] { Complex.ZERO, Complex.ZERO };
+            return new Complex[] {Complex.ZERO, Complex.ZERO};
         }
         else if (q0 == 0.0)
         {
             // Two real roots; one of these is 0,0
             // x^2 + q1 * x == x * (x + q1)
             Complex nonZeroRoot = new Complex(-q1);
-            return new Complex[] { q1 > 0 ? Complex.ZERO : nonZeroRoot, q1 <= 0 ? nonZeroRoot : Complex.ZERO };
+            return new Complex[] {q1 > 0 ? Complex.ZERO : nonZeroRoot, q1 <= 0 ? nonZeroRoot : Complex.ZERO};
         }
         else if (q1 == 0.0)
         {
@@ -136,12 +136,12 @@ public final class PolynomialRoots
             if (q0 < 0.0)
             {
                 // Two real roots, symmetrically around 0
-                return new Complex[] { new Complex(x, 0), new Complex(-x, 0) };
+                return new Complex[] {new Complex(x, 0), new Complex(-x, 0)};
             }
             else
             {
                 // Two complex roots, symmetrically around 0
-                return new Complex[] { new Complex(0, x), new Complex(0, -x) };
+                return new Complex[] {new Complex(0, x), new Complex(0, -x)};
             }
         }
         else
@@ -211,7 +211,7 @@ public final class PolynomialRoots
                 {
                     z = a0 / y;
                 }
-                return new Complex[] { new Complex(Math.max(y, z), 0), new Complex(Math.min(y, z), 0) };
+                return new Complex[] {new Complex(Math.max(y, z), 0), new Complex(Math.min(y, z), 0)};
             }
             else
             {
@@ -223,7 +223,7 @@ public final class PolynomialRoots
                     x *= k;
                     y *= k;
                 }
-                return new Complex[] { new Complex(-x, y), new Complex(-x, -y) };
+                return new Complex[] {new Complex(-x, y), new Complex(-x, -y)};
             }
         }
     }
@@ -427,12 +427,12 @@ public final class PolynomialRoots
         switch (cubicType)
         {
             case allzero: // 1) Only zero roots
-                return new Complex[] { Complex.ZERO, Complex.ZERO, Complex.ZERO };
+                return new Complex[] {Complex.ZERO, Complex.ZERO, Complex.ZERO};
 
             case linear: // 2) The linear equation case -> additional 2 zeros.
             {
                 double root = -a2 * k;
-                return new Complex[] { new Complex(Math.max(0.0, root), 0), Complex.ZERO, new Complex(Math.min(0.0, root), 0) };
+                return new Complex[] {new Complex(Math.max(0.0, root), 0), Complex.ZERO, new Complex(Math.min(0.0, root), 0)};
             }
 
             case quadratic: // 3) The quadratic equation case -> additional 1 zero.
@@ -444,13 +444,13 @@ public final class PolynomialRoots
                     // Three real roots
                     double xx = otherRoots[0].re * k;
                     double yy = otherRoots[1].re * k;
-                    return new Complex[] { new Complex(Math.max(xx, 0.0), 0), new Complex(Math.max(yy, Math.min(xx, 0.0)), 0),
-                            new Complex(Math.min(yy, 0.0), 0) };
+                    return new Complex[] {new Complex(Math.max(xx, 0.0), 0), new Complex(Math.max(yy, Math.min(xx, 0.0)), 0),
+                            new Complex(Math.min(yy, 0.0), 0)};
                 }
                 else
                 {
                     // One real root and two complex roots
-                    return new Complex[] { Complex.ZERO, otherRoots[0].times(k), otherRoots[1].times(k) };
+                    return new Complex[] {Complex.ZERO, otherRoots[0].times(k), otherRoots[1].times(k)};
                 }
             }
             case general:
@@ -538,7 +538,7 @@ public final class PolynomialRoots
                     {
                         x = -third * k;
                         Complex root = new Complex(x, 0);
-                        return new Complex[] { root, root, root };
+                        return new Complex[] {root, root, root};
                     }
                     else
                     {
@@ -592,7 +592,7 @@ public final class PolynomialRoots
                     {
                         x = third * k;
                         Complex root = new Complex(x, 0);
-                        return new Complex[] { root, root, root };
+                        return new Complex[] {root, root, root};
                     }
                     else
                     {
@@ -783,14 +783,14 @@ public final class PolynomialRoots
                 if (quadraticRoots[0].isReal())
                 {
                     // Three real roots
-                    return new Complex[] { new Complex(Math.max(quadraticRoots[0].re, y), 0),
+                    return new Complex[] {new Complex(Math.max(quadraticRoots[0].re, y), 0),
                             new Complex(Math.max(quadraticRoots[1].re, Math.min(quadraticRoots[0].re, y)), 0),
-                            new Complex(Math.min(quadraticRoots[1].re, y), 0) };
+                            new Complex(Math.min(quadraticRoots[1].re, y), 0)};
                 }
                 else
                 {
                     // One real root and two complex roots
-                    return new Complex[] { new Complex(y, 0), quadraticRoots[0], quadraticRoots[1] };
+                    return new Complex[] {new Complex(y, 0), quadraticRoots[0], quadraticRoots[1]};
                 }
             }
 
@@ -1011,8 +1011,8 @@ public final class PolynomialRoots
                     y = cubicRoots[1].re * k;
                     z = cubicRoots[2].re * k;
 
-                    return new Complex[] { new Complex(Math.max(x, 0), 0), new Complex(Math.max(y, Math.min(x, 0)), 0),
-                            new Complex(Math.max(z, Math.min(y, 0)), 0), new Complex(Math.min(z, 0), 0) };
+                    return new Complex[] {new Complex(Math.max(x, 0), 0), new Complex(Math.max(y, Math.min(x, 0)), 0),
+                            new Complex(Math.max(z, Math.min(y, 0)), 0), new Complex(Math.min(z, 0), 0)};
                 }
                 else
                 {
@@ -1023,8 +1023,8 @@ public final class PolynomialRoots
                     }
                     x = cubicRoots[0].re * k;
 
-                    return new Complex[] { new Complex(Math.max(0, x), 0), new Complex(Math.min(0, x), 0), cubicRoots[1],
-                            cubicRoots[2] };
+                    return new Complex[] {new Complex(Math.max(0, x), 0), new Complex(Math.min(0, x), 0), cubicRoots[1],
+                            cubicRoots[2]};
                 }
             }
 
@@ -1040,19 +1040,19 @@ public final class PolynomialRoots
                     {
                         x = Math.sqrt(x) * k;
                         y = Math.sqrt(y) * k;
-                        return new Complex[] { new Complex(x, 0), new Complex(y, 0), new Complex(-y, 0), new Complex(-x, 0) };
+                        return new Complex[] {new Complex(x, 0), new Complex(y, 0), new Complex(-y, 0), new Complex(-x, 0)};
                     }
                     else if (x >= 0.0 && y < 0.0)
                     {
                         x = Math.sqrt(x) * k;
                         y = Math.sqrt(Math.abs(y)) * k;
-                        return new Complex[] { new Complex(x, 0), new Complex(-x, 0), new Complex(0, y), new Complex(0, -y) };
+                        return new Complex[] {new Complex(x, 0), new Complex(-x, 0), new Complex(0, y), new Complex(0, -y)};
                     }
                     else if (x < 0.0)
                     {
                         x = Math.sqrt(Math.abs(x)) * k;
                         y = Math.sqrt(Math.abs(y)) * k;
-                        return new Complex[] { new Complex(0, y), new Complex(0, x), new Complex(0, -x), new Complex(0, -y) };
+                        return new Complex[] {new Complex(0, y), new Complex(0, x), new Complex(0, -x), new Complex(0, -y)};
                     }
                 }
                 else
@@ -1064,7 +1064,7 @@ public final class PolynomialRoots
                     z = Math.sqrt(x * x + y * y);
                     y = Math.sqrt(z - x) * k;
                     x = Math.sqrt(z + x) * k;
-                    return new Complex[] { new Complex(x, y), new Complex(x, -y), new Complex(-x, y), new Complex(-x, -y) };
+                    return new Complex[] {new Complex(x, y), new Complex(x, -y), new Complex(-x, y), new Complex(-x, -y)};
 
                 }
             }
@@ -1378,14 +1378,14 @@ public final class PolynomialRoots
                         t = cubicRoots[1].re; // real roots of cubic are ordered s >= t >= u
                         u = cubicRoots[2].re;
                         // Construct a new array and insert x at the appropriate place
-                        return new Complex[] { new Complex(Math.max(s, x), 0), new Complex(Math.max(t, Math.min(s, x)), 0),
-                                new Complex(Math.max(u, Math.min(t, x)), 0), new Complex(Math.min(u, x), 0) };
+                        return new Complex[] {new Complex(Math.max(s, x), 0), new Complex(Math.max(t, Math.min(s, x)), 0),
+                                new Complex(Math.max(u, Math.min(t, x)), 0), new Complex(Math.min(u, x), 0)};
                     }
                     else // there is only one real cubic root here
                     {
                         s = cubicRoots[0].re;
-                        return new Complex[] { new Complex(Math.max(s, x), 0), new Complex(Math.min(s, x), 0), cubicRoots[1],
-                                cubicRoots[2] };
+                        return new Complex[] {new Complex(Math.max(s, x), 0), new Complex(Math.min(s, x), 0), cubicRoots[1],
+                                cubicRoots[2]};
                     }
                 }
                 else
@@ -1559,15 +1559,15 @@ public final class PolynomialRoots
 
                     if (a > b)
                     {
-                        return new Complex[] { new Complex(a, c), new Complex(a, -c), new Complex(b, d), new Complex(b, -d) };
+                        return new Complex[] {new Complex(a, c), new Complex(a, -c), new Complex(b, d), new Complex(b, -d)};
                     }
                     else if (a < b)
                     {
-                        return new Complex[] { new Complex(b, d), new Complex(b, -d), new Complex(a, c), new Complex(a, -c) };
+                        return new Complex[] {new Complex(b, d), new Complex(b, -d), new Complex(a, c), new Complex(a, -c)};
                     }
                     else
                     {
-                        return new Complex[] { new Complex(a, c), new Complex(a, -c), new Complex(a, d), new Complex(a, -d) };
+                        return new Complex[] {new Complex(a, c), new Complex(a, -c), new Complex(a, d), new Complex(a, -d)};
                     }
 
                 } // # of real roots 'if'

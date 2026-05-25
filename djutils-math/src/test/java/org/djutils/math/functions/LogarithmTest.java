@@ -134,6 +134,5 @@ public class LogarithmTest
             // Ignore expected exception
         }
 
-        
     }
 }

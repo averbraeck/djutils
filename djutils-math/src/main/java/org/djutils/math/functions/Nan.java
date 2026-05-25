@@ -72,7 +72,7 @@ public final class Nan implements MathFunction
     {
         if (interval.low() == interval.high())
         {
-            SortedSet<Double> result =  new TreeSet<Double>();
+            SortedSet<Double> result = new TreeSet<Double>();
             result.add(interval.low());
             return result;
         }

@@ -44,7 +44,7 @@ public enum KnotReport
                 throw new IllegalStateException("Cannot happen");
         }
     }
-    
+
     /**
      * Combine two <code>KnotReport</code>s and return the combined knowledge.
      * @param other the other <code>KnotReport</code>
@@ -62,7 +62,7 @@ public enum KnotReport
         }
         if (this == KNOWN_FINITE || other == KNOWN_FINITE)
         {
-            return KNOWN_FINITE; 
+            return KNOWN_FINITE;
         }
         return NONE;
     }

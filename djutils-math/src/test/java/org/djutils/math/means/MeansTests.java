@@ -150,7 +150,8 @@ public class MeansTests
         am = new ArithmeticMean<Double, Double>();
         hm = new HarmonicMean<Double, Double>();
         gm = new GeometricMean<Double, Double>();
-        assertEquals(am, am.add(new ArrayList<Double>(Arrays.asList(testValues)), new ArrayList<Double>(Arrays.asList(testWeights))),
+        assertEquals(am,
+                am.add(new ArrayList<Double>(Arrays.asList(testValues)), new ArrayList<Double>(Arrays.asList(testWeights))),
                 "add returns object for method chaining");
         assertEquals(sum / sumWeights, am.getMean(), sum / sumWeights / 99999999, "arithmetic mean");
         hm.add(new ArrayList<Double>(Arrays.asList(testValues)), new ArrayList<Double>(Arrays.asList(testWeights)));

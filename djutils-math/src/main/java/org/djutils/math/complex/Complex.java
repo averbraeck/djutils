@@ -77,10 +77,9 @@ public class Complex
 
     /**
      * Compute and return the norm, or radius, or absolute value of this complex number.
-     * @return the norm, or radius, or absolute value of this complex number. Due to the fact that in this
-     *         implementation of complex numbers, all values are stored as a real an imaginary double value; the result may
-     *         overflow to Double.POSITIVE_INFINITY, even though both the real and imaginary part of the complex number can be
-     *         represented.
+     * @return the norm, or radius, or absolute value of this complex number. Due to the fact that in this implementation of
+     *         complex numbers, all values are stored as a real an imaginary double value; the result may overflow to
+     *         Double.POSITIVE_INFINITY, even though both the real and imaginary part of the complex number can be represented.
      */
     public double norm()
     {
@@ -89,11 +88,13 @@ public class Complex
 
     /** Precision limit. */
     private static final double EPSILONSQRT = Math.sqrt(Math.ulp(1.0) / 2);
+
     /** Square root of smallest floating point value. */
     private static final double SQRT_OF_MIN_VALUE = Math.sqrt(Double.MIN_VALUE);
+
     /** Square root of biggest floating point value. */
     private static final double SQRT_OF_MAX_VALUE = Math.sqrt(Double.MAX_VALUE);
-    
+
     /**
      * Better implementation of the hypotenuse function (faster and more accurate than the one in the java Math library). <br>
      * Derived from <a href="https://arxiv.org/abs/1904.09481">An improved algorithm for hypot(a, b) by Carlos F. Borges</a>.
@@ -148,9 +149,9 @@ public class Complex
 
     /**
      * Compute and return the phase or phi of this complex number.
-     * @return the phase or phi of this complex number in Radians. Due to the fact that in this implementation of
-     *         complex numbers, all values are stored as a real and imaginary value; the result of this method is always
-     *         normalized to the interval (-&pi;,&pi;].
+     * @return the phase or phi of this complex number in Radians. Due to the fact that in this implementation of complex
+     *         numbers, all values are stored as a real and imaginary value; the result of this method is always normalized to
+     *         the interval (-&pi;,&pi;].
      */
     public double phi()
     {
@@ -159,8 +160,8 @@ public class Complex
 
     /**
      * Determine if this Complex has an imaginary component of zero.
-     * @return true if the imaginary component of this Complex number is 0.0; false if the imaginary component of this
-     *         Complex number is not 0.0.
+     * @return true if the imaginary component of this Complex number is 0.0; false if the imaginary component of this Complex
+     *         number is not 0.0.
      */
     public boolean isReal()
     {
@@ -169,8 +170,8 @@ public class Complex
 
     /**
      * Determine if this Complex has a real component of zero.
-     * @return true if the real component of this Complex number is 0.0; false if the real component of this Complex
-     *         number is not 0.0
+     * @return true if the real component of this Complex number is 0.0; false if the real component of this Complex number is
+     *         not 0.0
      */
     public boolean isImaginary()
     {

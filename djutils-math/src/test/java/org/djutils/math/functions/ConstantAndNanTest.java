@@ -131,7 +131,7 @@ public class ConstantAndNanTest
         {
             // Ignore expected exception
         }
-        
+
         assertEquals(KnotReport.KNOWN_FINITE, Nan.NAN.getKnotReport(new Interval<String>(10, true, 10, true, "string")),
                 "one knots on zero width interval");
         assertEquals(1, Nan.NAN.getKnots(new Interval<String>(10, true, 10, true, "string")).size(), "one knot");

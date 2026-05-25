@@ -209,7 +209,7 @@ public class Sum implements MathFunction
     @Override
     public SortedSet<Double> getKnots(final Interval<?> interval)
     {
-        SortedSet<Double> result = new TreeSet<>(); 
+        SortedSet<Double> result = new TreeSet<>();
         for (MathFunction term : this.terms)
         {
             result.addAll(term.getKnots(interval));

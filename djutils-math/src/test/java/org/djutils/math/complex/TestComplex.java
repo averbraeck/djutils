@@ -27,7 +27,7 @@ public class TestComplex
     @Test
     public void testConstructors()
     {
-        double[] testValues = new double[] { 0, 1, 100, -1, -10000, Math.PI };
+        double[] testValues = new double[] {0, 1, 100, -1, -10000, Math.PI};
 
         for (double re : testValues)
         {
@@ -124,7 +124,7 @@ public class TestComplex
         c = a.times(c);
         assertEquals(1, c.re, 0.00001, "a * a.reciprocal re");
         assertEquals(0, c.im, 0.00001, "a * a.reciprocal im");
-        for (double angle : new double[] { 0, 0.1, 1, Math.E, Math.PI, 5, 10, -1, -5 })
+        for (double angle : new double[] {0, 0.1, 1, Math.E, Math.PI, 5, 10, -1, -5})
         {
             c = a.rotate(angle);
             assertEquals(a.norm(), c.norm(), 0.00001, "rotated a norm");
@@ -177,7 +177,7 @@ public class TestComplex
     /**
      * Test other methods.
      */
-    @SuppressWarnings({ "unlikely-arg-type" })
+    @SuppressWarnings({"unlikely-arg-type"})
     @Test
     public void testOthers()
     {
@@ -216,7 +216,7 @@ public class TestComplex
         assertEquals(Double.MIN_VALUE, Complex.hypot(0, Double.MIN_VALUE), 0, "hypot(0, Double.MIN_VALUE)");
         assertEquals(Double.MAX_VALUE / Math.sqrt(2), Complex.hypot(Double.MAX_VALUE / 2, Double.MAX_VALUE / 2),
                 Double.MAX_VALUE / 100000, "hypot(Double.MAX_VALUE / 2, Double.MAX_VALUE / 2)");
-        assertEquals(Double.MIN_VALUE * 10 *  Math.sqrt(2), Complex.hypot(Double.MIN_VALUE * 10, Double.MIN_VALUE * 10),
+        assertEquals(Double.MIN_VALUE * 10 * Math.sqrt(2), Complex.hypot(Double.MIN_VALUE * 10, Double.MIN_VALUE * 10),
                 Double.MIN_VALUE, "hypot(Double.MIN_VALUE * 10, Double.MIN_VALUE * 10)");
         assertEquals(Complex.hypot(10, 0), Complex.hypot(-10, 0), 0, "hypot is symmetrical in x");
         assertEquals(Complex.hypot(0, 10), Complex.hypot(0, -10), 0, "hypot is symmetrical in y");

@@ -229,8 +229,8 @@ public final class ComplexMath
     }
 
     /**
-     * Inverse hyperbolic tangent of a Complex operand. Derived from
-     * <a href="http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/catanh.c?rev=1.1&amp;content-type=text/plain">
+     * Inverse hyperbolic tangent of a Complex operand. Derived from <a href=
+     * "http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/catanh.c?rev=1.1&amp;content-type=text/plain">
      * NetBSD Complex catanh.c</a>.
      * @param z the operand
      * @return the result of the atanh function applied to the operand

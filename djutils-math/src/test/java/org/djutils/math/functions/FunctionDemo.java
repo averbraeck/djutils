@@ -34,8 +34,7 @@ public final class FunctionDemo
     public static void main(final String... args)
     {
         System.out.println("Build a cubic polynomial as a sum of four power functions");
-        MathFunction function =
-                new Sum(new Power(2, 3), new Power(5, 2), new Power(8, 1), new Power(3, 0));
+        MathFunction function = new Sum(new Power(2, 3), new Power(5, 2), new Power(8, 1), new Power(3, 0));
         MathFunction deriv1 = function.getDerivative();
         MathFunction deriv2 = deriv1.getDerivative();
         MathFunction deriv3 = deriv2.getDerivative();
@@ -175,8 +174,8 @@ public final class FunctionDemo
         for (int step = -10; step <= 10; step++)
         {
             double x = 0.2 * step;
-            System.out.println(String.format("x=%5.1f: f(x)=%10.5f; f'(x)=%10.5f; f''(x)=%10.5f; f'''(x)=%10.5f", x, p2.apply(x),
-                    deriv1.apply(x), deriv2.apply(x), deriv3.apply(x)));
+            System.out.println(String.format("x=%5.1f: f(x)=%10.5f; f'(x)=%10.5f; f''(x)=%10.5f; f'''(x)=%10.5f", x,
+                    p2.apply(x), deriv1.apply(x), deriv2.apply(x), deriv3.apply(x)));
         }
 
         System.out.println("show that pure cosines get print as cos and sin(x+pi) like (-sin(x))");
@@ -192,14 +191,14 @@ public final class FunctionDemo
         System.out.println("\ncreate cos(x - pi)");
         f = Sine.cosine(1, 1, -Math.PI);
         printWithSomeDerivatives(f, 6);
-        
+
         System.out.println("\narc sine");
         MathFunction a = new ArcSine(1, 3);
         printWithSomeDerivatives(a, 2);
-        
+
         a = new ArcSine(new Power(2, 1), 1, 0).scaleBy(7);
         printWithSomeDerivatives(a, 2);
-        
+
     }
 
     /**
