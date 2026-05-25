@@ -5,8 +5,9 @@ import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
 /**
- * PrimitiveArraySerializer is responsible for the serialization of 1-dimenisional arrays of primitive types, which can be
- * offered as the primitive type (e.g., <code>int[]</code> itself or as the object wrapper (e.g., <code>Integer[]</code>).
+ * PrimitiveArrayCodec is responsible for the serialization and deserialization of 1-dimensional arrays of primitive types,
+ * which can be offered as the primitive type (e.g., <code>int[]</code> itself or as the object wrapper (e.g.,
+ * <code>Integer[]</code>).
  * <p>
  * Copyright (c) 2026-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -17,11 +18,11 @@ import org.djutils.serialization.SerializationException;
  * @author Peter Knoppers
  * @author Wouter Schakel
  */
-public final class PrimitiveArraySerializer
+public final class PrimitiveArrayCodec
 {
 
     /** Static class, no constructor. */
-    private PrimitiveArraySerializer()
+    private PrimitiveArrayCodec()
     {
         // Static class, no constructor
     }

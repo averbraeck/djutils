@@ -6,8 +6,9 @@ import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
 /**
- * PrimitiveArraySerializer is responsible for the serialization of 1-dimenisional arrays of primitive types, which can be
- * offered as the primitive type (e.g., <code>int[]</code> itself or as the object wrapper (e.g., <code>Integer[]</code>).
+ * PrimitiveArrayCodec is responsible for the serialization and deserialization of 2-dimensional matrices of primitive types,
+ * which can be offered as the primitive type (e.g., <code>int[][]</code> itself or as the object wrapper (e.g.,
+ * <code>Integer[][]</code>).
  * <p>
  * Copyright (c) 2026-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -18,17 +19,17 @@ import org.djutils.serialization.SerializationException;
  * @author Peter Knoppers
  * @author Wouter Schakel
  */
-public final class PrimitiveMatrixSerializer
+public final class PrimitiveMatrixCodec
 {
 
     /** Static class, no constructor. */
-    private PrimitiveMatrixSerializer()
+    private PrimitiveMatrixCodec()
     {
         // Static class, no constructor
     }
 
     /** Converter for byte matrix. */
-    protected static final Serializer<byte[][]> CONVERT_BT_MATRIX =
+    protected static final Serializer<byte[][]> CONVERT_BYTE_MATRIX =
             new BasicPrimitiveArrayOrMatrixSerializer<byte[][]>(FieldTypes.BYTE_8_MATRIX, 1, "byte_8_matrix", 2)
             {
                 @Override
@@ -74,7 +75,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for Byte matrix. */
-    protected static final Serializer<Byte[][]> CONVERT_BYTE_MATRIX =
+    protected static final Serializer<Byte[][]> CONVERT_BYTE_OBJECT_MATRIX =
             new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, Byte.class, "Byte_8_matrix")
             {
                 @Override
@@ -92,7 +93,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for short matrix. */
-    protected static final Serializer<short[][]> CONVERT_SHRT_MATRIX =
+    protected static final Serializer<short[][]> CONVERT_SHORT_MATRIX =
             new BasicPrimitiveArrayOrMatrixSerializer<short[][]>(FieldTypes.SHORT_16_MATRIX, 2, "short_16_matrix", 2)
             {
                 @Override
@@ -138,7 +139,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for Short matrix. */
-    protected static final Serializer<Short[][]> CONVERT_SHORT_MATRIX =
+    protected static final Serializer<Short[][]> CONVERT_SHORT_OBJECT_MATRIX =
             new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, Short.class, "Short_16_matrix")
             {
                 @Override
@@ -202,7 +203,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for Integer matrix. */
-    protected static final Serializer<Integer[][]> CONVERT_INTEGER_MATRIX =
+    protected static final Serializer<Integer[][]> CONVERT_INTEGER_OBJECT_MATRIX =
             new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, Integer.class, "Integer_32_matrix")
             {
                 @Override
@@ -220,7 +221,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for long matrix. */
-    protected static final Serializer<long[][]> CONVERT_LNG_MATRIX =
+    protected static final Serializer<long[][]> CONVERT_LONG_MATRIX =
             new BasicPrimitiveArrayOrMatrixSerializer<long[][]>(FieldTypes.LONG_64_MATRIX, 8, "long_64_matrix", 2)
             {
                 @Override
@@ -266,7 +267,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for Long matrix. */
-    protected static final Serializer<Long[][]> CONVERT_LONG_MATRIX =
+    protected static final Serializer<Long[][]> CONVERT_LONG_OBJECT_MATRIX =
             new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, Long.class, "Long_64_matrix")
             {
                 @Override
@@ -284,7 +285,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for float matrix. */
-    protected static final Serializer<float[][]> CONVERT_FLT_MATRIX =
+    protected static final Serializer<float[][]> CONVERT_FLOAT_MATRIX =
             new BasicPrimitiveArrayOrMatrixSerializer<float[][]>(FieldTypes.FLOAT_32_MATRIX, 4, "float_32_matrix", 2)
             {
                 @Override
@@ -330,7 +331,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for Float matrix. */
-    protected static final Serializer<Float[][]> CONVERT_FLOAT_MATRIX =
+    protected static final Serializer<Float[][]> CONVERT_FLOAT_OBJECT_MATRIX =
             new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, Float.class, "Float_32_matrix")
             {
                 @Override
@@ -348,7 +349,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for double matrix. */
-    protected static final Serializer<double[][]> CONVERT_DBL_MATRIX =
+    protected static final Serializer<double[][]> CONVERT_DOUBLE_MATRIX =
             new BasicPrimitiveArrayOrMatrixSerializer<double[][]>(FieldTypes.DOUBLE_64_MATRIX, 8, "double_64_matrix", 2)
             {
                 @Override
@@ -394,7 +395,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for Double matrix. */
-    protected static final Serializer<Double[][]> CONVERT_DOUBLE_MATRIX =
+    protected static final Serializer<Double[][]> CONVERT_DOUBLE_OBJECT_MATRIX =
             new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class, "Double_64_matrix")
             {
                 @Override
@@ -412,7 +413,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for boolean matrix. */
-    protected static final Serializer<boolean[][]> CONVERT_BOOL_MATRIX =
+    protected static final Serializer<boolean[][]> CONVERT_BOOLEAN_MATRIX =
             new BasicPrimitiveArrayOrMatrixSerializer<boolean[][]>(FieldTypes.BOOLEAN_8_MATRIX, 1, "boolean_8_matrix", 2)
             {
                 @Override
@@ -458,7 +459,7 @@ public final class PrimitiveMatrixSerializer
             };
 
     /** Converter for Boolean matrix. */
-    protected static final Serializer<Boolean[][]> CONVERT_BOOLEAN_MATRIX =
+    protected static final Serializer<Boolean[][]> CONVERT_BOOLEAN_OBJECT_MATRIX =
             new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class, "Boolean_8_matrix")
             {
                 @Override

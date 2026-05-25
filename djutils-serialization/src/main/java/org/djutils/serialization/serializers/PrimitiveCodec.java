@@ -4,8 +4,8 @@ import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 
 /**
- * PrimitiveSerializer is responsible for the serialization of primitive types, which can be offered as the primitive type
- * (e.g., <code>int</code> itself or as the object wrapper (e.g., <code>Integer</code>).
+ * PrimitiveCodec is responsible for the serialization and deserialization of primitive types, which can be offered as the
+ * primitive type (e.g., <code>int</code> itself or as the object wrapper (e.g., <code>Integer</code>).
  * <p>
  * Copyright (c) 2026-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -14,11 +14,11 @@ import org.djutils.serialization.FieldTypes;
  * <p>
  * @author Alexander Verbraeck
  */
-public final class PrimitiveSerializer
+public final class PrimitiveCodec
 {
 
     /** Static class, no constructor. */
-    private PrimitiveSerializer()
+    private PrimitiveCodec()
     {
         // Static class, no constructor
     }
