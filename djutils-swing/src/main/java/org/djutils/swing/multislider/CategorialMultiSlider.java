@@ -20,7 +20,7 @@ import org.djutils.immutablecollections.ImmutableList;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * @author Alexander Verbraeck
  * @param <T> The type of the labels for the multislider
  */
 public class CategorialMultiSlider<T> extends AbstractMultiSlider<T>

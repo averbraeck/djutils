@@ -50,7 +50,7 @@ import org.djutils.logger.CategoryLogger;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * @author Alexander Verbraeck
  * @param <T> the type of values that the {@code AbstractMultiSlider} stores and returns
  */
 public abstract class AbstractMultiSlider<T> extends JComponent
