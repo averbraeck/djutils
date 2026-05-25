@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test the DistNormalTable class. <br>
- * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * @author Peter Knoppers
  */
 public class DistNormalTableTest
 {

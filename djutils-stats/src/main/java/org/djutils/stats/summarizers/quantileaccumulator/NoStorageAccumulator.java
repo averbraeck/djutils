@@ -8,7 +8,7 @@ import org.djutils.stats.summarizers.Tally;
  * The no storage accumulator accumulates nothing and estimates all requested quantiles from mean, standard deviation, etc. (as
  * accumulated by the Tally class object). This is sensible if the input values are normally distributed. Do not use this
  * accumulator when the input values are not normally distributes.<br>
- * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * @author Peter Knoppers
  */
 public class NoStorageAccumulator implements QuantileAccumulator
 {

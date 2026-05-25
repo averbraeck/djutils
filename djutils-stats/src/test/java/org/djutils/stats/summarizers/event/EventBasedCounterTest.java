@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
- * @author <a href="https://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * @author Alexander Verbraeck
  */
 public class EventBasedCounterTest
 {

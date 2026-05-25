@@ -4,7 +4,7 @@ import org.djutils.stats.summarizers.Tally;
 
 /**
  * Interface for quantile accumulator. <br>
- * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * @author Peter Knoppers
  */
 public interface QuantileAccumulator
 {

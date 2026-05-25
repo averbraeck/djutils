@@ -15,7 +15,7 @@ import org.djutils.exceptions.Throw;
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
  * <p>
- * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
+ * @author Alexander Verbraeck
  */
 public class TimestampWeightedTally extends WeightedTally
 {

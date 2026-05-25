@@ -23,7 +23,7 @@ import org.djutils.stats.summarizers.TimestampWeightedTally;
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
- * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
+ * @author Alexander Verbraeck
  */
 public class EventBasedTimestampWeightedTally extends TimestampWeightedTally implements EventProducer, EventListener
 {
