@@ -69,7 +69,7 @@ class F0 implements Function
     {
         return this.f0.execute(this);
     }
-    
+
     /**
      * Interface for zero argument functions.
      */

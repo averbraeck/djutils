@@ -23,8 +23,9 @@ public class EvalDemo
         run("100[s] + 10 [s]");
         run("sqrt(-1)");
         run("1/0");
-        
-        RetrieveValue values = new RetrieveValue() {
+
+        RetrieveValue values = new RetrieveValue()
+        {
             @Override
             public Object lookup(final String name)
             {
@@ -33,7 +34,8 @@ public class EvalDemo
                     return 123.456;
                 }
                 return null;
-            }};
+            }
+        };
         run("myVariable+20", values);
         run("2 * PI()");
         run("sin(1)");
@@ -50,7 +52,7 @@ public class EvalDemo
     {
         run(expression, null);
     }
-    
+
     /**
      * Evaluate an expression and print the result.
      * @param expression the expression

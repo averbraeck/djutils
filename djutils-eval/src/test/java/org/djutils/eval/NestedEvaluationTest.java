@@ -42,8 +42,8 @@ public class NestedEvaluationTest
                 return value;
             }
         });
-        //System.out.println(eval.evaluate("1.0 - param2")); // 0,70000000
-        //System.out.println(eval.evaluate("1.0 - param1")); // RuntimeException: Stack empty at position 6
-        assertEquals(0.7,  ((SIQuantity) eval.evaluate("1.0 - param1")).si, 0.000001, "Nested call succeeded");
+        // System.out.println(eval.evaluate("1.0 - param2")); // 0,70000000
+        // System.out.println(eval.evaluate("1.0 - param1")); // RuntimeException: Stack empty at position 6
+        assertEquals(0.7, ((SIQuantity) eval.evaluate("1.0 - param1")).si, 0.000001, "Nested call succeeded");
     }
 }

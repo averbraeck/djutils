@@ -18,8 +18,7 @@ public interface QuantityParser
      * Parse a user-specific quantity.
      * @param value the value (already parsed; expressed in the unit)
      * @param unit the unit specification
-     * @return the resulting (strongly typed) quantity, or null if the user-specified parser cannot handle
-     *         the provided unit
+     * @return the resulting (strongly typed) quantity, or null if the user-specified parser cannot handle the provided unit
      */
     Quantity<?> parseQuantity(final double value, final String unit);
 
