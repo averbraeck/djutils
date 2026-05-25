@@ -28,9 +28,9 @@ import org.junit.jupiter.api.Test;
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>. <br>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
+ * @author Alexander Verbraeck
+ * @author Peter Knoppers
+ * @author Wouter Schakel
  */
 public class TestXmlTable
 {
