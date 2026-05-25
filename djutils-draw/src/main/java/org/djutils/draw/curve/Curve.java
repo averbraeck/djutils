@@ -18,9 +18,9 @@ import org.djutils.draw.point.Point;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
+ * @author Alexander Verbraeck
+ * @author Peter Knoppers
+ * @author Wouter Schakel
  * @param <DP> the <code>DirectedPoint</code> type
  * @param <DIR> the direction type. In 2d this is a <code>java.lang.Double</code>; in 3d this is a <code>Direction3d</code>
  *            object

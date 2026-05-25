@@ -13,9 +13,9 @@ package org.djutils.draw;
  * the positive z-axis to the projection of the direction on the x-y-plane is named <code>dirY</code>. The angle from the
  * positive x-axis to the projection of the direction in the x-y-plane is named <code>dirZ</code>.
  * <p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
- * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
+ * @author Alexander Verbraeck
+ * @author Peter Knoppers
+ * @author Wouter Schakel
  */
 public interface Directed3d extends Directed
 {

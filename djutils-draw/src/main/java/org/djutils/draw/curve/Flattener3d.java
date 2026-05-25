@@ -19,11 +19,11 @@ import org.djutils.exceptions.Throw;
  * <p>
  * Copyright (c) 2023-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/license.html" target="_blank">
- * https://djutils.org/docs/license.html</a>..
+ * https://djutils.org/docs/license.html</a>.
  * <p>
- * @author <a href="https://github.com/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
- * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
+ * @author Alexander Verbraeck
+ * @author Peter Knoppers
+ * @author Wouter Schakel
  */
 public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d, Point3d, Direction3d>
 {

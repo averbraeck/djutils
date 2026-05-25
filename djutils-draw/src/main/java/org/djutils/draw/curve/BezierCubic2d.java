@@ -30,9 +30,9 @@ import org.djutils.math.functions.MathFunction.TupleSt;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
- * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
+ * @author Alexander Verbraeck
+ * @author Peter Knoppers
+ * @author Wouter Schakel
  * @see <a href="https://pomax.github.io/bezierinfo/">B&eacute;zier info</a>
  */
 public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, Curvature
