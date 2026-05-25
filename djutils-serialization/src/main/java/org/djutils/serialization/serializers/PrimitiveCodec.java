@@ -24,7 +24,7 @@ public final class PrimitiveCodec
     }
 
     /** Converter for Byte. */
-    protected static final BasicCodec<Byte> CONVERT_BYTE = new FixedSizeObjectCodec<Byte>(FieldTypes.BYTE_8, 1, "Byte_8")
+    protected static final BasicCodec<Byte> CONVERT_BYTE = new FixedSizeObjectCodec<>(FieldTypes.BYTE_8, 1)
     {
         @Override
         public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -40,43 +40,39 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Short. */
-    protected static final BasicCodec<Short> CONVERT_SHORT =
-            new FixedSizeObjectCodec<Short>(FieldTypes.SHORT_16, 2, "Short_16")
-            {
-                @Override
-                public void serialize(final Short object, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness)
-                {
-                    endianness.encodeShort(object, buffer, pointer.getAndIncrement(2));
-                }
+    protected static final BasicCodec<Short> CONVERT_SHORT = new FixedSizeObjectCodec<>(FieldTypes.SHORT_16, 2)
+    {
+        @Override
+        public void serialize(final Short object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            endianness.encodeShort(object, buffer, pointer.getAndIncrement(2));
+        }
 
-                @Override
-                public Short deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                {
-                    return endianness.decodeShort(buffer, pointer.getAndIncrement(2));
-                }
-            };
+        @Override
+        public Short deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return endianness.decodeShort(buffer, pointer.getAndIncrement(2));
+        }
+    };
 
     /** Converter for Integer. */
-    protected static final BasicCodec<Integer> CONVERT_INTEGER =
-            new FixedSizeObjectCodec<Integer>(FieldTypes.INT_32, 4, "Integer_32")
-            {
-                @Override
-                public void serialize(final Integer object, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness)
-                {
-                    endianness.encodeInt(object, buffer, pointer.getAndIncrement(4));
-                }
+    protected static final BasicCodec<Integer> CONVERT_INTEGER = new FixedSizeObjectCodec<>(FieldTypes.INT_32, 4)
+    {
+        @Override
+        public void serialize(final Integer object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            endianness.encodeInt(object, buffer, pointer.getAndIncrement(4));
+        }
 
-                @Override
-                public Integer deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                {
-                    return endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                }
-            };
+        @Override
+        public Integer deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+        }
+    };
 
     /** Converter for Integer. */
-    protected static final BasicCodec<Long> CONVERT_LONG = new FixedSizeObjectCodec<Long>(FieldTypes.LONG_64, 8, "Long_64")
+    protected static final BasicCodec<Long> CONVERT_LONG = new FixedSizeObjectCodec<>(FieldTypes.LONG_64, 8)
     {
         @Override
         public void serialize(final Long object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -92,93 +88,83 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Float. */
-    protected static final BasicCodec<Float> CONVERT_FLOAT =
-            new FixedSizeObjectCodec<Float>(FieldTypes.FLOAT_32, 4, "Float_32")
-            {
-                @Override
-                public void serialize(final Float object, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness)
-                {
-                    endianness.encodeFloat(object, buffer, pointer.getAndIncrement(4));
-                }
+    protected static final BasicCodec<Float> CONVERT_FLOAT = new FixedSizeObjectCodec<>(FieldTypes.FLOAT_32, 4)
+    {
+        @Override
+        public void serialize(final Float object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            endianness.encodeFloat(object, buffer, pointer.getAndIncrement(4));
+        }
 
-                @Override
-                public Float deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                {
-                    return endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
-                }
-            };
+        @Override
+        public Float deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
+        }
+    };
 
     /** Converter for Double. */
-    protected static final BasicCodec<Double> CONVERT_DOUBLE =
-            new FixedSizeObjectCodec<Double>(FieldTypes.DOUBLE_64, 8, "Double_64")
-            {
-                @Override
-                public void serialize(final Double object, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness)
-                {
-                    endianness.encodeDouble(object, buffer, pointer.getAndIncrement(8));
-                }
+    protected static final BasicCodec<Double> CONVERT_DOUBLE = new FixedSizeObjectCodec<>(FieldTypes.DOUBLE_64, 8)
+    {
+        @Override
+        public void serialize(final Double object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            endianness.encodeDouble(object, buffer, pointer.getAndIncrement(8));
+        }
 
-                @Override
-                public Double deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                {
-                    return endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
-                }
-            };
+        @Override
+        public Double deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
+        }
+    };
 
     /** Converter for Boolean. */
-    protected static final BasicCodec<Boolean> CONVERT_BOOLEAN =
-            new FixedSizeObjectCodec<Boolean>(FieldTypes.BOOLEAN_8, 1, "Boolean_8")
-            {
-                @Override
-                public void serialize(final Boolean object, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness)
-                {
-                    buffer[pointer.getAndIncrement(1)] = (byte) (object ? 1 : 0);
-                }
+    protected static final BasicCodec<Boolean> CONVERT_BOOLEAN = new FixedSizeObjectCodec<>(FieldTypes.BOOLEAN_8, 1)
+    {
+        @Override
+        public void serialize(final Boolean object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            buffer[pointer.getAndIncrement(1)] = (byte) (object ? 1 : 0);
+        }
 
-                @Override
-                public Boolean deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                {
-                    return buffer[pointer.getAndIncrement(1)] != 0;
-                }
-            };
+        @Override
+        public Boolean deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return buffer[pointer.getAndIncrement(1)] != 0;
+        }
+    };
 
     /** Converter for Character. */
-    protected static final BasicCodec<Character> CONVERT_CHARACTER16 =
-            new FixedSizeObjectCodec<Character>(FieldTypes.CHAR_16, 2, "Char_16")
-            {
-                @Override
-                public void serialize(final Character object, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness)
-                {
-                    endianness.encodeChar(object, buffer, pointer.getAndIncrement(size(object)));
-                }
+    protected static final BasicCodec<Character> CONVERT_CHARACTER16 = new FixedSizeObjectCodec<>(FieldTypes.CHAR_16, 2)
+    {
+        @Override
+        public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            endianness.encodeChar(object, buffer, pointer.getAndIncrement(size(object)));
+        }
 
-                @Override
-                public Character deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                {
-                    return endianness.decodeChar(buffer, pointer.getAndIncrement(2));
-                }
-            };
+        @Override
+        public Character deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return endianness.decodeChar(buffer, pointer.getAndIncrement(2));
+        }
+    };
 
     /** Converter for Character. */
-    protected static final BasicCodec<Character> CONVERT_CHARACTER8 =
-            new FixedSizeObjectCodec<Character>(FieldTypes.CHAR_8, 1, "Char_8")
-            {
-                @Override
-                public void serialize(final Character object, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness)
-                {
-                    buffer[pointer.getAndIncrement(size(object))] = (byte) (object & 0xFF);
-                }
+    protected static final BasicCodec<Character> CONVERT_CHARACTER8 = new FixedSizeObjectCodec<>(FieldTypes.CHAR_8, 1)
+    {
+        @Override
+        public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            buffer[pointer.getAndIncrement(size(object))] = (byte) (object & 0xFF);
+        }
 
-                @Override
-                public Character deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                {
-                    return Character.valueOf((char) buffer[pointer.getAndIncrement(1)]);
-                }
-            };
+        @Override
+        public Character deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return Character.valueOf((char) buffer[pointer.getAndIncrement(1)]);
+        }
+    };
 
 }

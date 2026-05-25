@@ -21,11 +21,10 @@ public abstract class FixedSizeObjectCodec<T extends Object> extends BasicCodec<
      * Construct the FixedSizeObjectCodec.
      * @param fieldType the field type as defined by the {@link FieldTypes} class
      * @param serializedDataSize number of bytes required for the serialized object
-     * @param dataClassName descriptive name of the type (not the class name)
      */
-    public FixedSizeObjectCodec(final byte fieldType, final int serializedDataSize, final String dataClassName)
+    public FixedSizeObjectCodec(final byte fieldType, final int serializedDataSize)
     {
-        super(fieldType, dataClassName);
+        super(fieldType);
         this.dataSize = serializedDataSize;
     }
 

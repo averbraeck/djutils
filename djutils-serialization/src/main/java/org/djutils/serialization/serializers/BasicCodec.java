@@ -19,18 +19,13 @@ public abstract class BasicCodec<T>
     /** The field type that usually prefixes the serialized data. */
     private final byte type;
 
-    /** String returned by the dataClassName method. */
-    private final String dataClassName;
-
     /**
-     * Construct the BasicSerializer.
+     * Construct the BasicCodec.
      * @param type the field type as defined by the {@link FieldTypes} class
-     * @param dataClassName the name of the data type (not the class name)
      */
-    public BasicCodec(final byte type, final String dataClassName)
+    public BasicCodec(final byte type)
     {
         this.type = type;
-        this.dataClassName = dataClassName;
     }
 
     /**
@@ -101,16 +96,6 @@ public abstract class BasicCodec<T>
     public abstract T deserialize(byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
 
     /**
-     * Return a description of the type of data that this serializer handles. The result of this method should <b>not</b> be
-     * subject to localization because it is used in the SerialDataDecoder to identify the type of a serializer.
-     * @return description of the type of data that this serializer handles
-     */
-    public final String dataClassName()
-    {
-        return this.dataClassName;
-    }
-
-    /**
      * Return the number of dimensions of the stored data.
      * @return 0 for plain data, 1 for array, 2 for matrix
      */
@@ -128,7 +113,7 @@ public abstract class BasicCodec<T>
     @Override
     public String toString()
     {
-        return "BasicSerializer [type=" + this.type + ", dataClassName=" + this.dataClassName + "]";
+        return "BasicCodec [type=" + this.type + "]";
     }
 
 }
