@@ -34,12 +34,9 @@ import org.junit.jupiter.api.Test;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
- * <p>
  * TODO test flattener Beziers that are not based on just two DirectedPoint objects.
  * <p>
- * <p>
  * TODO also with maxAngle flattener and non-declared knot.
- * <p>
  * <p>
  * TODO test flattener with curve that has a knot.
  * <p>

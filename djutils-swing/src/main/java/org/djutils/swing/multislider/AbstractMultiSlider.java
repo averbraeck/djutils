@@ -40,10 +40,8 @@ import org.djutils.logger.CategoryLogger;
  * <p>
  * Several models exist to indicate whether thumbs can pass each other or not, or be on top of each other or not.
  * <p>
- * <p>
  * The {@code AbstractMultiSlider} stores all values internally as int. Only when getting or setting values (or, e.g., the
  * minimum or maximum), the generic type T is used.
- * <p>
  * <p>
  * Copyright (c) 2024-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
