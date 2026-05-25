@@ -23,7 +23,7 @@ public class TestCliException
     {
         ExceptionTest.testExceptionClass(CliException.class);
     }
-    
+
     /**
      * Test the CliRuntimeException.
      */
