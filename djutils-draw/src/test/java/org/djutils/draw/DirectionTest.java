@@ -120,7 +120,7 @@ public class DirectionTest
         assertNotEquals(d1.hashCode(), d2.hashCode(), "hashcodes should be different");
         assertNotEquals(d1, "string", "not equal to some totally different object");
         assertNotEquals(d1, null, "not equal to null");
-        
+
         try
         {
             d2.directionDifference(null);
@@ -130,7 +130,7 @@ public class DirectionTest
         {
             // Ignore expected exception
         }
-        
+
     }
 
     /**

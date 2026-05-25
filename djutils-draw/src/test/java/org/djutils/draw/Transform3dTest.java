@@ -387,19 +387,27 @@ public class Transform3dTest
                                         for (double shearB : values)
                                         {
                                             Transform3d t = new Transform3d().translate(translateX, translateY, translateZ)
-                                                    .scale(scaleX, scaleY, scaleZ).rotZ(angle).shearXY(shearA, shearB);
+                                                .scale(scaleX, scaleY, scaleZ)
+                                                .rotZ(angle)
+                                                .shearXY(shearA, shearB);
                                             Transform3d shearXY = new Transform3d().shearXY(shearA, shearB);
-                                            Transform3d tReflectX =
-                                                    new Transform3d().reflectX().translate(translateX, translateY, translateZ)
-                                                            .scale(scaleX, scaleY, scaleZ).rotY(angle).shearYZ(shearA, shearB);
+                                            Transform3d tReflectX = new Transform3d().reflectX()
+                                                .translate(translateX, translateY, translateZ)
+                                                .scale(scaleX, scaleY, scaleZ)
+                                                .rotY(angle)
+                                                .shearYZ(shearA, shearB);
                                             Transform3d shearYZ = new Transform3d().shearYZ(shearA, shearB);
-                                            Transform3d tReflectY =
-                                                    new Transform3d().reflectY().translate(translateX, translateY, translateZ)
-                                                            .scale(scaleX, scaleY, scaleZ).rotZ(angle).shearXZ(shearA, shearB);
+                                            Transform3d tReflectY = new Transform3d().reflectY()
+                                                .translate(translateX, translateY, translateZ)
+                                                .scale(scaleX, scaleY, scaleZ)
+                                                .rotZ(angle)
+                                                .shearXZ(shearA, shearB);
                                             Transform3d shearXZ = new Transform3d().shearXZ(shearA, shearB);
-                                            Transform3d tReflectZ =
-                                                    new Transform3d().reflectZ().translate(translateX, translateY, translateZ)
-                                                            .scale(scaleX, scaleY, scaleZ).rotX(angle).shearXY(shearA, shearB);
+                                            Transform3d tReflectZ = new Transform3d().reflectZ()
+                                                .translate(translateX, translateY, translateZ)
+                                                .scale(scaleX, scaleY, scaleZ)
+                                                .rotX(angle)
+                                                .shearXY(shearA, shearB);
                                             for (double px : values)
                                             {
                                                 for (double py : values)
@@ -453,8 +461,13 @@ public class Transform3dTest
     {
         double[] values = new double[] {-100, 0.1, 0, 0.1, 100};
         double[] sizes = new double[] {0, 10, 100};
-        Transform3d t = new Transform3d().rotX(0.4).rotZ(0.8).rotY(-1.2).reflectX().scale(0.5, 1.5, 2.5).shearXY(2, 3)
-                .translate(123, 456, 789);
+        Transform3d t = new Transform3d().rotX(0.4)
+            .rotZ(0.8)
+            .rotY(-1.2)
+            .reflectX()
+            .scale(0.5, 1.5, 2.5)
+            .shearXY(2, 3)
+            .translate(123, 456, 789);
         // System.out.println(t);
         for (double x : values)
         {
@@ -596,9 +609,9 @@ public class Transform3dTest
         Point3d rotated = transform.transform(unitVector);
         System.out.println(rotated);
         System.out.println("dirZ: " + Math.toDegrees(Math.atan2(rotated.y, rotated.x)));
-        System.out.println(
-                "dirY: " + Math.toDegrees(Math.atan2(-rotated.z, Math.sqrt(rotated.x * rotated.x + rotated.y * rotated.y)))
-                        + " == " + Math.toDegrees(Math.atan2(-rotated.z, Math.hypot(rotated.x, rotated.y))));
+        System.out
+            .println("dirY: " + Math.toDegrees(Math.atan2(-rotated.z, Math.sqrt(rotated.x * rotated.x + rotated.y * rotated.y)))
+                    + " == " + Math.toDegrees(Math.atan2(-rotated.z, Math.hypot(rotated.x, rotated.y))));
 
     }
 

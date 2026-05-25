@@ -226,8 +226,8 @@ public class TestCurves
                                     flattened = ca.toPolyLine(new OffsetFlattener2d.MaxAngle(anglePrecision), of);
                                     verifyMaxAngleDeviation(flattened, ca, of, anglePrecision);
                                     // Test the MaxDeviationAndAngle flattener with offsets
-                                    flattened = ca.toPolyLine(
-                                            new OffsetFlattener2d.MaxDeviationAndAngle(precision, anglePrecision), of);
+                                    flattened = ca
+                                        .toPolyLine(new OffsetFlattener2d.MaxDeviationAndAngle(precision, anglePrecision), of);
                                     verifyMaxDeviation(ca, of, flattened, precision);
                                     verifyMaxAngleDeviation(flattened, ca, of, anglePrecision);
                                 }

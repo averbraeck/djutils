@@ -80,8 +80,8 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      * start and end.
      * @param start the start point and start direction of the B&eacute;zier curve
      * @param end the end point and end direction of the B&eacute;zier curve
-     * @param shape 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
-     *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
+     * @param shape 1 = control points at half the distance between start and end, &gt; 1 results in a pointier shape, &lt; 1
+     *            results in a flatter shape, value should be above 0 and finite
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
      *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
@@ -96,8 +96,8 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      * start and end.
      * @param start the start point and start direction of the B&eacute;zier curve
      * @param end the end point and end direction of the B&eacute;zier curve
-     * @param shape 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
-     *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
+     * @param shape 1 = control points at half the distance between start and end, &gt; 1 results in a pointier shape, &lt; 1
+     *            results in a flatter shape, value should be above 0 and finite
      * @param weighted control point distance relates to distance to projected point on extended line from other end
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
@@ -113,9 +113,9 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      * Create control points for a cubic B&eacute;zier curve defined by two Rays.
      * @param start the start point (and direction)
      * @param end the end point (and direction)
-     * @param shape the shape; higher values put the generated control points further away from end and result in a
-     *            pointier B&eacute;zier curve
-     * @param weighted whether weights will be applied 
+     * @param shape the shape; higher values put the generated control points further away from end and result in a pointier
+     *            B&eacute;zier curve
+     * @param weighted whether weights will be applied
      * @return an array of four Point3d elements: start, the first control point, the second control point, end.
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,

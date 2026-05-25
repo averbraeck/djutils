@@ -69,8 +69,8 @@ public interface Flattener<F extends Flattener<F, C, PL, P, DIR>, C extends Curv
      * @param prevPoint P
      * @param nextPoint P
      * @param maxDeviation double
-     * @return <code>true</code> if the <code>medianPoint</code> is too far from the line segment; <code>false</code>
-     *         if the <code>medianPoint</code> is close enough to the line segment
+     * @return <code>true</code> if the <code>medianPoint</code> is too far from the line segment; <code>false</code> if the
+     *         <code>medianPoint</code> is close enough to the line segment
      */
     default boolean checkPositionError(final P medianPoint, final P prevPoint, final P nextPoint, final double maxDeviation)
     {
@@ -83,8 +83,8 @@ public interface Flattener<F extends Flattener<F, C, PL, P, DIR>, C extends Curv
      * Check for a direction change of more than 90 degrees. If that happens, the MaxDeviation flattener must zoom in closer.
      * @param prevDirection the direction at the preceding (already added) point
      * @param nextDirection the direction at the succeeding (already added) point
-     * @return <code>true</code> if the curve changes direction by more than 90 degrees; <code>false</code> if the
-     *         curve does not change direction by more than 90 degrees
+     * @return <code>true</code> if the curve changes direction by more than 90 degrees; <code>false</code> if the curve does
+     *         not change direction by more than 90 degrees
      */
     boolean checkLoopBack(DIR prevDirection, DIR nextDirection);
 

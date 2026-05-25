@@ -1167,14 +1167,14 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
             else if (fractionInStart > fractionInEnd)
             {
-                pointList.add(this.getLocation(fractionInEnd * this.length).interpolate(endLine.get(indexInEnd),
-                        transition.function(fractionInEnd)));
+                pointList.add(this.getLocation(fractionInEnd * this.length)
+                    .interpolate(endLine.get(indexInEnd), transition.function(fractionInEnd)));
                 indexInEnd++;
             }
             else
             {
-                pointList.add(this.get(indexInStart).interpolate(endLine.getLocation(fractionInEnd * endLine.length),
-                        transition.function(fractionInStart)));
+                pointList.add(this.get(indexInStart)
+                    .interpolate(endLine.getLocation(fractionInEnd * endLine.length), transition.function(fractionInStart)));
                 indexInStart++;
                 indexInEnd++;
             }

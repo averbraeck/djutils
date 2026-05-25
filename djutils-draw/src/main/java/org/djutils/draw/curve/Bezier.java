@@ -61,8 +61,8 @@ public final class Bezier
      * t<sup>i</sup> P<sub>i</sub>], where C(n, k) is the binomial coefficient defined by n! / ( k! (n-k)! ), ! being the
      * factorial operator.
      * @param t the fraction
-     * @param p the points of the curve, where the first and last are begin and end point, and all intermediate ones
-     *            are control points
+     * @param p the points of the curve, where the first and last are begin and end point, and all intermediate ones are control
+     *            points
      * @return the B&eacute;zier value B(t) of degree n, where n is the number of points in the <code>p</code> array
      */
     @SuppressWarnings("checkstyle:methodname")
@@ -112,7 +112,7 @@ public final class Bezier
     {
         if (in.length == 0) // Derivative of a zero order B&eacute;zier is a zero order B&eacute;zier
         {
-            return in; //  No need to create a new one
+            return in; // No need to create a new one
         }
         int n = in.length - 1;
         double[] result = new double[n];

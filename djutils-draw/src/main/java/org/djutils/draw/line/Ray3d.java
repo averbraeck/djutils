@@ -44,8 +44,8 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param x the x coordinate
      * @param y the y coordinate
      * @param z the z coordinate
-     * @param directionVector the two direction angles in a double array containing dirY and dirZ in that order. DirY
-     *            is the rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to the
+     * @param directionVector the two direction angles in a double array containing dirY and dirZ in that order. DirY is the
+     *            rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to the
      *            projection of the direction in the x-y-plane.
      * @throws NullPointerException when <code>direction</code> is <code>null</code>
      * @throws ArithmeticException when the <code>directionVector</code> array contains a <code>NaN</code> value

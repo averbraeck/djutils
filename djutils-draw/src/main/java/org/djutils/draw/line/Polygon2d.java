@@ -170,8 +170,8 @@ public class Polygon2d extends PolyLine2d
 
     /**
      * Ensure that the last point in the list is different from the first point by possibly removing the last point.
-     * @param doNotModifyList if <code>true</code>; the list of points will not be modified (if the last point is to be
-     *            removed; the entire list up to the last point is duplicated)
+     * @param doNotModifyList if <code>true</code>; the list of points will not be modified (if the last point is to be removed;
+     *            the entire list up to the last point is duplicated)
      * @param points the list of points
      * @return the fixed list
      * @throws NullPointerException when <code>points</code> is <code>null</code>
@@ -245,8 +245,8 @@ public class Polygon2d extends PolyLine2d
     /**
      * Determine if this Polygon is convex. Returns bogus result for self-intersecting polygons. Derived from
      * <a href="http://paulbourke.net/geometry/polygonmesh/source2.c">Convex by Paul Bourke</a>
-     * @return <code>true</code> if this <code>Polygon2d</code> is convex; <code>false</code> if this
-     *         <code>Polygon2d</code> is concave
+     * @return <code>true</code> if this <code>Polygon2d</code> is convex; <code>false</code> if this <code>Polygon2d</code> is
+     *         concave
      */
     public final boolean isConvex()
     {
@@ -275,9 +275,8 @@ public class Polygon2d extends PolyLine2d
     /**
      * Determine if a point is inside this Polygon. Returns bogus results for self-intersecting polygons.
      * @param point the point
-     * @return <code>true</code> if the point is inside this <code>Polygon2d</code>, <code>false</code> if the point is
-     *         outside this <code>Polygon2d</code>. Results are ill-defined for points on the edges of this
-     *         <code>Polygon2d</code>.
+     * @return <code>true</code> if the point is inside this <code>Polygon2d</code>, <code>false</code> if the point is outside
+     *         this <code>Polygon2d</code>. Results are ill-defined for points on the edges of this <code>Polygon2d</code>.
      */
     public boolean contains(final Point2d point)
     {
@@ -289,9 +288,8 @@ public class Polygon2d extends PolyLine2d
      * <a href="http://paulbourke.net/geometry/polygonmesh/">Polygons and meshes by Paul Bourke</a>
      * @param x the x-coordinate of the point
      * @param y the y-coordinate of the point
-     * @return <code>true</code> if the point is inside this <code>Polygon2d</code>, <code>false</code> if the point is
-     *         outside this <code>Polygon2d</code>. Results are ill-defined for points on the edges of this
-     *         <code>Polygon2d</code>.
+     * @return <code>true</code> if the point is inside this <code>Polygon2d</code>, <code>false</code> if the point is outside
+     *         this <code>Polygon2d</code>. Results are ill-defined for points on the edges of this <code>Polygon2d</code>.
      */
     public boolean contains(final double x, final double y)
     {
@@ -326,9 +324,9 @@ public class Polygon2d extends PolyLine2d
     /**
      * Determine if this Polygon completely contains a Bounds2d object. If this Polygon self-intersects, the results is bogus.
      * @param bounds the Bounds2d object
-     * @return <code>true</code> if the <code>Bounds2d</code> object is completely contained in this
-     *         <code>Polygon2d</code>; <code>false</code> if any part (or all) of the Bounds2d object is outside this
-     *         <code>Polygon2d</code>. If the Bounds2d object touches this <code>Polygon2d</code> the results are ill-defined.
+     * @return <code>true</code> if the <code>Bounds2d</code> object is completely contained in this <code>Polygon2d</code>;
+     *         <code>false</code> if any part (or all) of the Bounds2d object is outside this <code>Polygon2d</code>. If the
+     *         Bounds2d object touches this <code>Polygon2d</code> the results are ill-defined.
      */
     public boolean contains(final Bounds2d bounds)
     {
@@ -344,8 +342,8 @@ public class Polygon2d extends PolyLine2d
     /**
      * Determine if this Polygon2d intersects another Polygon2d.
      * @param other the other Polygon2d
-     * @return <code>true</code> if the polygons intersect; <code>false</code> if the polygons are disjunct.
-     *         Ill-defined if the polygons touch.
+     * @return <code>true</code> if the polygons intersect; <code>false</code> if the polygons are disjunct. Ill-defined if the
+     *         polygons touch.
      */
     public boolean intersects(final Polygon2d other)
     {

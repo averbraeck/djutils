@@ -68,8 +68,8 @@ public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL
     PL toPolyLine(F flattener);
 
     /**
-     * Returns the point at the given fraction of this Curve. The fraction may represent any parameter, such as <i>t</i> in
-     * a B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length.
+     * Returns the point at the given fraction of this Curve. The fraction may represent any parameter, such as <i>t</i> in a
+     * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length.
      * @param fraction the fraction
      * @return the point at the given <code>fraction</code>
      */

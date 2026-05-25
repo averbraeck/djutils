@@ -175,10 +175,14 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
             double dEnd = end.distance(start.projectOrthogonalExtended(end));
             double wStart = dStart / (dStart + dEnd);
             double wEnd = dEnd / (dStart + dEnd);
-            control1 = new Transform2d().translate(start).rotation(start.dirZ).scale(distance * wStart, distance * wStart)
-                    .transform(UNIT_VECTOR2D);
-            control2 = new Transform2d().translate(end).rotation(end.dirZ + Math.PI).scale(distance * wEnd, distance * wEnd)
-                    .transform(UNIT_VECTOR2D);
+            control1 = new Transform2d().translate(start)
+                .rotation(start.dirZ)
+                .scale(distance * wStart, distance * wStart)
+                .transform(UNIT_VECTOR2D);
+            control2 = new Transform2d().translate(end)
+                .rotation(end.dirZ + Math.PI)
+                .scale(distance * wEnd, distance * wEnd)
+                .transform(UNIT_VECTOR2D);
         }
         else
         {

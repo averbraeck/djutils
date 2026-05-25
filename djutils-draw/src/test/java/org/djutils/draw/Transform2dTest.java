@@ -237,12 +237,20 @@ public class Transform2dTest
                             {
                                 for (double shearY : values)
                                 {
-                                    Transform2d t = new Transform2d().translate(translateX, translateY).scale(scaleX, scaleY)
-                                            .rotation(angle).shear(shearX, shearY);
-                                    Transform2d tReflectX = new Transform2d().reflectX().translate(translateX, translateY)
-                                            .scale(scaleX, scaleY).rotation(angle).shear(shearX, shearY);
-                                    Transform2d tReflectY = new Transform2d().reflectY().translate(translateX, translateY)
-                                            .scale(scaleX, scaleY).rotation(angle).shear(shearX, shearY);
+                                    Transform2d t = new Transform2d().translate(translateX, translateY)
+                                        .scale(scaleX, scaleY)
+                                        .rotation(angle)
+                                        .shear(shearX, shearY);
+                                    Transform2d tReflectX = new Transform2d().reflectX()
+                                        .translate(translateX, translateY)
+                                        .scale(scaleX, scaleY)
+                                        .rotation(angle)
+                                        .shear(shearX, shearY);
+                                    Transform2d tReflectY = new Transform2d().reflectY()
+                                        .translate(translateX, translateY)
+                                        .scale(scaleX, scaleY)
+                                        .rotation(angle)
+                                        .shear(shearX, shearY);
                                     Transform2d shearing = new Transform2d().shear(shearX, shearY);
                                     for (double px : values)
                                     {
@@ -251,7 +259,7 @@ public class Transform2dTest
                                             Point2d p = new Point2d(px, py);
                                             Point2d tp = t.transform(p);
                                             Point2d chainP = translation
-                                                    .transform(scaling.transform(rotation.transform(shearing.transform(p))));
+                                                .transform(scaling.transform(rotation.transform(shearing.transform(p))));
                                             assertEquals(chainP.x, tp.x, 0.0000001, "X");
                                             assertEquals(chainP.y, tp.y, 0.0000001, "Y");
                                             tp = tReflectX.transform(p);

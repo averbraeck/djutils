@@ -168,7 +168,7 @@ public class Ray3dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             new Ray3d(1, 2, 3, new double[] {0.5});
@@ -270,8 +270,8 @@ public class Ray3dTest
         verifyBounds(new Ray3d(1, 2, 3, 0, 0).getAbsoluteBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // first quadrant in XY, pointing up (positive Z)
-        verifyBounds(new Ray3d(1, 2, 3, 1.1, 0.2).getAbsoluteBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
-                Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, 1.1, 0.2).getAbsoluteBounds(), 1, 2, 3, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
         verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI / 2).getAbsoluteBounds(), 1, 2, 3, Double.POSITIVE_INFINITY,
@@ -282,8 +282,8 @@ public class Ray3dTest
                 Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
-                Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1,
+                Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // third quadrant
         verifyBounds(new Ray3d(1, 2, 3, 1, 4).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
@@ -294,8 +294,8 @@ public class Ray3dTest
                 Double.POSITIVE_INFINITY);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 1, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY,
-                2, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, 1, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3,
+                Double.POSITIVE_INFINITY, 2, Double.POSITIVE_INFINITY);
 
         // first quadrant in XY, pointing down (negative Z)
         verifyBounds(new Ray3d(1, 2, 3, 3, 0.2).getAbsoluteBounds(), 1, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
@@ -306,8 +306,8 @@ public class Ray3dTest
                 Double.POSITIVE_INFINITY, 3);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 3, Math.PI).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
-                Double.POSITIVE_INFINITY, 3);
+        verifyBounds(new Ray3d(1, 2, 3, 3, Math.PI).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY,
+                1, Double.POSITIVE_INFINITY, 3);
 
         // third quadrant
         verifyBounds(new Ray3d(1, 2, 3, 3, 4).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
@@ -318,32 +318,32 @@ public class Ray3dTest
                 Double.POSITIVE_INFINITY, 2, 3);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 3, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
-                Double.POSITIVE_INFINITY, 2, 3);
+        verifyBounds(new Ray3d(1, 2, 3, 3, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY,
+                Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2, 3);
 
         // first quadrant in XY, pointing up (positive Z)
-        verifyBounds(new Ray3d(1, 2, 3, -1.1, 0.2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
-                Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, -1.1, 0.2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3,
+                1, 2, Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI / 2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1,
-                2, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI / 2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY,
+                Double.NEGATIVE_INFINITY, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // second quadrant in XY, pointing up
         verifyBounds(new Ray3d(1, 2, 3, -1, 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
-                Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3,
+                Double.POSITIVE_INFINITY, 2, Double.POSITIVE_INFINITY);
 
         // third quadrant
         verifyBounds(new Ray3d(1, 2, 3, -1, 4).getAbsoluteBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // fourth quadrant
-        verifyBounds(new Ray3d(1, 2, 3, -1, -1).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
-                Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, -1, -1).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1,
+                Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // TODO dirY values at boundaries and outside of [0..PI/2]
     }
@@ -534,8 +534,10 @@ public class Ray3dTest
         assertNull(ray.projectOrthogonal(new Point3d(0, 2, 3)), "projection misses the ray");
         assertNull(ray.projectOrthogonal(new Point3d(1, 2, 2)), "projection misses the ray");
         assertEquals(new Point3d(1, 2, 3), ray.projectOrthogonal(new Point3d(1, 2, 3)), "projection hits start point of ray");
-        assertEquals(0, new LineSegment3d(ray.getLocationExtended(-100), ray.getLocation(100))
-                .closestPointOnSegment(new Point3d(1, 0, -1)).distance(ray.projectOrthogonalExtended(new Point3d(1, 0, -1))),
+        assertEquals(0,
+                new LineSegment3d(ray.getLocationExtended(-100), ray.getLocation(100))
+                    .closestPointOnSegment(new Point3d(1, 0, -1))
+                    .distance(ray.projectOrthogonalExtended(new Point3d(1, 0, -1))),
                 0.0001, "extended projection returns same point as projection on sufficiently long line segment");
 
         Point3d projectingPoint = new Point3d(10, 10, 10);

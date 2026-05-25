@@ -980,14 +980,14 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             }
             else if (fractionInStart > fractionInEnd)
             {
-                pointList.add(this.getLocation(fractionInEnd * this.length).interpolate(endLine.get(indexInEnd),
-                        transition.function(fractionInEnd)));
+                pointList.add(this.getLocation(fractionInEnd * this.length)
+                    .interpolate(endLine.get(indexInEnd), transition.function(fractionInEnd)));
                 indexInEnd++;
             }
             else
             {
-                pointList.add(this.get(indexInStart).interpolate(endLine.getLocation(fractionInEnd * endLine.length),
-                        transition.function(fractionInStart)));
+                pointList.add(this.get(indexInStart)
+                    .interpolate(endLine.getLocation(fractionInEnd * endLine.length), transition.function(fractionInStart)));
                 indexInStart++;
                 indexInEnd++;
             }
@@ -1054,8 +1054,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         String format = String.format("%%sx=%1$s, y=%1$s, z=%1$s", doubleFormat);
         for (int index = 0; index < this.x.length; index++)
         {
-            result.append(
-                    String.format(Locale.US, format, index == 0 ? "[" : ", ", this.x[index], this.y[index], this.z[index]));
+            result
+                .append(String.format(Locale.US, format, index == 0 ? "[" : ", ", this.x[index], this.y[index], this.z[index]));
         }
         if (this.lengthIndexedLine.length == 1)
         {

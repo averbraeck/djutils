@@ -207,7 +207,8 @@ public class Ray2dTest
         verifyBounds(new Ray2d(1, 2, 0.2).getAbsoluteBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        verifyBounds(new Ray2d(1, 2, Math.PI / 2).getAbsoluteBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray2d(1, 2, Math.PI / 2).getAbsoluteBounds(), 1, 2, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
 
         // second quadrant
         verifyBounds(new Ray2d(1, 2, 2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 1, Double.POSITIVE_INFINITY);
@@ -222,7 +223,8 @@ public class Ray2dTest
         verifyBounds(new Ray2d(1, 2, -1).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray2d(1, 2, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
+        verifyBounds(new Ray2d(1, 2, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
+                2);
 
     }
 
@@ -376,7 +378,7 @@ public class Ray2dTest
         assertEquals(new Point2d(1, 2), ray.projectOrthogonal(new Point2d(1, 2)), "projection hits start point of ray");
         assertEquals(0,
                 new LineSegment2d(ray.getLocationExtended(-100), ray.getLocation(100)).closestPointOnSegment(new Point2d(1, 0))
-                        .distance(ray.projectOrthogonalExtended(new Point2d(1, 0))),
+                    .distance(ray.projectOrthogonalExtended(new Point2d(1, 0))),
                 0.0001, "extended projection returns same point as projection on sufficiently long line segment");
 
         Point2d projectingPoint = new Point2d(10, 10);

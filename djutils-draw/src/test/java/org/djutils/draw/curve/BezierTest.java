@@ -101,7 +101,7 @@ public class BezierTest
         for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine2d line = new BezierCubic2d(new Ray2d(from.x, from.y, Math.PI), new Ray2d(to.x, to.y, Math.PI / 2))
-                    .toPolyLine(new Flattener2d.NumSegments(n));
+                .toPolyLine(new Flattener2d.NumSegments(n));
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point2d p = line.get(i);
