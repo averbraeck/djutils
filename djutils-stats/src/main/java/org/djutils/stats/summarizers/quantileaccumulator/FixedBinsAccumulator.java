@@ -5,8 +5,7 @@ import org.djutils.stats.summarizers.Tally;
 
 /**
  * FixedBinsAccumulator.java. <br>
- * This accumulator is created with a caller prescribes set of bins. All bins have the same width.
- * <br>
+ * This accumulator is created with a caller prescribes set of bins. All bins have the same width. <br>
  * Copyright (c) 2021-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
@@ -139,7 +138,7 @@ public class FixedBinsAccumulator implements QuantileAccumulator
         this.totalCount++;
         return value;
     }
-    
+
     /**
      * Compute the cumulative values if not already available.
      */

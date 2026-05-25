@@ -314,8 +314,8 @@ public class Tally implements TallyStatistic
     }
 
     /**
-     * Return the sample kurtosis of the registered data. The sample kurtosis can be defined in multiple ways. Here, we choose the
-     * following formula:<br>
+     * Return the sample kurtosis of the registered data. The sample kurtosis can be defined in multiple ways. Here, we choose
+     * the following formula:<br>
      * &nbsp;&nbsp;<i>Kurt<sub>unbiased</sub> = [ &Sigma; ( x - &mu; ) <sup>4</sup> ] / [ ( n - 1 ) . S<sup>4</sup> ]</i><br>
      * where <i>S<sup>2</sup></i> is the <u>sample</u> variance. So the denominator is equal to <i>[ ( n - 1 ) .
      * sample_var<sup>2</sup> ]</i> .
@@ -396,8 +396,8 @@ public class Tally implements TallyStatistic
     /**
      * Get, or estimate fraction of registered values between -infinity up to and including a given quantile.
      * @param quantile the given quantile
-     * @return the estimated or observed fraction of registered values between -infinity up to and including the given
-     *         quantile. When this TallyInterface has registered zero values; this method shall return NaN.
+     * @return the estimated or observed fraction of registered values between -infinity up to and including the given quantile.
+     *         When this TallyInterface has registered zero values; this method shall return NaN.
      * @throws IllegalArgumentException when quantile is NaN
      */
     public double getCumulativeProbability(final double quantile)
@@ -407,8 +407,8 @@ public class Tally implements TallyStatistic
 
     /**
      * returns the confidence interval on either side of the mean.
-     * @param alpha Alpha is the significance level used to compute the confidence level. The confidence level equals
-     *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
+     * @param alpha Alpha is the significance level used to compute the confidence level. The confidence level equals 100*(1 -
+     *            alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
      * @return the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      */
@@ -419,8 +419,8 @@ public class Tally implements TallyStatistic
 
     /**
      * returns the confidence interval based of the mean.
-     * @param alpha Alpha is the significance level used to compute the confidence level. The confidence level equals
-     *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
+     * @param alpha Alpha is the significance level used to compute the confidence level. The confidence level equals 100*(1 -
+     *            alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
      * @param side the side of the confidence interval with respect to the mean
      * @return the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1

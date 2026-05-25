@@ -123,5 +123,5 @@ public class Counter implements Statistic
     {
         return "Counter [description=" + this.description + ", n=" + this.n + ", count=" + this.count + "]";
     }
-    
+
 }

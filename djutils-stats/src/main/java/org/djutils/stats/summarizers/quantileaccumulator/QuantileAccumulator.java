@@ -25,13 +25,13 @@ public interface QuantileAccumulator
      * @throws NullPointerException when tally is null
      */
     double getQuantile(Tally tally, double probability);
-    
+
     /**
      * Get, or estimate fraction of registered values between -infinity up to and including a given quantile.
      * @param tally the tally object that accumulates mean, minimum, maximum, count, etc.
      * @param quantile the given quantile
-     * @return the estimated or observed fraction of registered values between -infinity up to and including the given
-     *         quantile. When this QuantileAccumulator has registered zero values; this method shall return NaN.
+     * @return the estimated or observed fraction of registered values between -infinity up to and including the given quantile.
+     *         When this QuantileAccumulator has registered zero values; this method shall return NaN.
      * @throws IllegalArgumentException when quantile is NaN
      */
     double getCumulativeProbability(Tally tally, double quantile) throws IllegalArgumentException;

@@ -238,8 +238,8 @@ public class TallyTest
     {
         Tally tally = new Tally("test with the NoStorageAccumulator", new NoStorageAccumulator());
         assertTrue(Double.isNaN(tally.getSampleMean()), "mean of no data is NaN");
-        UnitTest.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
-                IllegalArgumentException.class);
+        UnitTest.testFail(() -> tally.getQuantile(0.5),
+                "getQuantile of no data should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
         tally.register(90.0);
         assertEquals(90.0, tally.getSampleMean(), 0, "mean of one value is that value");
         UnitTest.testFail(() -> tally.getQuantile(0.5),

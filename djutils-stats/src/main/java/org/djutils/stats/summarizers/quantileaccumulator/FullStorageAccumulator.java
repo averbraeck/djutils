@@ -100,7 +100,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
             {
                 lowerBound = guess + 1;
             }
-            else 
+            else
             {
                 upperBound = guess;
             }
@@ -115,7 +115,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
             {
                 upperBound = guess;
             }
-            else 
+            else
             {
                 b = guess + 1;
             }
@@ -140,7 +140,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
         }
         return (adjust + upperBound + lowerBound) / this.accumulator.size() / 2; // cases 4, 5 and 6
     }
-    
+
     @Override
     public void initialize()
     {
