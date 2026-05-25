@@ -1,20 +1,38 @@
 package org.djutils.serialization.serializers;
 
 import org.djutils.serialization.Endianness;
+import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
 /**
- * Interface to serialize and deserialize data.
+ * Basic functions of the serializer/deserializer.
  * <p>
  * Copyright (c) 2019-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * <p>
  * @author Alexander Verbraeck
  * @author Peter Knoppers
- * @param <T> Type of object that can be serialized and deserialized
+ * @param <T> class
  */
-public interface Serializer<T extends Object>
+public abstract class BasicCodec<T>
 {
+    /** The field type that usually prefixes the serialized data. */
+    private final byte type;
+
+    /** String returned by the dataClassName method. */
+    private final String dataClassName;
+
+    /**
+     * Construct the BasicSerializer.
+     * @param type the field type as defined by the {@link FieldTypes} class
+     * @param dataClassName the name of the data type (not the class name)
+     */
+    public BasicCodec(final byte type, final String dataClassName)
+    {
+        this.type = type;
+        this.dataClassName = dataClassName;
+    }
+
     /**
      * Compute the number of bytes needed to serialize an object of type T (excluding the byte(s) that indicate that an object
      * of type T is next in the data stream).
@@ -22,7 +40,7 @@ public interface Serializer<T extends Object>
      * @return the number of bytes needed to serialize an object of type T
      * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    int size(T object) throws SerializationException;
+    public abstract int size(T object) throws SerializationException;
 
     /**
      * Compute the number of bytes needed to serialize an object of type T (including the byte(s) that indicate that an object
@@ -31,13 +49,19 @@ public interface Serializer<T extends Object>
      * @return the number of bytes needed to serialize an object of type T
      * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    int sizeWithPrefix(T object) throws SerializationException;
+    public int sizeWithPrefix(final T object) throws SerializationException
+    {
+        return 1 + size(object);
+    }
 
     /**
      * Return the byte representation of the field type.
-     * @return byte
+     * @return byte representing the encoded field type
      */
-    byte fieldType();
+    public final byte fieldType()
+    {
+        return this.type;
+    }
 
     /**
      * Serialize an object of type T; not including the prefix byte(s).
@@ -47,7 +71,8 @@ public interface Serializer<T extends Object>
      * @param endianness selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serialize(T object, byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
+    public abstract void serialize(T object, byte[] buffer, Pointer pointer, Endianness endianness)
+            throws SerializationException;
 
     /**
      * Serialize an object of type T including the prefix byte(s).
@@ -57,7 +82,12 @@ public interface Serializer<T extends Object>
      * @param endianness selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
+    public void serializeWithPrefix(final T object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+            throws SerializationException
+    {
+        buffer[pointer.getAndIncrement(1)] = fieldType();
+        serialize(object, buffer, pointer, endianness);
+    }
 
     /**
      * Deserialize an object of type T. The <code>pointer</code> should be on the first byte of the object; i.e. just after the
@@ -68,27 +98,37 @@ public interface Serializer<T extends Object>
      * @param endianness selects bigEndian or littleEndian encoding
      * @throws SerializationException when the input data cannot be deserialized
      */
-    T deSerialize(byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
+    public abstract T deserialize(byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
 
     /**
      * Return a description of the type of data that this serializer handles. The result of this method should <b>not</b> be
      * subject to localization because it is used in the SerialDataDecoder to identify the type of a serializer.
      * @return description of the type of data that this serializer handles
      */
-    String dataClassName();
+    public final String dataClassName()
+    {
+        return this.dataClassName;
+    }
 
     /**
      * Return the number of dimensions of the stored data.
      * @return 0 for plain data, 1 for array, 2 for matrix
      */
-    int getNumberOfDimensions();
+    public abstract int getNumberOfDimensions();
 
     /**
      * Return whether the serializer uses a single unit type or not.
      * @return whether the serializer uses a single unit type or not
      */
-    default boolean hasUnit()
+    public boolean hasUnit()
     {
         return false;
     }
+
+    @Override
+    public String toString()
+    {
+        return "BasicSerializer [type=" + this.type + ", dataClassName=" + this.dataClassName + "]";
+    }
+
 }

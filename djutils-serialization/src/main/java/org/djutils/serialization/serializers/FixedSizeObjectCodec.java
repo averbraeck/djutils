@@ -12,18 +12,18 @@ import org.djutils.serialization.FieldTypes;
  * @author Peter Knoppers
  * @param <T> class to be serialized
  */
-public abstract class FixedSizeObjectSerializer<T extends Object> extends ObjectSerializer<T>
+public abstract class FixedSizeObjectCodec<T extends Object> extends BasicCodec<T>
 {
     /** Size of the encoded data. */
     private final int dataSize;
 
     /**
-     * Construct the FixedSizeObjectSerializer.
+     * Construct the FixedSizeObjectCodec.
      * @param fieldType the field type as defined by the {@link FieldTypes} class
      * @param serializedDataSize number of bytes required for the serialized object
      * @param dataClassName descriptive name of the type (not the class name)
      */
-    public FixedSizeObjectSerializer(final byte fieldType, final int serializedDataSize, final String dataClassName)
+    public FixedSizeObjectCodec(final byte fieldType, final int serializedDataSize, final String dataClassName)
     {
         super(fieldType, dataClassName);
         this.dataSize = serializedDataSize;
@@ -33,6 +33,13 @@ public abstract class FixedSizeObjectSerializer<T extends Object> extends Object
     public final int size(final Object object)
     {
         return this.dataSize;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getNumberOfDimensions()
+    {
+        return 0;
     }
 
 }
