@@ -7,7 +7,8 @@ import java.nio.ByteOrder;
  * Method to help with Little Endian / Big Endian conversions for the serialization.
  * <p>
  * Copyright (c) 2016-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
- * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">Sim0MQ License</a>.
+ * BSD-style license. <a href="https://djutils.org/docs/license.html" target="_blank">
+ * https://djutils.org/docs/license.html</a>..
  * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
@@ -36,8 +37,8 @@ public final class Endianness
 
     /**
      * Construct an Endianness object with user specified endianness.
-     * @param bigEndian if true encoding and decoding use big endian style; if false; encoding and decoding use little
-     *            endian style
+     * @param bigEndian if true encoding and decoding use big endian style; if false; encoding and decoding use little endian
+     *            style
      */
     private Endianness(final boolean bigEndian)
     {

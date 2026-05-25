@@ -1,11 +1,11 @@
 package org.djutils.serialization;
 
 /**
- * Exception for the DSOL ZeroMQ bridge.
+ * Runtime Exception for serialization and deserialization code.
  * <p>
- * Copyright (c) 2019-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2019-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
- * </p>
+ * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
@@ -15,14 +15,14 @@ public class SerializationRuntimeException extends RuntimeException
     private static final long serialVersionUID = 20190611L;
 
     /**
-     * Create a serialization exception.
+     * Create a serialization runtime exception.
      */
     public SerializationRuntimeException()
     {
     }
 
     /**
-     * Create a serialization exception.
+     * Create a serialization runtime exception.
      * @param message the message
      */
     public SerializationRuntimeException(final String message)
@@ -31,7 +31,7 @@ public class SerializationRuntimeException extends RuntimeException
     }
 
     /**
-     * Create a serialization exception.
+     * Create a serialization runtime exception.
      * @param cause the exception that caused the serialization exception
      */
     public SerializationRuntimeException(final Throwable cause)
@@ -40,7 +40,7 @@ public class SerializationRuntimeException extends RuntimeException
     }
 
     /**
-     * Create a serialization exception.
+     * Create a serialization runtime exception.
      * @param message the message
      * @param cause the exception that caused the serialization exception
      */
@@ -50,7 +50,7 @@ public class SerializationRuntimeException extends RuntimeException
     }
 
     /**
-     * Create a serialization exception.
+     * Create a serialization runtime exception.
      * @param message the message
      * @param cause the exception that caused the serialization exception
      * @param enableSuppression to enable suppressions or not
