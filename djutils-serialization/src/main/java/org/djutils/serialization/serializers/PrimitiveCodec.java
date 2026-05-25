@@ -13,18 +13,39 @@ import org.djutils.serialization.FieldTypes;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
  * @author Alexander Verbraeck
+ * @param <T> the primitive type (as object class)
  */
-public final class PrimitiveCodec
+public abstract class PrimitiveCodec<T> extends BasicCodec<T>
 {
+    /** Size of the encoded data. */
+    private final int dataSize;
 
-    /** Static class, no constructor. */
-    private PrimitiveCodec()
+    /**
+     * Construct the FixedSizeObjectCodec.
+     * @param fieldType the field type as defined by the {@link FieldTypes} class
+     * @param serializedDataSize number of bytes required for the serialized object
+     */
+    public PrimitiveCodec(final byte fieldType, final int serializedDataSize)
     {
-        // Static class, no constructor
+        super(fieldType);
+        this.dataSize = serializedDataSize;
+    }
+
+    @Override
+    public final int size(final Object object)
+    {
+        return this.dataSize;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getNumberOfDimensions()
+    {
+        return 0;
     }
 
     /** Converter for Byte. */
-    protected static final BasicCodec<Byte> CONVERT_BYTE = new FixedSizeObjectCodec<>(FieldTypes.BYTE_8, 1)
+    protected static final PrimitiveCodec<Byte> CONVERT_BYTE = new PrimitiveCodec<>(FieldTypes.BYTE_8, 1)
     {
         @Override
         public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -40,7 +61,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Short. */
-    protected static final BasicCodec<Short> CONVERT_SHORT = new FixedSizeObjectCodec<>(FieldTypes.SHORT_16, 2)
+    protected static final PrimitiveCodec<Short> CONVERT_SHORT = new PrimitiveCodec<>(FieldTypes.SHORT_16, 2)
     {
         @Override
         public void serialize(final Short object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -56,7 +77,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Integer. */
-    protected static final BasicCodec<Integer> CONVERT_INTEGER = new FixedSizeObjectCodec<>(FieldTypes.INT_32, 4)
+    protected static final PrimitiveCodec<Integer> CONVERT_INTEGER = new PrimitiveCodec<>(FieldTypes.INT_32, 4)
     {
         @Override
         public void serialize(final Integer object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -72,7 +93,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Integer. */
-    protected static final BasicCodec<Long> CONVERT_LONG = new FixedSizeObjectCodec<>(FieldTypes.LONG_64, 8)
+    protected static final PrimitiveCodec<Long> CONVERT_LONG = new PrimitiveCodec<>(FieldTypes.LONG_64, 8)
     {
         @Override
         public void serialize(final Long object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -88,7 +109,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Float. */
-    protected static final BasicCodec<Float> CONVERT_FLOAT = new FixedSizeObjectCodec<>(FieldTypes.FLOAT_32, 4)
+    protected static final PrimitiveCodec<Float> CONVERT_FLOAT = new PrimitiveCodec<>(FieldTypes.FLOAT_32, 4)
     {
         @Override
         public void serialize(final Float object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -104,7 +125,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Double. */
-    protected static final BasicCodec<Double> CONVERT_DOUBLE = new FixedSizeObjectCodec<>(FieldTypes.DOUBLE_64, 8)
+    protected static final PrimitiveCodec<Double> CONVERT_DOUBLE = new PrimitiveCodec<>(FieldTypes.DOUBLE_64, 8)
     {
         @Override
         public void serialize(final Double object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -120,7 +141,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Boolean. */
-    protected static final BasicCodec<Boolean> CONVERT_BOOLEAN = new FixedSizeObjectCodec<>(FieldTypes.BOOLEAN_8, 1)
+    protected static final PrimitiveCodec<Boolean> CONVERT_BOOLEAN = new PrimitiveCodec<>(FieldTypes.BOOLEAN_8, 1)
     {
         @Override
         public void serialize(final Boolean object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -136,7 +157,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Character. */
-    protected static final BasicCodec<Character> CONVERT_CHARACTER16 = new FixedSizeObjectCodec<>(FieldTypes.CHAR_16, 2)
+    protected static final PrimitiveCodec<Character> CONVERT_CHARACTER16 = new PrimitiveCodec<>(FieldTypes.CHAR_16, 2)
     {
         @Override
         public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -152,7 +173,7 @@ public final class PrimitiveCodec
     };
 
     /** Converter for Character. */
-    protected static final BasicCodec<Character> CONVERT_CHARACTER8 = new FixedSizeObjectCodec<>(FieldTypes.CHAR_8, 1)
+    protected static final PrimitiveCodec<Character> CONVERT_CHARACTER8 = new PrimitiveCodec<>(FieldTypes.CHAR_8, 1)
     {
         @Override
         public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
