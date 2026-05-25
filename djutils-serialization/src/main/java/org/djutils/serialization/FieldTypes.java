@@ -5,9 +5,9 @@ package org.djutils.serialization;
  * <p>
  * Copyright (c) 2016-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. <a href="https://djutils.org/docs/license.html" target="_blank">
- * https://djutils.org/docs/license.html</a>..
+ * https://djutils.org/docs/license.html</a>.
  * <p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * @author Alexander Verbraeck
  */
 public final class FieldTypes
 {

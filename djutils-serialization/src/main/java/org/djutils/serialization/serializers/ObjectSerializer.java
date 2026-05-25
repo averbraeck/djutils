@@ -1,6 +1,7 @@
 package org.djutils.serialization.serializers;
 
 import org.djutils.serialization.Endianness;
+import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
 /**
@@ -8,17 +9,17 @@ import org.djutils.serialization.SerializationException;
  * <p>
  * Copyright (c) 2019-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * <p>
+ * @author Alexander Verbraeck
+ * @author Peter Knoppers
  * @param <T> class
  */
 public abstract class ObjectSerializer<T extends Object> extends BasicSerializer<T>
 {
     /**
      * Construct a new ObjectSerializer.
-     * @param type the field type (returned by the <code>fieldType</code> method)
-     * @param dataClassName returned by the dataClassName method
+     * @param type the field type as defined by the {@link FieldTypes} class
+     * @param dataClassName descriptive name of the type (not the class name)
      */
     public ObjectSerializer(final byte type, final String dataClassName)
     {
