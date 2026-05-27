@@ -1840,24 +1840,24 @@ public class UnitType
     }
 
     /**
-     * Return the display type belonging to the display code.
+     * Return the unit type belonging to the display code.
      * @param unitType the unit type to search for
      * @param code the code to search for.
      * @return the unit type, or null if not found.
      */
-    public static UnitType getDisplayType(final QuantityType unitType, final Integer code)
+    public static UnitType getUnitType(final QuantityType unitType, final Integer code)
     {
         Map<Integer, UnitType> byteMap = codeUnitMap.get(unitType);
         return byteMap == null ? null : byteMap.get(code);
     }
 
     /**
-     * Return the display type belonging to the display code.
+     * Return the unit type belonging to the display code.
      * @param quantityTypeCode the quantity type to search for
      * @param unitCode the unit code to search for.
      * @return the unit type, or null if not found.
      */
-    public static UnitType getDisplayType(final byte quantityTypeCode, final int unitCode)
+    public static UnitType getUnitType(final byte quantityTypeCode, final int unitCode)
     {
         QuantityType quantityType = QuantityType.getQuantityType(quantityTypeCode);
         Map<Integer, UnitType> codeMap = codeUnitMap.get(quantityType);
