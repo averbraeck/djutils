@@ -72,9 +72,9 @@ public final class MessageCodec
      * @return array filled with the serializers needed for the objects in the Object array
      * @throws SerializationException when an object in <code>content</code> cannot be serialized
      */
-    protected static Serializer<?>[] buildEncoderList(final boolean utf8, final Object... content) throws SerializationException
+    protected static BasicCodec<?>[] buildEncoderList(final boolean utf8, final Object... content) throws SerializationException
     {
-        Serializer<?>[] result = new Serializer[content.length];
+        BasicCodec<?>[] result = new BasicCodec[content.length];
         for (int i = 0; i < content.length; i++)
         {
             Object object = content[i];
@@ -85,7 +85,7 @@ public final class MessageCodec
     }
 
     /**
-     * Encode the object array into a Big Endian message.
+     * Encode the object array into a message, taking the endianness into account.
      * @param utf8 whether to encode String fields and characters in utf8 or not
      * @param endianness encoder for multi-byte values
      * @param content the objects to encode
@@ -96,7 +96,7 @@ public final class MessageCodec
     private static byte[] encode(final boolean utf8, final Endianness endianness, final Object... content)
             throws SerializationException
     {
-        Serializer[] serializers = buildEncoderList(utf8, content);
+        BasicCodec[] serializers = buildEncoderList(utf8, content);
         // Pass one: compute total size
         int size = 0;
         for (int i = 0; i < serializers.length; i++)
@@ -151,7 +151,7 @@ public final class MessageCodec
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decode(final Endianness endianness, final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap)
+    public static Object[] decode(final Endianness endianness, final byte[] buffer, final Map<Byte, BasicCodec<?>> decoderMap)
             throws SerializationException
     {
         List<Object> list = new ArrayList<>();
@@ -159,7 +159,7 @@ public final class MessageCodec
         while (pointer.get() < buffer.length)
         {
             Byte fieldType = buffer[pointer.getAndIncrement(1)];
-            Serializer<?> serializer = decoderMap.get(fieldType);
+            BasicCodec<?> serializer = decoderMap.get(fieldType);
             if (null == serializer)
             {
                 throw new SerializationException("Bad FieldType or no defined decoder for fieldType " + fieldType
@@ -167,7 +167,7 @@ public final class MessageCodec
             }
             else
             {
-                list.add(serializer.deSerialize(buffer, pointer, endianness));
+                list.add(serializer.deserialize(buffer, pointer, endianness));
             }
         }
         return list.toArray();
