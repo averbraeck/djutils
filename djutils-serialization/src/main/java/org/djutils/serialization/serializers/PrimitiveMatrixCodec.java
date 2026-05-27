@@ -6,9 +6,8 @@ import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
 /**
- * PrimitiveArrayCodec is responsible for the serialization and deserialization of 2-dimensional matrices of primitive types,
- * which can be offered as the primitive type (e.g., <code>int[][]</code> itself or as the object wrapper (e.g.,
- * <code>Integer[][]</code>).
+ * PrimitiveMatrixCodec is responsible for the serialization and deserialization of 2-dimensional matrices of primitive types,
+ * (e.g., <code>int[][]</code>. Note that the matrices need to be non-jagged, and non-empty.
  * <p>
  * Copyright (c) 2026-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -18,19 +17,42 @@ import org.djutils.serialization.SerializationException;
  * @author Alexander Verbraeck
  * @author Peter Knoppers
  * @author Wouter Schakel
+ * @param <T> the data type (2-dimensional)
  */
-public final class PrimitiveMatrixCodec
+public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
 {
+    /** Size of one element of the encoded data. */
+    private final int elementSize;
 
-    /** Static class, no constructor. */
-    private PrimitiveMatrixCodec()
+    /**
+     * Construct a new PrimitiveMatrixCodec.
+     * @param type the field type as defined by the {@link FieldTypes} class
+     * @param elementSize the number of bytes needed to encode one additional array element
+     */
+    public PrimitiveMatrixCodec(final byte type, final int elementSize)
     {
-        // Static class, no constructor
+        super(type);
+        this.elementSize = elementSize;
+    }
+
+    /**
+     * Retrieve the number of bytes needed to encode one additional array element.
+     * @return the number of bytes needed to encode one additional array element
+     */
+    public final int getElementSize()
+    {
+        return this.elementSize;
+    }
+
+    @Override
+    public final int getNumberOfDimensions()
+    {
+        return 2;
     }
 
     /** Converter for byte matrix. */
-    protected static final Serializer<byte[][]> CONVERT_BYTE_MATRIX =
-            new BasicPrimitiveArrayOrMatrixSerializer<byte[][]>(FieldTypes.BYTE_8_MATRIX, 1, "byte_8_matrix", 2)
+    protected static final PrimitiveMatrixCodec<byte[][]> CONVERT_BYTE_MATRIX =
+            new PrimitiveMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1)
             {
                 @Override
                 public int size(final byte[][] matrix)
@@ -57,7 +79,7 @@ public final class PrimitiveMatrixCodec
                 }
 
                 @Override
-                public byte[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                public byte[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                         throws SerializationException
                 {
                     int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -74,27 +96,9 @@ public final class PrimitiveMatrixCodec
                 }
             };
 
-    /** Converter for Byte matrix. */
-    protected static final Serializer<Byte[][]> CONVERT_BYTE_OBJECT_MATRIX =
-            new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, Byte.class, "Byte_8_matrix")
-            {
-                @Override
-                public void serializeElement(final Byte object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    buffer[offset] = object;
-                }
-
-                @Override
-                public Byte deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return buffer[offset];
-                }
-            };
-
     /** Converter for short matrix. */
-    protected static final Serializer<short[][]> CONVERT_SHORT_MATRIX =
-            new BasicPrimitiveArrayOrMatrixSerializer<short[][]>(FieldTypes.SHORT_16_MATRIX, 2, "short_16_matrix", 2)
+    protected static final PrimitiveMatrixCodec<short[][]> CONVERT_SHORT_MATRIX =
+            new PrimitiveMatrixCodec<short[][]>(FieldTypes.SHORT_16_MATRIX, 2)
             {
                 @Override
                 public int size(final short[][] matrix)
@@ -121,7 +125,7 @@ public final class PrimitiveMatrixCodec
                 }
 
                 @Override
-                public short[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                public short[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                         throws SerializationException
                 {
                     int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -138,27 +142,9 @@ public final class PrimitiveMatrixCodec
                 }
             };
 
-    /** Converter for Short matrix. */
-    protected static final Serializer<Short[][]> CONVERT_SHORT_OBJECT_MATRIX =
-            new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, Short.class, "Short_16_matrix")
-            {
-                @Override
-                public void serializeElement(final Short object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeShort(object, buffer, offset);
-                }
-
-                @Override
-                public Short deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeShort(buffer, offset);
-                }
-            };
-
     /** Converter for int matrix. */
-    protected static final Serializer<int[][]> CONVERT_INT_MATRIX =
-            new BasicPrimitiveArrayOrMatrixSerializer<int[][]>(FieldTypes.INT_32_MATRIX, 4, "int_32_matrix", 2)
+    protected static final PrimitiveMatrixCodec<int[][]> CONVERT_INT_MATRIX =
+            new PrimitiveMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4)
             {
                 @Override
                 public int size(final int[][] matrix)
@@ -185,7 +171,7 @@ public final class PrimitiveMatrixCodec
                 }
 
                 @Override
-                public int[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                public int[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                         throws SerializationException
                 {
                     int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -202,27 +188,9 @@ public final class PrimitiveMatrixCodec
                 }
             };
 
-    /** Converter for Integer matrix. */
-    protected static final Serializer<Integer[][]> CONVERT_INTEGER_OBJECT_MATRIX =
-            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, Integer.class, "Integer_32_matrix")
-            {
-                @Override
-                public void serializeElement(final Integer object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeInt(object, buffer, offset);
-                }
-
-                @Override
-                public Integer deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeInt(buffer, offset);
-                }
-            };
-
     /** Converter for long matrix. */
-    protected static final Serializer<long[][]> CONVERT_LONG_MATRIX =
-            new BasicPrimitiveArrayOrMatrixSerializer<long[][]>(FieldTypes.LONG_64_MATRIX, 8, "long_64_matrix", 2)
+    protected static final PrimitiveMatrixCodec<long[][]> CONVERT_LONG_MATRIX =
+            new PrimitiveMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8)
             {
                 @Override
                 public int size(final long[][] matrix)
@@ -249,7 +217,7 @@ public final class PrimitiveMatrixCodec
                 }
 
                 @Override
-                public long[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                public long[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                         throws SerializationException
                 {
                     int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -266,27 +234,9 @@ public final class PrimitiveMatrixCodec
                 }
             };
 
-    /** Converter for Long matrix. */
-    protected static final Serializer<Long[][]> CONVERT_LONG_OBJECT_MATRIX =
-            new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, Long.class, "Long_64_matrix")
-            {
-                @Override
-                public void serializeElement(final Long object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeLong(object, buffer, offset);
-                }
-
-                @Override
-                public Long deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeLong(buffer, offset);
-                }
-            };
-
     /** Converter for float matrix. */
-    protected static final Serializer<float[][]> CONVERT_FLOAT_MATRIX =
-            new BasicPrimitiveArrayOrMatrixSerializer<float[][]>(FieldTypes.FLOAT_32_MATRIX, 4, "float_32_matrix", 2)
+    protected static final PrimitiveMatrixCodec<float[][]> CONVERT_FLOAT_MATRIX =
+            new PrimitiveMatrixCodec<>(FieldTypes.FLOAT_32_MATRIX, 4)
             {
                 @Override
                 public int size(final float[][] matrix)
@@ -313,7 +263,7 @@ public final class PrimitiveMatrixCodec
                 }
 
                 @Override
-                public float[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                public float[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                         throws SerializationException
                 {
                     int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -330,27 +280,9 @@ public final class PrimitiveMatrixCodec
                 }
             };
 
-    /** Converter for Float matrix. */
-    protected static final Serializer<Float[][]> CONVERT_FLOAT_OBJECT_MATRIX =
-            new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, Float.class, "Float_32_matrix")
-            {
-                @Override
-                public void serializeElement(final Float object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeFloat(object, buffer, offset);
-                }
-
-                @Override
-                public Float deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeFloat(buffer, offset);
-                }
-            };
-
     /** Converter for double matrix. */
-    protected static final Serializer<double[][]> CONVERT_DOUBLE_MATRIX =
-            new BasicPrimitiveArrayOrMatrixSerializer<double[][]>(FieldTypes.DOUBLE_64_MATRIX, 8, "double_64_matrix", 2)
+    protected static final PrimitiveMatrixCodec<double[][]> CONVERT_DOUBLE_MATRIX =
+            new PrimitiveMatrixCodec<>(FieldTypes.DOUBLE_64_MATRIX, 8)
             {
                 @Override
                 public int size(final double[][] matrix)
@@ -377,7 +309,7 @@ public final class PrimitiveMatrixCodec
                 }
 
                 @Override
-                public double[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                public double[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                         throws SerializationException
                 {
                     int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -394,27 +326,9 @@ public final class PrimitiveMatrixCodec
                 }
             };
 
-    /** Converter for Double matrix. */
-    protected static final Serializer<Double[][]> CONVERT_DOUBLE_OBJECT_MATRIX =
-            new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class, "Double_64_matrix")
-            {
-                @Override
-                public void serializeElement(final Double object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeDouble(object, buffer, offset);
-                }
-
-                @Override
-                public Double deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeDouble(buffer, offset);
-                }
-            };
-
     /** Converter for boolean matrix. */
-    protected static final Serializer<boolean[][]> CONVERT_BOOLEAN_MATRIX =
-            new BasicPrimitiveArrayOrMatrixSerializer<boolean[][]>(FieldTypes.BOOLEAN_8_MATRIX, 1, "boolean_8_matrix", 2)
+    protected static final PrimitiveMatrixCodec<boolean[][]> CONVERT_BOOLEAN_MATRIX =
+            new PrimitiveMatrixCodec<>(FieldTypes.BOOLEAN_8_MATRIX, 1)
             {
                 @Override
                 public int size(final boolean[][] matrix)
@@ -441,7 +355,7 @@ public final class PrimitiveMatrixCodec
                 }
 
                 @Override
-                public boolean[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                public boolean[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                         throws SerializationException
                 {
                     int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -455,24 +369,6 @@ public final class PrimitiveMatrixCodec
                         }
                     }
                     return result;
-                }
-            };
-
-    /** Converter for Boolean matrix. */
-    protected static final Serializer<Boolean[][]> CONVERT_BOOLEAN_OBJECT_MATRIX =
-            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class, "Boolean_8_matrix")
-            {
-                @Override
-                public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    buffer[offset] = (byte) (object ? 1 : 0);
-                }
-
-                @Override
-                public Boolean deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return buffer[offset] != 0;
                 }
             };
 
