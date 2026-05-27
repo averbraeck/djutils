@@ -1,66 +1,65 @@
 package org.djutils.serialization.serializers;
 
+import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;
-import org.djutils.serialization.UnitType;
-import org.djutils.serialization.Endianness;
 import org.djutils.serialization.QuantityType;
+import org.djutils.serialization.UnitType;
 
 /**
- * Abstract class to (de)serializes a DJUNITS value.
+ * Static class to (de)serializes a Unit from the djunits library.
  * <p>
- * Copyright (c) 2019-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2019-2026 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djunits.org/docs/license.html">DJUNITS License</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
- * @param <U> the unit type
- * @param <T> the object type
+ * <p>
+ * @author Alexander Verbraeck
  */
-public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends ObjectSerializer<T>
+public final class UnitCodec
 {
-    /**
-     * Construct a new ObjectWithUnitSerializer.
-     * @param type the field type (returned by the <code>fieldType</code> method)
-     * @param dataClassName returned by the dataClassName method
-     */
-    public ObjectWithUnitSerializer(final byte type, final String dataClassName)
+    /** static class. */
+    private UnitCodec()
     {
-        super(type, dataClassName);
+        // static class
     }
 
     /**
-     * Code a unit.
+     * Encode a quantity code and unit code into a message byte array.
      * @param unit the unit to code in the byte array
      * @param message the byte array
      * @param pointer the start pointer in the byte array
-     * @param endianness encoder to use for multi-byte values
      */
-    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final Endianness endianness)
+    protected static void encodeQuantityUnit(final Unit<?, ?> unit, final byte[] message, final Pointer pointer)
     {
-        QuantityType unitType = QuantityType.getUnitType(unit);
-        message[pointer.getAndIncrement(1)] = unitType.getCode();
-        UnitType displayType = UnitType.getDisplayType(unit);
-        message[pointer.getAndIncrement(1)] = displayType.getByteCode();
+        QuantityType quantityType = QuantityType.getQuantityType(unit);
+        message[pointer.getAndIncrement(1)] = quantityType.getCode();
+        UnitType unitType = UnitType.getUnitType(unit);
+        message[pointer.getAndIncrement(1)] = unitType.getByteCode();
     }
 
     /**
-     * Retrieve and decode a DJUNITS unit.
-     * @param buffer the encoded data
-     * @param pointer position in the encoded data where the unit is to be decoded from
-     * @param endianness decoder for multi-byte values
-     * @return Unit
+     * Encode a quantity code and unit code based on a quantity into a message byte array.
+     * @param quantity the quantity for which to encode the unit in the byte array
+     * @param message the byte array
+     * @param pointer the start pointer in the byte array
      */
-    @SuppressWarnings("unchecked")
-    protected U getUnit(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+    protected static void encodeQuantityUnit(final Quantity<?> quantity, final byte[] message, final Pointer pointer)
     {
-        QuantityType unitType = QuantityType.getUnitType(buffer[pointer.getAndIncrement(1)]);
-        UnitType displayType = UnitType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
-        return (U) displayType.getDjunitsType();
+        QuantityType quantityType = QuantityType.getQuantityType(quantity);
+        message[pointer.getAndIncrement(1)] = quantityType.getCode();
+        UnitType unitType = UnitType.getUnitType(quantity.getDisplayUnit());
+        message[pointer.getAndIncrement(1)] = unitType.getByteCode();
     }
 
-    @Override
-    public boolean hasUnit()
+    /**
+     * Decode and return a unit.
+     * @param buffer the encoded data
+     * @param pointer position in the encoded data where the unit is to be decoded from
+     * @return the Unit 
+     */
+    protected static Unit<?, ?> getUnit(final byte[] buffer, final Pointer pointer)
     {
-        return true;
+        byte quantityCode = buffer[pointer.getAndIncrement(1)];
+        byte unitCode = buffer[pointer.getAndIncrement(1)];
+        return UnitType.getUnit(quantityCode, unitCode);
     }
 
 }
