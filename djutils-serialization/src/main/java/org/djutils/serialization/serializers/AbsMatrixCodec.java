@@ -31,7 +31,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
     @Override
     public int getNumberOfDimensions()
     {
-        return 1;
+        return 2;
     }
 
     /** Converter for Absolute Matrix with a float value. */

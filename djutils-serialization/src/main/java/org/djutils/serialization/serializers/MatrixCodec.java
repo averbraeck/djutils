@@ -31,7 +31,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
     @Override
     public int getNumberOfDimensions()
     {
-        return 1;
+        return 2;
     }
 
     /** Converter for Quantity Matrix with float values. */
