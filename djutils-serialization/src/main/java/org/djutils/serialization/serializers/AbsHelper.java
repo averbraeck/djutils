@@ -10,6 +10,10 @@ import org.djunits.quantity.TemperatureDifference;
 import org.djunits.quantity.Time;
 import org.djunits.quantity.def.AbsBasic;
 import org.djunits.quantity.def.Quantity;
+import org.djunits.quantity.def.Reference;
+import org.djunits.unit.Unit;
+import org.djunits.vecmat.dn.AbsVectorN;
+import org.djunits.vecmat.dn.VectorN;
 import org.djutils.exceptions.Throw;
 import org.djutils.serialization.SerializationException;
 
@@ -32,45 +36,72 @@ public final class AbsHelper
     }
 
     /**
+     * Resolve the reference from a String and a unit.
+     * @param refStr the reference string
+     * @param unit the unit for the relative quantity
+     * @return the reference
+     * @throws SerializationException when the reference or absolute class could not be found
+     */
+    static Reference<?, ?, ?> instantiateReference(final String refStr, final Unit<?, ?> unit) throws SerializationException
+    {
+        Quantity<?> quantity = unit.ofSi(0.0);
+        if (quantity instanceof Angle)
+        {
+            Direction.Reference ref = Direction.Reference.get(refStr);
+            Throw.when(ref == null, SerializationException.class, "reference %s for Direction could no be found", refStr);
+            return ref;
+        }
+        if (quantity instanceof Length)
+        {
+            Position.Reference ref = Position.Reference.get(refStr);
+            Throw.when(ref == null, SerializationException.class, "reference %s for Position could no be found", refStr);
+            return ref;
+        }
+        if (quantity instanceof TemperatureDifference)
+        {
+            Temperature.Reference ref = Temperature.Reference.get(refStr);
+            Throw.when(ref == null, SerializationException.class, "reference %s for Temperature could no be found", refStr);
+            return ref;
+        }
+        else if (quantity instanceof Duration)
+        {
+            Time.Reference ref = Time.Reference.get(refStr);
+            Throw.when(ref == null, SerializationException.class, "reference %s for Time could no be found", refStr);
+            return ref;
+        }
+        throw new SerializationException(
+                "Absolute object for quantity " + quantity.getClass().getSimpleName() + " could not be deserialized");
+    }
+
+    /**
      * Instantiate an absolute quantity based on a relative quantity and a reference string.
      * @param quantity the relative quantity
      * @param refStr the reference string
      * @return the absolute quantity
      * @throws SerializationException when the reference or absolute class could not be found
+     * @param <Q> the quantity type
      */
-    static AbsBasic<?, ?, ?> instantiateAbsQuantity(final Quantity<?> quantity, final String refStr)
+    @SuppressWarnings("unchecked")
+    static <Q extends Quantity<Q>> AbsBasic<?, Q, ?> instantiateAbsQuantity(final Quantity<?> quantity, final String refStr)
             throws SerializationException
     {
-        AbsBasic<?, ?, ?> absQuantity;
-        if (quantity instanceof Angle angle)
-        {
-            Direction.Reference ref = Direction.Reference.get(refStr);
-            Throw.when(ref == null, SerializationException.class, "reference %s for Direction could no be found", refStr);
-            absQuantity = ref.instantiate(angle);
-        }
-        else if (quantity instanceof Length length)
-        {
-            Position.Reference ref = Position.Reference.get(refStr);
-            Throw.when(ref == null, SerializationException.class, "reference %s for Position could no be found", refStr);
-            absQuantity = ref.instantiate(length);
-        }
-        else if (quantity instanceof TemperatureDifference temperature)
-        {
-            Temperature.Reference ref = Temperature.Reference.get(refStr);
-            Throw.when(ref == null, SerializationException.class, "reference %s for Temperature could no be found", refStr);
-            absQuantity = ref.instantiate(temperature);
-        }
-        else if (quantity instanceof Duration duration)
-        {
-            Time.Reference ref = Time.Reference.get(refStr);
-            Throw.when(ref == null, SerializationException.class, "reference %s for Time could no be found", refStr);
-            absQuantity = ref.instantiate(duration);
-        }
-        else
-        {
-            throw new SerializationException(
-                    "Absolute quantity for quantity " + quantity.getClass().getSimpleName() + " could not be deserialized");
-        }
-        return absQuantity;
+        Reference<?, ?, Q> ref = (Reference<?, ?, Q>) instantiateReference(refStr, quantity.getDisplayUnit());
+        return ref.instantiate((Q) quantity);
     }
+
+    /**
+     * Instantiate an absolute vector based on a relative vector and a reference string.
+     * @param vector the vector with relative quantities
+     * @param refStr the reference string
+     * @return the vector with absolute quantities
+     * @throws SerializationException when the reference or absolute class could not be found
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    static AbsVectorN.Col<?, ?> instantiateAbsVector(final VectorN.Col<?> vector, final String refStr)
+            throws SerializationException
+    {
+        Reference<?, ?, ?> ref = instantiateReference(refStr, vector.getDisplayUnit());
+        return new AbsVectorN.Col(vector, ref);
+    }
+
 }
