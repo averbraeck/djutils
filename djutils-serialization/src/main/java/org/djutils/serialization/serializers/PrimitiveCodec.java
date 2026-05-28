@@ -37,7 +37,6 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         return this.dataSize;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getNumberOfDimensions()
     {
