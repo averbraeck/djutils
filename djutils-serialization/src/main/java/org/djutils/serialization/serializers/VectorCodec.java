@@ -3,6 +3,7 @@ package org.djutils.serialization.serializers;
 import org.djunits.unit.Unit;
 import org.djunits.vecmat.def.Vector;
 import org.djunits.vecmat.dn.VectorN;
+import org.djunits.vecmat.storage.DenseDoubleDataSi;
 import org.djunits.vecmat.storage.DenseFloatDataSi;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
@@ -105,7 +106,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
                     {
                         dataSi[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
                     }
-                    VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, 1, size), unit);
+                    VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, 1, size), unit);
                     UnitCodec.setDisplayUnit(vector, unit);
                     return vector;
                 }
