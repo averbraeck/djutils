@@ -46,7 +46,7 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
         {
             UnitCodec.encodeQuantityUnit(quantity, buffer, pointer);
             float v = (float) quantity.si();
-            endianness.encodeDouble(v, buffer, pointer.getAndIncrement(4));
+            endianness.encodeFloat(v, buffer, pointer.getAndIncrement(4));
         }
 
         @Override
