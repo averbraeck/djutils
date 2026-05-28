@@ -14,6 +14,8 @@ import org.djunits.quantity.def.Reference;
 import org.djunits.unit.Unit;
 import org.djunits.vecmat.dn.AbsVectorN;
 import org.djunits.vecmat.dn.VectorN;
+import org.djunits.vecmat.dnxm.AbsMatrixNxM;
+import org.djunits.vecmat.dnxm.MatrixNxM;
 import org.djutils.exceptions.Throw;
 import org.djutils.serialization.SerializationException;
 
@@ -102,6 +104,20 @@ public final class AbsHelper
     {
         Reference<?, ?, ?> ref = instantiateReference(refStr, vector.getDisplayUnit());
         return new AbsVectorN.Col(vector, ref);
+    }
+
+    /**
+     * Instantiate an absolute matrix based on a relative matrix and a reference string.
+     * @param matrix the matrix with relative quantities
+     * @param refStr the reference string
+     * @return the matrix with absolute quantities
+     * @throws SerializationException when the reference or absolute class could not be found
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    static AbsMatrixNxM<?, ?> instantiateAbsMatrix(final MatrixNxM<?> matrix, final String refStr) throws SerializationException
+    {
+        Reference<?, ?, ?> ref = instantiateReference(refStr, matrix.getDisplayUnit());
+        return new AbsMatrixNxM(matrix, ref);
     }
 
 }
