@@ -33,9 +33,8 @@ public abstract class BasicCodec<T>
      * of type T is next in the data stream).
      * @param object Instance of the object
      * @return the number of bytes needed to serialize an object of type T
-     * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    public abstract int size(T object) throws SerializationException;
+    public abstract int size(T object);
 
     /**
      * Compute the number of bytes needed to serialize an object of type T (including the byte(s) that indicate that an object

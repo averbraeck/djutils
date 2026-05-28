@@ -58,9 +58,8 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
     }
 
     @Override
-    public final int size(final E[][] matrix) throws SerializationException
+    public final int size(final E[][] matrix)
     {
-        Throw.when(matrix.length == 0 || matrix[0].length == 0, SerializationException.class, "Zero sized matrix not allowed");
         return 4 + 4 + getElementSize() * matrix.length * matrix[0].length;
     }
 

@@ -34,11 +34,17 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
         return 1;
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
     /** Converter for Quantity Vector with float values. */
     protected static final BasicCodec<Vector<?, ?, ?, ?, ?>> VECTOR_FLOAT = new VectorCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
     {
         @Override
-        public int size(final Vector<?, ?, ?, ?, ?> vector) throws SerializationException
+        public int size(final Vector<?, ?, ?, ?, ?> vector)
         {
             return 4 + 2 + 4 * vector.size();
         }
@@ -76,7 +82,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
     protected static final BasicCodec<Vector<?, ?, ?, ?, ?>> VECTOR_DOUBLE = new VectorCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
     {
         @Override
-        public int size(final Vector<?, ?, ?, ?, ?> vector) throws SerializationException
+        public int size(final Vector<?, ?, ?, ?, ?> vector)
         {
             return 4 + 2 + 8 * vector.size();
         }

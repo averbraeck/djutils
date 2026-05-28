@@ -35,12 +35,18 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
         return 1;
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
     /** Converter for Absolute Vector with a float value. */
     protected static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> ABS_VECTOR_FLOAT =
             new AbsVectorCodec(FieldTypes.FLOAT_32_UNIT_ABS_ARRAY)
             {
                 @Override
-                public int size(final AbsVector<?, ?, ?, ?, ?> absVector) throws SerializationException
+                public int size(final AbsVector<?, ?, ?, ?, ?> absVector)
                 {
                     return 2 + 4 * absVector.size() + 1 + 4 + absVector.getReference().getId().length();
                 }
@@ -82,7 +88,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
             new AbsVectorCodec(FieldTypes.DOUBLE_64_UNIT_ABS_ARRAY)
             {
                 @Override
-                public int size(final AbsVector<?, ?, ?, ?, ?> absVector) throws SerializationException
+                public int size(final AbsVector<?, ?, ?, ?, ?> absVector)
                 {
                     return 2 + 8 * absVector.size() + 1 + 4 + absVector.getReference().getId().length();
                 }

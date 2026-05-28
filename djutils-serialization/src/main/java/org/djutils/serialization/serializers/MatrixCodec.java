@@ -34,11 +34,17 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
         return 2;
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
     /** Converter for Quantity Matrix with float values. */
     protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_FLOAT = new MatrixCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
     {
         @Override
-        public int size(final Matrix<?, ?, ?, ?, ?> matrix) throws SerializationException
+        public int size(final Matrix<?, ?, ?, ?, ?> matrix)
         {
             return 4 + 4 + 2 + 4 * matrix.rows() * matrix.cols();
         }
@@ -85,7 +91,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
     protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_DOUBLE = new MatrixCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
     {
         @Override
-        public int size(final Matrix<?, ?, ?, ?, ?> matrix) throws SerializationException
+        public int size(final Matrix<?, ?, ?, ?, ?> matrix)
         {
             return 4 + 4 + 2 + 8 * matrix.rows() * matrix.cols();
         }

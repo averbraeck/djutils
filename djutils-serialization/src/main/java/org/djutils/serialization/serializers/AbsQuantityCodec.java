@@ -33,11 +33,17 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
         return 0;
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
     /** Converter for Absolute Quantity with a float value. */
     protected static final BasicCodec<AbsBasic<?, ?, ?>> ABS_QUANTITY_FLOAT = new AbsQuantityCodec(FieldTypes.FLOAT_32_UNIT_ABS)
     {
         @Override
-        public int size(final AbsBasic<?, ?, ?> absQuantity) throws SerializationException
+        public int size(final AbsBasic<?, ?, ?> absQuantity)
         {
             return 2 + 4 + 1 + 4 + absQuantity.getReference().getId().length();
         }
@@ -70,7 +76,7 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
             new AbsQuantityCodec(FieldTypes.DOUBLE_64_UNIT_ABS)
             {
                 @Override
-                public int size(final AbsBasic<?, ?, ?> absQuantity) throws SerializationException
+                public int size(final AbsBasic<?, ?, ?> absQuantity)
                 {
                     return 2 + 8 + 1 + 4 + absQuantity.getReference().getId().length();
                 }

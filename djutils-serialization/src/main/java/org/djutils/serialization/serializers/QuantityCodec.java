@@ -31,11 +31,17 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
         return 0;
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
     /** Converter for Quantity with a float value. */
     protected static final BasicCodec<Quantity<?>> QUANTITY_FLOAT = new QuantityCodec(FieldTypes.FLOAT_32_UNIT)
     {
         @Override
-        public int size(final Quantity<?> quantity) throws SerializationException
+        public int size(final Quantity<?> quantity)
         {
             return 2 + 4;
         }
@@ -64,7 +70,7 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
     protected static final BasicCodec<Quantity<?>> QUANTITY_DOUBLE = new QuantityCodec(FieldTypes.DOUBLE_64_UNIT)
     {
         @Override
-        public int size(final Quantity<?> quantity) throws SerializationException
+        public int size(final Quantity<?> quantity)
         {
             return 2 + 8;
         }

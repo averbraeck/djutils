@@ -34,12 +34,18 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
         return 2;
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
     /** Converter for Absolute Matrix with a float value. */
     protected static final BasicCodec<AbsMatrix<?, ?, ?, ?, ?>> ABS_MATRIX_FLOAT =
             new AbsMatrixCodec(FieldTypes.FLOAT_32_UNIT_ABS_MATRIX)
             {
                 @Override
-                public int size(final AbsMatrix<?, ?, ?, ?, ?> absMatrix) throws SerializationException
+                public int size(final AbsMatrix<?, ?, ?, ?, ?> absMatrix)
                 {
                     return 2 + 4 * absMatrix.rows() * absMatrix.cols() + 1 + 4 + absMatrix.getReference().getId().length();
                 }
@@ -91,7 +97,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
             new AbsMatrixCodec(FieldTypes.DOUBLE_64_UNIT_ABS_MATRIX)
             {
                 @Override
-                public int size(final AbsMatrix<?, ?, ?, ?, ?> absMatrix) throws SerializationException
+                public int size(final AbsMatrix<?, ?, ?, ?, ?> absMatrix)
                 {
                     return 2 + 8 * absMatrix.rows() * absMatrix.cols() + 1 + 4 + absMatrix.getReference().getId().length();
                 }
