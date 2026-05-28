@@ -8,14 +8,20 @@ import org.djunits.unit.Unit;
 import org.djutils.decoderdumper.Decoder;
 import org.djutils.logger.CategoryLogger;
 import org.djutils.serialization.Endianness;
-import org.djutils.serialization.serializers.ArrayOrMatrixWithUnitSerializer;
-import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
+import org.djutils.serialization.FieldTypes;
+import org.djutils.serialization.SerializationException;
+import org.djutils.serialization.UnitType;
+import org.djutils.serialization.serializers.BasicCodec;
 import org.djutils.serialization.serializers.Codec;
-import org.djutils.serialization.serializers.FixedSizeObjectSerializer;
+import org.djutils.serialization.serializers.ObjectArrayCodec;
+import org.djutils.serialization.serializers.ObjectMatrixCodec;
 import org.djutils.serialization.serializers.Pointer;
-import org.djutils.serialization.serializers.Serializer;
-import org.djutils.serialization.serializers.StringArraySerializer;
-import org.djutils.serialization.serializers.StringMatrixSerializer;
+import org.djutils.serialization.serializers.PrimitiveArrayCodec;
+import org.djutils.serialization.serializers.PrimitiveCodec;
+import org.djutils.serialization.serializers.PrimitiveMatrixCodec;
+import org.djutils.serialization.serializers.QuantityCodec;
+import org.djutils.serialization.serializers.StringArrayCodec;
+import org.djutils.serialization.serializers.StringMatrixCodec;
 
 /**
  * Decoder for inspection of serialized data. The SerialDataDecoder implements a state machine that processes one byte at a
@@ -36,7 +42,7 @@ public class SerialDataDecoder implements Decoder
     private byte currentFieldType;
 
     /** The serializer for the <code>currentFieldType</code>. */
-    private Serializer<?> currentSerializer = null;
+    private BasicCodec<?> currentCodec = null;
 
     /** Position in the dataElementBytes where the next input byte shall be store. */
     private int nextDataElementByte = -1;
@@ -109,7 +115,7 @@ public class SerialDataDecoder implements Decoder
         boolean result = false;
 
         // check if first byte to indicate the field type
-        if (this.currentSerializer == null)
+        if (this.currentCodec == null)
         {
             result = processFieldTypeByte(theByte);
             return result;
@@ -128,7 +134,7 @@ public class SerialDataDecoder implements Decoder
         }
 
         // are we done?
-        if (this.currentSerializer == null)
+        if (this.currentCodec == null)
         {
             return true;
         }
@@ -143,14 +149,14 @@ public class SerialDataDecoder implements Decoder
     private boolean processFieldTypeByte(final byte fieldType)
     {
         this.currentFieldType = fieldType;
-        this.currentSerializer = Codec.DECODERS.get(this.currentFieldType);
-        if (this.currentSerializer == null)
+        this.currentCodec = Codec.getDecoders().get(this.currentFieldType);
+        if (this.currentCodec == null)
         {
             this.buffer.append(String.format("Error: Bad field type %02x - resynchronizing", this.currentFieldType));
             return true;
         }
-        this.buffer.append(this.currentSerializer.dataClassName() + (this.currentSerializer.getNumberOfDimensions() > 0
-                || this.currentSerializer.dataClassName().startsWith("Djunits") ? " " : ": "));
+        this.buffer.append(this.currentCodec.getClass().getSimpleName()
+                + (this.currentCodec.getNumberOfDimensions() > 0 || this.currentCodec.hasUnit() ? " " : ": "));
 
         this.columnCount = 0;
         this.rowCount = 0;
@@ -158,18 +164,17 @@ public class SerialDataDecoder implements Decoder
         this.columnUnits = null;
 
         // check the type and prepare for what is expected; primitive types
-        if (this.currentSerializer instanceof FixedSizeObjectSerializer<?>)
+        if (this.currentCodec instanceof PrimitiveCodec || this.currentCodec instanceof QuantityCodec)
         {
-            var fsoe = (FixedSizeObjectSerializer<?>) this.currentSerializer;
-            int size = fsoe.size(null);
+            int size = this.currentCodec.size(null);
             prepareForDataElement(size);
             return false;
         }
 
         // array or matrix type: next variable to expect is one or more ints (rows/cols)
-        if (this.currentSerializer.getNumberOfDimensions() > 0)
+        if (this.currentCodec.getNumberOfDimensions() > 0)
         {
-            int size = this.currentSerializer.getNumberOfDimensions() * 4;
+            int size = this.currentCodec.getNumberOfDimensions() * 4;
             prepareForDataElement(size);
             return false;
         }
@@ -202,7 +207,7 @@ public class SerialDataDecoder implements Decoder
         boolean result = false;
 
         // primitive types
-        if (this.currentSerializer instanceof FixedSizeObjectSerializer<?>)
+        if (this.currentCodec instanceof PrimitiveCodec || this.currentCodec instanceof QuantityCodec)
         {
             result = appendFixedSizeObject();
             done();
@@ -237,33 +242,43 @@ public class SerialDataDecoder implements Decoder
         }
 
         // array or matrix type
-        if (this.currentSerializer.getNumberOfDimensions() > 0)
+        if (this.currentCodec.getNumberOfDimensions() > 0)
         {
             if (this.rowCount == 0)
             {
                 processRowsCols();
-                if (this.currentSerializer.hasUnit())
+                if (this.currentCodec.hasUnit())
                 {
                     prepareForDataElement(2); // unit type and display type
                 }
-                else if (this.currentSerializer instanceof BasicPrimitiveArrayOrMatrixSerializer<?>)
+                else if (this.currentCodec instanceof PrimitiveArrayCodec pac)
                 {
-                    var bpams = (BasicPrimitiveArrayOrMatrixSerializer<?>) this.currentSerializer;
-                    prepareForDataElement(bpams.getElementSize());
+                    prepareForDataElement(pac.getElementSize());
                 }
-                else if (this.currentSerializer instanceof StringArraySerializer
-                        || this.currentSerializer instanceof StringMatrixSerializer)
+                else if (this.currentCodec instanceof PrimitiveMatrixCodec pmc)
+                {
+                    prepareForDataElement(pmc.getElementSize());
+                }
+                else if (this.currentCodec instanceof ObjectArrayCodec oac)
+                {
+                    prepareForDataElement(oac.getElementSize());
+                }
+                else if (this.currentCodec instanceof ObjectMatrixCodec omc)
+                {
+                    prepareForDataElement(omc.getElementSize());
+                }
+                else if (this.currentCodec instanceof StringArrayCodec || this.currentCodec instanceof StringMatrixCodec)
                 {
                     prepareForDataElement(4);
                 }
                 return false;
             }
-            if (this.currentSerializer.hasUnit())
+            if (this.currentCodec.hasUnit())
             {
                 if (this.displayUnit == null)
                 {
                     result = processUnit();
-                    prepareForDataElement(((ArrayOrMatrixWithUnitSerializer<?, ?>) this.currentSerializer).getElementSize());
+                    prepareForDataElement(this.currentCodec.getClass().getSimpleName().contains("FLOAT") ? 4 : 8);
                     return result;
                 }
                 result = appendDjunitsElement();
@@ -271,8 +286,7 @@ public class SerialDataDecoder implements Decoder
                 incColumnCount();
                 return result;
             }
-            if (this.currentSerializer instanceof StringArraySerializer
-                    || this.currentSerializer instanceof StringMatrixSerializer)
+            if (this.currentCodec instanceof StringArrayCodec || this.currentCodec instanceof StringMatrixCodec)
             {
                 processStringElement();
                 return false;
@@ -308,15 +322,7 @@ public class SerialDataDecoder implements Decoder
      */
     private int getSize()
     {
-        try
-        {
-            return this.currentSerializer.size(null);
-        }
-        catch (SerializationException e)
-        {
-            CategoryLogger.always().error(e, "Could not determine size of element for field type {}", this.currentFieldType);
-            return 1;
-        }
+        return this.currentCodec.size(null);
     }
 
     /**
@@ -327,7 +333,7 @@ public class SerialDataDecoder implements Decoder
     {
         try
         {
-            Object value = this.currentSerializer.deSerialize(this.dataElementBytes, new Pointer(), this.endianness);
+            Object value = this.currentCodec.deserialize(this.dataElementBytes, new Pointer(), this.endianness);
             this.buffer.append(value.toString());
         }
         catch (SerializationException e)
@@ -343,7 +349,7 @@ public class SerialDataDecoder implements Decoder
      */
     private void appendString()
     {
-        int elementSize = this.currentSerializer.dataClassName().contains("8") ? 1 : 2;
+        int elementSize = this.currentCodec.getClass().getSimpleName().contains("UTF8") ? 1 : 2;
         if (this.charCount == 0)
         {
             this.charCount = this.endianness.decodeInt(this.dataElementBytes, 0);
@@ -537,7 +543,7 @@ public class SerialDataDecoder implements Decoder
     private boolean appendPrimitiveElement()
     {
         boolean result = false;
-        this.buffer.append(switch (this.currentSerializer.fieldType())
+        this.buffer.append(switch (this.currentCodec.fieldType())
         {
             // @formatter:off
             case FieldTypes.BYTE_8_ARRAY, FieldTypes.BYTE_8_MATRIX -> 
@@ -555,7 +561,7 @@ public class SerialDataDecoder implements Decoder
             case FieldTypes.BOOLEAN_8_ARRAY, FieldTypes.BOOLEAN_8_MATRIX -> 
                 this.dataElementBytes[0] == 0 ? "false " : "true ";
             // @formatter:on
-            default -> "Error: Unhandled type of basicPrimitiveArraySerializer: " + this.currentSerializer.fieldType();
+            default -> "Error: Unhandled type of basicPrimitiveArrayCodec: " + this.currentCodec.fieldType();
         });
         return result;
     }
@@ -582,7 +588,7 @@ public class SerialDataDecoder implements Decoder
      */
     private void done()
     {
-        this.currentSerializer = null;
+        this.currentCodec = null;
         this.rowCount = 0;
         this.columnCount = 0;
         this.charCount = 0;
