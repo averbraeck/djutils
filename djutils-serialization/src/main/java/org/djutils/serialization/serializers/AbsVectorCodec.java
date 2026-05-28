@@ -36,7 +36,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
     }
 
     /** Converter for Absolute Vector with a float value. */
-    protected static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> CONVERT_ABS_VECTOR_FLOAT =
+    protected static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> ABS_VECTOR_FLOAT =
             new AbsVectorCodec(FieldTypes.FLOAT_32_UNIT_ABS_ARRAY)
             {
                 @Override
@@ -51,8 +51,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                 {
                     endianness.encodeInt(absVector.size(), buffer, pointer.getAndIncrement(4));
                     UnitCodec.encodeQuantityUnit(absVector.getRelativeVecMat().get(0), buffer, pointer);
-                    StringCodec.CONVERT_STRING8.serializeWithPrefix(absVector.getReference().getId(), buffer, pointer,
-                            endianness);
+                    StringCodec.STRING8.serializeWithPrefix(absVector.getReference().getId(), buffer, pointer, endianness);
                     for (int i = 0; i < absVector.size(); i++)
                     {
                         endianness.encodeFloat((float) absVector.get(i).si(), buffer, pointer.getAndIncrement(4));
@@ -66,7 +65,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                     int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
                     Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
                     Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
-                    String refStr = StringCodec.CONVERT_STRING8.deserialize(buffer, pointer, endianness);
+                    String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
                     float[] dataSi = new float[size];
                     for (int i = 0; i < size; i++)
                     {
@@ -79,7 +78,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
             };
 
     /** Converter for Absolute Vector with a double value. */
-    protected static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> CONVERT_ABS_VECTOR_DOUBLE =
+    protected static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> ABS_VECTOR_DOUBLE =
             new AbsVectorCodec(FieldTypes.DOUBLE_64_UNIT_ABS_ARRAY)
             {
                 @Override
@@ -94,8 +93,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                 {
                     endianness.encodeInt(absVector.size(), buffer, pointer.getAndIncrement(4));
                     UnitCodec.encodeQuantityUnit(absVector.getRelativeVecMat().get(0), buffer, pointer);
-                    StringCodec.CONVERT_STRING8.serializeWithPrefix(absVector.getReference().getId(), buffer, pointer,
-                            endianness);
+                    StringCodec.STRING8.serializeWithPrefix(absVector.getReference().getId(), buffer, pointer, endianness);
                     for (int i = 0; i < absVector.size(); i++)
                     {
                         endianness.encodeDouble(absVector.get(i).si(), buffer, pointer.getAndIncrement(8));
@@ -109,7 +107,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                     int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
                     Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
                     Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
-                    String refStr = StringCodec.CONVERT_STRING8.deserialize(buffer, pointer, endianness);
+                    String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
                     double[] dataSi = new double[size];
                     for (int i = 0; i < size; i++)
                     {

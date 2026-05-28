@@ -41,7 +41,7 @@ public abstract class StringCodec extends BasicCodec<String>
     }
 
     /** Converter for String. */
-    protected static final StringCodec CONVERT_STRING16 = new StringCodec(FieldTypes.STRING_UTF16)
+    protected static final StringCodec STRING16 = new StringCodec(FieldTypes.STRING_UTF16)
     {
         @Override
         public int size(final String object)
@@ -74,7 +74,7 @@ public abstract class StringCodec extends BasicCodec<String>
     };
 
     /** Converter for String. */
-    protected static final StringCodec CONVERT_STRING8 = new StringCodec(FieldTypes.STRING_UTF8)
+    protected static final StringCodec STRING8 = new StringCodec(FieldTypes.STRING_UTF8)
     {
         @Override
         public int size(final String string)

@@ -50,77 +50,75 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     }
 
     /** Converter for byte array. */
-    protected static final PrimitiveArrayCodec<byte[]> CONVERT_BYTE_ARRAY =
-            new PrimitiveArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1)
+    protected static final PrimitiveArrayCodec<byte[]> BYTE_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1)
+    {
+        @Override
+        public int size(final byte[] array)
+        {
+            return 4 + getElementSize() * array.length;
+        }
+
+        @Override
+        public void serialize(final byte[] array, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < array.length; i++)
             {
-                @Override
-                public int size(final byte[] array)
-                {
-                    return 4 + getElementSize() * array.length;
-                }
+                buffer[pointer.getAndIncrement(getElementSize())] = array[i];
+            }
+        }
 
-                @Override
-                public void serialize(final byte[] array, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < array.length; i++)
-                    {
-                        buffer[pointer.getAndIncrement(getElementSize())] = array[i];
-                    }
-                }
-
-                @Override
-                public byte[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    byte[] result = new byte[size];
-                    for (int i = 0; i < size; i++)
-                    {
-                        result[i] = buffer[pointer.getAndIncrement(getElementSize())];
-                    }
-                    return result;
-                }
-            };
+        @Override
+        public byte[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            byte[] result = new byte[size];
+            for (int i = 0; i < size; i++)
+            {
+                result[i] = buffer[pointer.getAndIncrement(getElementSize())];
+            }
+            return result;
+        }
+    };
 
     /** Converter for short array. */
-    protected static final PrimitiveArrayCodec<short[]> CONVERT_SHORT_ARRAY =
-            new PrimitiveArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2)
+    protected static final PrimitiveArrayCodec<short[]> SHORT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2)
+    {
+        @Override
+        public int size(final short[] array)
+        {
+            return 4 + getElementSize() * array.length;
+        }
+
+        @Override
+        public void serialize(final short[] array, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < array.length; i++)
             {
-                @Override
-                public int size(final short[] array)
-                {
-                    return 4 + getElementSize() * array.length;
-                }
+                endianness.encodeShort(array[i], buffer, pointer.getAndIncrement(getElementSize()));
+            }
+        }
 
-                @Override
-                public void serialize(final short[] array, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < array.length; i++)
-                    {
-                        endianness.encodeShort(array[i], buffer, pointer.getAndIncrement(getElementSize()));
-                    }
-                }
-
-                @Override
-                public short[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    short[] result = new short[size];
-                    for (int i = 0; i < size; i++)
-                    {
-                        result[i] = endianness.decodeShort(buffer, pointer.getAndIncrement(getElementSize()));
-                    }
-                    return result;
-                }
-            };
+        @Override
+        public short[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            short[] result = new short[size];
+            for (int i = 0; i < size; i++)
+            {
+                result[i] = endianness.decodeShort(buffer, pointer.getAndIncrement(getElementSize()));
+            }
+            return result;
+        }
+    };
 
     /** Converter for int array. */
-    protected static final PrimitiveArrayCodec<int[]> CONVERT_INT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.INT_32_ARRAY, 4)
+    protected static final PrimitiveArrayCodec<int[]> INT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.INT_32_ARRAY, 4)
     {
         @Override
         public int size(final int[] array)
@@ -154,77 +152,75 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for long array. */
-    protected static final PrimitiveArrayCodec<long[]> CONVERT_LONG_ARRAY =
-            new PrimitiveArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8)
+    protected static final PrimitiveArrayCodec<long[]> LONG_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8)
+    {
+        @Override
+        public int size(final long[] array)
+        {
+            return 4 + getElementSize() * array.length;
+        }
+
+        @Override
+        public void serialize(final long[] array, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < array.length; i++)
             {
-                @Override
-                public int size(final long[] array)
-                {
-                    return 4 + getElementSize() * array.length;
-                }
+                endianness.encodeLong(array[i], buffer, pointer.getAndIncrement(getElementSize()));
+            }
+        }
 
-                @Override
-                public void serialize(final long[] array, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < array.length; i++)
-                    {
-                        endianness.encodeLong(array[i], buffer, pointer.getAndIncrement(getElementSize()));
-                    }
-                }
-
-                @Override
-                public long[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    long[] result = new long[size];
-                    for (int i = 0; i < size; i++)
-                    {
-                        result[i] = endianness.decodeLong(buffer, pointer.getAndIncrement(getElementSize()));
-                    }
-                    return result;
-                }
-            };
+        @Override
+        public long[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            long[] result = new long[size];
+            for (int i = 0; i < size; i++)
+            {
+                result[i] = endianness.decodeLong(buffer, pointer.getAndIncrement(getElementSize()));
+            }
+            return result;
+        }
+    };
 
     /** Converter for float array. */
-    protected static final PrimitiveArrayCodec<float[]> CONVERT_FLOAT_ARRAY =
-            new PrimitiveArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4)
+    protected static final PrimitiveArrayCodec<float[]> FLOAT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4)
+    {
+        @Override
+        public int size(final float[] array)
+        {
+            return 4 + getElementSize() * array.length;
+        }
+
+        @Override
+        public void serialize(final float[] array, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < array.length; i++)
             {
-                @Override
-                public int size(final float[] array)
-                {
-                    return 4 + getElementSize() * array.length;
-                }
+                endianness.encodeFloat(array[i], buffer, pointer.getAndIncrement(getElementSize()));
+            }
+        }
 
-                @Override
-                public void serialize(final float[] array, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < array.length; i++)
-                    {
-                        endianness.encodeFloat(array[i], buffer, pointer.getAndIncrement(getElementSize()));
-                    }
-                }
-
-                @Override
-                public float[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    float[] result = new float[size];
-                    for (int i = 0; i < size; i++)
-                    {
-                        result[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(getElementSize()));
-                    }
-                    return result;
-                }
-            };
+        @Override
+        public float[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            float[] result = new float[size];
+            for (int i = 0; i < size; i++)
+            {
+                result[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(getElementSize()));
+            }
+            return result;
+        }
+    };
 
     /** Converter for double array. */
-    protected static final PrimitiveArrayCodec<double[]> CONVERT_DOUBLE_ARRAY =
+    protected static final PrimitiveArrayCodec<double[]> DOUBLE_ARRAY =
             new PrimitiveArrayCodec<double[]>(FieldTypes.DOUBLE_64_ARRAY, 8)
             {
                 @Override
@@ -259,7 +255,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for boolean array. */
-    protected static final PrimitiveArrayCodec<boolean[]> CONVERT_BOOLEAN_ARRAY =
+    protected static final PrimitiveArrayCodec<boolean[]> BOOLEAN_ARRAY =
             new PrimitiveArrayCodec<>(FieldTypes.BOOLEAN_8_ARRAY, 1)
             {
                 @Override

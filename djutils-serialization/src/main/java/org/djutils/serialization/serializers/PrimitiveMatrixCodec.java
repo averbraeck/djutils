@@ -51,53 +51,52 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
     }
 
     /** Converter for byte matrix. */
-    protected static final PrimitiveMatrixCodec<byte[][]> CONVERT_BYTE_MATRIX =
-            new PrimitiveMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1)
+    protected static final PrimitiveMatrixCodec<byte[][]> BYTE_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1)
+    {
+        @Override
+        public int size(final byte[][] matrix)
+        {
+            return 8 + getElementSize() * matrix.length * matrix[0].length;
+        }
+
+        @Override
+        public void serialize(final byte[][] matrix, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int height = matrix.length;
+            int width = matrix[0].length;
+            endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < height; i++)
             {
-                @Override
-                public int size(final byte[][] matrix)
+                Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                for (int j = 0; j < width; j++)
                 {
-                    return 8 + getElementSize() * matrix.length * matrix[0].length;
+                    buffer[pointer.getAndIncrement(getElementSize())] = matrix[i][j];
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final byte[][] matrix, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public byte[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            byte[][] result = new byte[height][width];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
                 {
-                    int height = matrix.length;
-                    int width = matrix[0].length;
-                    endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < height; i++)
-                    {
-                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
-                        for (int j = 0; j < width; j++)
-                        {
-                            buffer[pointer.getAndIncrement(getElementSize())] = matrix[i][j];
-                        }
-                    }
+                    result[i][j] = buffer[pointer.getAndIncrement(getElementSize())];
                 }
-
-                @Override
-                public byte[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    byte[][] result = new byte[height][width];
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int j = 0; j < width; j++)
-                        {
-                            result[i][j] = buffer[pointer.getAndIncrement(getElementSize())];
-                        }
-                    }
-                    return result;
-                }
-            };
+            }
+            return result;
+        }
+    };
 
     /** Converter for short matrix. */
-    protected static final PrimitiveMatrixCodec<short[][]> CONVERT_SHORT_MATRIX =
+    protected static final PrimitiveMatrixCodec<short[][]> SHORT_MATRIX =
             new PrimitiveMatrixCodec<short[][]>(FieldTypes.SHORT_16_MATRIX, 2)
             {
                 @Override
@@ -143,99 +142,97 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for int matrix. */
-    protected static final PrimitiveMatrixCodec<int[][]> CONVERT_INT_MATRIX =
-            new PrimitiveMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4)
+    protected static final PrimitiveMatrixCodec<int[][]> INT_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4)
+    {
+        @Override
+        public int size(final int[][] matrix)
+        {
+            return 8 + getElementSize() * matrix.length * matrix[0].length;
+        }
+
+        @Override
+        public void serialize(final int[][] matrix, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int height = matrix.length;
+            int width = matrix[0].length;
+            endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < height; i++)
             {
-                @Override
-                public int size(final int[][] matrix)
+                Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                for (int j = 0; j < width; j++)
                 {
-                    return 8 + getElementSize() * matrix.length * matrix[0].length;
+                    endianness.encodeInt(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final int[][] matrix, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public int[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int[][] result = new int[height][width];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
                 {
-                    int height = matrix.length;
-                    int width = matrix[0].length;
-                    endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < height; i++)
-                    {
-                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
-                        for (int j = 0; j < width; j++)
-                        {
-                            endianness.encodeInt(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
-                        }
-                    }
+                    result[i][j] = endianness.decodeInt(buffer, pointer.getAndIncrement(getElementSize()));
                 }
-
-                @Override
-                public int[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int[][] result = new int[height][width];
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int j = 0; j < width; j++)
-                        {
-                            result[i][j] = endianness.decodeInt(buffer, pointer.getAndIncrement(getElementSize()));
-                        }
-                    }
-                    return result;
-                }
-            };
+            }
+            return result;
+        }
+    };
 
     /** Converter for long matrix. */
-    protected static final PrimitiveMatrixCodec<long[][]> CONVERT_LONG_MATRIX =
-            new PrimitiveMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8)
+    protected static final PrimitiveMatrixCodec<long[][]> LONG_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8)
+    {
+        @Override
+        public int size(final long[][] matrix)
+        {
+            return 8 + getElementSize() * matrix.length * matrix[0].length;
+        }
+
+        @Override
+        public void serialize(final long[][] matrix, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int height = matrix.length;
+            int width = matrix[0].length;
+            endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < height; i++)
             {
-                @Override
-                public int size(final long[][] matrix)
+                Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                for (int j = 0; j < width; j++)
                 {
-                    return 8 + getElementSize() * matrix.length * matrix[0].length;
+                    endianness.encodeLong(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final long[][] matrix, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public long[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            long[][] result = new long[height][width];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
                 {
-                    int height = matrix.length;
-                    int width = matrix[0].length;
-                    endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < height; i++)
-                    {
-                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
-                        for (int j = 0; j < width; j++)
-                        {
-                            endianness.encodeLong(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
-                        }
-                    }
+                    result[i][j] = endianness.decodeLong(buffer, pointer.getAndIncrement(getElementSize()));
                 }
-
-                @Override
-                public long[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    long[][] result = new long[height][width];
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int j = 0; j < width; j++)
-                        {
-                            result[i][j] = endianness.decodeLong(buffer, pointer.getAndIncrement(getElementSize()));
-                        }
-                    }
-                    return result;
-                }
-            };
+            }
+            return result;
+        }
+    };
 
     /** Converter for float matrix. */
-    protected static final PrimitiveMatrixCodec<float[][]> CONVERT_FLOAT_MATRIX =
+    protected static final PrimitiveMatrixCodec<float[][]> FLOAT_MATRIX =
             new PrimitiveMatrixCodec<>(FieldTypes.FLOAT_32_MATRIX, 4)
             {
                 @Override
@@ -281,7 +278,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for double matrix. */
-    protected static final PrimitiveMatrixCodec<double[][]> CONVERT_DOUBLE_MATRIX =
+    protected static final PrimitiveMatrixCodec<double[][]> DOUBLE_MATRIX =
             new PrimitiveMatrixCodec<>(FieldTypes.DOUBLE_64_MATRIX, 8)
             {
                 @Override
@@ -327,7 +324,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for boolean matrix. */
-    protected static final PrimitiveMatrixCodec<boolean[][]> CONVERT_BOOLEAN_MATRIX =
+    protected static final PrimitiveMatrixCodec<boolean[][]> BOOLEAN_MATRIX =
             new PrimitiveMatrixCodec<>(FieldTypes.BOOLEAN_8_MATRIX, 1)
             {
                 @Override

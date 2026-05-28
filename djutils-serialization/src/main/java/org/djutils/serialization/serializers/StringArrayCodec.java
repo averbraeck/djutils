@@ -41,7 +41,7 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     }
 
     /** Converter for String UTF-8 array. */
-    protected static final StringArrayCodec CONVERT_STRING8_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF8_ARRAY)
+    protected static final StringArrayCodec STRING8_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF8_ARRAY)
     {
         @Override
         public int size(final String[] stringArray)
@@ -88,7 +88,7 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     };
 
     /** Converter for String UTF-16 array. */
-    protected static final StringArrayCodec CONVERT_STRING16_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF16_ARRAY)
+    protected static final StringArrayCodec STRING16_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF16_ARRAY)
     {
         @Override
         public int size(final String[] stringArray)

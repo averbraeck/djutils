@@ -43,7 +43,7 @@ public abstract class StringMatrixCodec extends BasicCodec<String[][]>
     }
 
     /** Converter for String UTF-8 matrix. */
-    protected static final StringMatrixCodec CONVERT_STRING8_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF8_MATRIX)
+    protected static final StringMatrixCodec STRING8_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF8_MATRIX)
     {
         @Override
         public int size(final String[][] stringMatrix)
@@ -103,7 +103,7 @@ public abstract class StringMatrixCodec extends BasicCodec<String[][]>
     };
 
     /** Converter for String UTF-16 matrix. */
-    protected static final StringMatrixCodec CONVERT_STRING16_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF16_MATRIX)
+    protected static final StringMatrixCodec STRING16_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF16_MATRIX)
     {
         @Override
         public int size(final String[][] stringMatrix)

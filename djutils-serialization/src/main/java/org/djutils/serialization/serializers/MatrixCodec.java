@@ -35,99 +35,97 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
     }
 
     /** Converter for Quantity Matrix with float values. */
-    protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> CONVERT_MATRIX_FLOAT =
-            new MatrixCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
+    protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_FLOAT = new MatrixCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
+    {
+        @Override
+        public int size(final Matrix<?, ?, ?, ?, ?> matrix) throws SerializationException
+        {
+            return 4 + 4 + 2 + 4 * matrix.rows() * matrix.cols();
+        }
+
+        @Override
+        public void serialize(final Matrix<?, ?, ?, ?, ?> matrix, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            endianness.encodeInt(matrix.rows(), buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(matrix.cols(), buffer, pointer.getAndIncrement(4));
+            UnitCodec.encodeQuantityUnit(matrix.get(0, 0), buffer, pointer);
+            for (int i = 0; i < matrix.rows(); i++)
             {
-                @Override
-                public int size(final Matrix<?, ?, ?, ?, ?> matrix) throws SerializationException
+                for (int j = 0; j < matrix.cols(); j++)
                 {
-                    return 4 + 4 + 2 + 4 * matrix.rows() * matrix.cols();
+                    endianness.encodeFloat((float) matrix.get(i, j).si(), buffer, pointer.getAndIncrement(4));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final Matrix<?, ?, ?, ?, ?> matrix, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public Matrix<?, ?, ?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+            float[][] dataSi = new float[rows][cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
                 {
-                    endianness.encodeInt(matrix.rows(), buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(matrix.cols(), buffer, pointer.getAndIncrement(4));
-                    UnitCodec.encodeQuantityUnit(matrix.get(0, 0), buffer, pointer);
-                    for (int i = 0; i < matrix.rows(); i++)
-                    {
-                        for (int j = 0; j < matrix.cols(); j++)
-                        {
-                            endianness.encodeFloat((float) matrix.get(i, j).si(), buffer, pointer.getAndIncrement(4));
-                        }
-                    }
-               }
-
-                @Override
-                public Matrix<?, ?, ?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
-                    float[][] dataSi = new float[rows][cols];
-                    for (int i = 0; i < rows; i++)
-                    {
-                        for (int j = 0; j < cols; j++)
-                        {
-                            dataSi[i][j] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
-                        }
-                    }
-                    @SuppressWarnings({"unchecked", "rawtypes"})
-                    MatrixNxM<?> matrix = new MatrixNxM(DenseFloatDataSi.of(dataSi, unit), unit);
-                    UnitCodec.setDisplayUnit(matrix, unit);
-                    return matrix;
+                    dataSi[i][j] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
                 }
-            };
+            }
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            MatrixNxM<?> matrix = new MatrixNxM(DenseFloatDataSi.of(dataSi, unit), unit);
+            UnitCodec.setDisplayUnit(matrix, unit);
+            return matrix;
+        }
+    };
 
     /** Converter for Quantity Matrix with double values. */
-    protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> CONVERT_MATRIX_DOUBLE =
-            new MatrixCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
+    protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_DOUBLE = new MatrixCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
+    {
+        @Override
+        public int size(final Matrix<?, ?, ?, ?, ?> matrix) throws SerializationException
+        {
+            return 4 + 4 + 2 + 8 * matrix.rows() * matrix.cols();
+        }
+
+        @Override
+        public void serialize(final Matrix<?, ?, ?, ?, ?> matrix, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            endianness.encodeInt(matrix.rows(), buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(matrix.cols(), buffer, pointer.getAndIncrement(4));
+            UnitCodec.encodeQuantityUnit(matrix.get(0, 0), buffer, pointer);
+            for (int i = 0; i < matrix.rows(); i++)
             {
-                @Override
-                public int size(final Matrix<?, ?, ?, ?, ?> matrix) throws SerializationException
+                for (int j = 0; j < matrix.cols(); j++)
                 {
-                    return 4 + 4 + 2 + 8 * matrix.rows() * matrix.cols();
+                    endianness.encodeDouble(matrix.get(i, j).si(), buffer, pointer.getAndIncrement(4));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final Matrix<?, ?, ?, ?, ?> matrix, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public Matrix<?, ?, ?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+            double[][] dataSi = new double[rows][cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
                 {
-                    endianness.encodeInt(matrix.rows(), buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(matrix.cols(), buffer, pointer.getAndIncrement(4));
-                    UnitCodec.encodeQuantityUnit(matrix.get(0, 0), buffer, pointer);
-                    for (int i = 0; i < matrix.rows(); i++)
-                    {
-                        for (int j = 0; j < matrix.cols(); j++)
-                        {
-                            endianness.encodeDouble(matrix.get(i, j).si(), buffer, pointer.getAndIncrement(4));
-                        }
-                    }
+                    dataSi[i][j] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
                 }
-
-                @Override
-                public Matrix<?, ?, ?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
-                    double[][] dataSi = new double[rows][cols];
-                    for (int i = 0; i < rows; i++)
-                    {
-                        for (int j = 0; j < cols; j++)
-                        {
-                            dataSi[i][j] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
-                        }
-                    }
-                    @SuppressWarnings({"unchecked", "rawtypes"})
-                    MatrixNxM<?> matrix = new MatrixNxM(DenseDoubleDataSi.of(dataSi, unit), unit);
-                    UnitCodec.setDisplayUnit(matrix, unit);
-                    return matrix;
-                }
-            };
+            }
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            MatrixNxM<?> matrix = new MatrixNxM(DenseDoubleDataSi.of(dataSi, unit), unit);
+            UnitCodec.setDisplayUnit(matrix, unit);
+            return matrix;
+        }
+    };
 
 }

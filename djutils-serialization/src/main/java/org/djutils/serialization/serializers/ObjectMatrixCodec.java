@@ -120,7 +120,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
     public abstract E deSerializeElement(byte[] buffer, int offset, Endianness endianness);
 
     /** Converter for Byte matrix. */
-    protected static final ObjectMatrixCodec<Byte> CONVERT_BYTE_OBJECT_MATRIX =
+    protected static final ObjectMatrixCodec<Byte> BYTE_OBJECT_MATRIX =
             new ObjectMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1, Byte.class)
             {
                 @Override
@@ -138,7 +138,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
             };
 
     /** Converter for Short matrix. */
-    protected static final ObjectMatrixCodec<Short> CONVERT_SHORT_OBJECT_MATRIX =
+    protected static final ObjectMatrixCodec<Short> SHORT_OBJECT_MATRIX =
             new ObjectMatrixCodec<Short>(FieldTypes.SHORT_16_MATRIX, 2, Short.class)
             {
                 @Override
@@ -156,7 +156,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
             };
 
     /** Converter for Integer matrix. */
-    protected static final ObjectMatrixCodec<Integer> CONVERT_INTEGER_OBJECT_MATRIX =
+    protected static final ObjectMatrixCodec<Integer> INTEGER_OBJECT_MATRIX =
             new ObjectMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4, Integer.class)
             {
                 @Override
@@ -174,7 +174,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
             };
 
     /** Converter for Long matrix. */
-    protected static final ObjectMatrixCodec<Long> CONVERT_LONG_OBJECT_MATRIX =
+    protected static final ObjectMatrixCodec<Long> LONG_OBJECT_MATRIX =
             new ObjectMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8, Long.class)
             {
                 @Override
@@ -192,7 +192,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
             };
 
     /** Converter for Float matrix. */
-    protected static final ObjectMatrixCodec<Float> CONVERT_FLOAT_OBJECT_MATRIX =
+    protected static final ObjectMatrixCodec<Float> FLOAT_OBJECT_MATRIX =
             new ObjectMatrixCodec<>(FieldTypes.FLOAT_32_MATRIX, 4, Float.class)
             {
                 @Override
@@ -210,7 +210,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
             };
 
     /** Converter for Double matrix. */
-    protected static final ObjectMatrixCodec<Double> CONVERT_DOUBLE_OBJECT_MATRIX =
+    protected static final ObjectMatrixCodec<Double> DOUBLE_OBJECT_MATRIX =
             new ObjectMatrixCodec<>(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class)
             {
                 @Override
@@ -228,7 +228,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
             };
 
     /** Converter for Boolean matrix. */
-    protected static final ObjectMatrixCodec<Boolean> CONVERT_BOOLEAN_OBJECT_MATRIX =
+    protected static final ObjectMatrixCodec<Boolean> BOOLEAN_OBJECT_MATRIX =
             new ObjectMatrixCodec<>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class)
             {
                 @Override

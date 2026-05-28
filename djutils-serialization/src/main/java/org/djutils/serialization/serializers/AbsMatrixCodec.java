@@ -35,7 +35,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
     }
 
     /** Converter for Absolute Matrix with a float value. */
-    protected static final BasicCodec<AbsMatrix<?, ?, ?, ?, ?>> CONVERT_ABS_MATRIX_FLOAT =
+    protected static final BasicCodec<AbsMatrix<?, ?, ?, ?, ?>> ABS_MATRIX_FLOAT =
             new AbsMatrixCodec(FieldTypes.FLOAT_32_UNIT_ABS_MATRIX)
             {
                 @Override
@@ -51,8 +51,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                     endianness.encodeInt(absMatrix.rows(), buffer, pointer.getAndIncrement(4));
                     endianness.encodeInt(absMatrix.cols(), buffer, pointer.getAndIncrement(4));
                     UnitCodec.encodeQuantityUnit(absMatrix.getRelativeVecMat().get(0, 0), buffer, pointer);
-                    StringCodec.CONVERT_STRING8.serializeWithPrefix(absMatrix.getReference().getId(), buffer, pointer,
-                            endianness);
+                    StringCodec.STRING8.serializeWithPrefix(absMatrix.getReference().getId(), buffer, pointer, endianness);
                     for (int i = 0; i < absMatrix.rows(); i++)
                     {
                         for (int j = 0; j < absMatrix.cols(); j++)
@@ -71,7 +70,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                     int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
                     Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
                     Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
-                    String refStr = StringCodec.CONVERT_STRING8.deserialize(buffer, pointer, endianness);
+                    String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
                     float[][] dataSi = new float[rows][cols];
                     for (int i = 0; i < rows; i++)
                     {
@@ -88,7 +87,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
             };
 
     /** Converter for Absolute Matrix with a double value. */
-    protected static final BasicCodec<AbsMatrix<?, ?, ?, ?, ?>> CONVERT_ABS_MATRIX_DOUBLE =
+    protected static final BasicCodec<AbsMatrix<?, ?, ?, ?, ?>> ABS_MATRIX_DOUBLE =
             new AbsMatrixCodec(FieldTypes.DOUBLE_64_UNIT_ABS_MATRIX)
             {
                 @Override
@@ -104,8 +103,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                     endianness.encodeInt(absMatrix.rows(), buffer, pointer.getAndIncrement(4));
                     endianness.encodeInt(absMatrix.cols(), buffer, pointer.getAndIncrement(4));
                     UnitCodec.encodeQuantityUnit(absMatrix.getRelativeVecMat().get(0, 0), buffer, pointer);
-                    StringCodec.CONVERT_STRING8.serializeWithPrefix(absMatrix.getReference().getId(), buffer, pointer,
-                            endianness);
+                    StringCodec.STRING8.serializeWithPrefix(absMatrix.getReference().getId(), buffer, pointer, endianness);
                     for (int i = 0; i < absMatrix.rows(); i++)
                     {
                         for (int j = 0; j < absMatrix.cols(); j++)
@@ -124,7 +122,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                     int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
                     Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
                     Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
-                    String refStr = StringCodec.CONVERT_STRING8.deserialize(buffer, pointer, endianness);
+                    String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
                     double[][] dataSi = new double[rows][cols];
                     for (int i = 0; i < rows; i++)
                     {
