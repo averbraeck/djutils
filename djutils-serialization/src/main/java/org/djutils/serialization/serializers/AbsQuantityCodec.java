@@ -3,6 +3,7 @@ package org.djutils.serialization.serializers;
 import org.djunits.quantity.def.AbsBasic;
 import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;
+import org.djutils.exceptions.Throw;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
@@ -58,6 +59,7 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
                         throws SerializationException
                 {
                     Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                    Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
                     String refStr = StringCodec.CONVERT_STRING8.deserialize(buffer, pointer, endianness);
                     Quantity<?> quantity = unit.ofSi(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)));
                     UnitCodec.setDisplayUnit(quantity, unit);
@@ -91,6 +93,7 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
                         throws SerializationException
                 {
                     Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                    Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
                     String refStr = StringCodec.CONVERT_STRING8.deserialize(buffer, pointer, endianness);
                     Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)));
                     UnitCodec.setDisplayUnit(quantity, unit);
