@@ -157,7 +157,7 @@ indicates the time, and column 2 the value. Suppose that we have a time series o
 
 <br>
 
-## 43a. Float matrix with unique units per column (big endian)
+## 43a. Float matrix with unique units per row (big endian)
 
 Dense float matrix, stored internally in the SI unit, with a unique quantity type and unit type per row. This is the
 transposed version of type 31. After the byte with value 43, the matrix types have a 32-bit int indicating the number of
@@ -193,7 +193,7 @@ This type has been added in djutils version 2.5
 
 <br>
 
-## 43b. Float matrix with unique units per column (little endian)
+## 43b. Float matrix with unique units per row (little endian)
 
 Dense float matrix, stored internally in the SI unit, with a unique quantity type and unit type per row. This is the
 transposed version of type 31. After the byte with value 43, the matrix types have a 32-bit little-endian int indicating 
@@ -230,7 +230,7 @@ This type has been added in djutils version 2.5
 
 <br>
 
-## 44a. Double matrix with unique units per column (big endian)
+## 44a. Double matrix with unique units per row (big endian)
 
 Dense double matrix, stored internally in the SI unit, with a unique quantity type and unit type per row. This is the
 transposed version of type 32. After the byte with value 44, the matrix types have a 32-bit int indicating the number of
@@ -268,7 +268,7 @@ This type has been added in djutils version 2.5
 
 <br>
 
-## 43b. Double matrix with unique units per column (little endian)
+## 43b. Double matrix with unique units per row (little endian)
 
 Dense double matrix, stored internally in the SI unit, with a unique quantity type and unit type per row. This is the
 transposed version of type 32. After the byte with value 44, the matrix types have a 32-bit little-endian int indicating 
