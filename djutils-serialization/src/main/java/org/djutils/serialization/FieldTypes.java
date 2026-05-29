@@ -455,7 +455,7 @@ public final class FieldTypes
      * Dense little-endian float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column
      * count int, with a unique quantity type and unit type per column of the float matrix.
      */
-    public static final byte FLOAT_32_UNIT_COLUMN_MATRIX = 31;
+    public static final byte FLOAT_32_UNIT_COL_VECTOR_ARRAY = 31;
 
     /**
      * <b>Big endian encoding</b> <br>
@@ -498,7 +498,7 @@ public final class FieldTypes
      * Dense little-endian double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column
      * count int, with a unique quantity type and unit type per column of the double matrix.
      */
-    public static final byte DOUBLE_64_UNIT_COLUMN_MATRIX = 32;
+    public static final byte DOUBLE_64_UNIT_COL_VECTOR_ARRAY = 32;
 
     /**
      * <b>Big endian encoding</b> <br>
@@ -814,7 +814,7 @@ public final class FieldTypes
      * each vector has its own quantity and unit.
      * @since version 2.5
      */
-    public static final byte FLOAT_32_UNIT_VECTOR_ARRAY = 43;
+    public static final byte FLOAT_32_UNIT_ROW_VECTOR_ARRAY = 43;
 
     /**
      * <b>Big endian encoding</b> <br>
@@ -854,7 +854,7 @@ public final class FieldTypes
      * each vector has its own quantity and unit.
      * @since version 2.5
      */
-    public static final byte DOUBLE_64_UNIT_VECTOR_ARRAY = 44;
+    public static final byte DOUBLE_64_UNIT_ROW_VECTOR_ARRAY = 44;
 
     /**
      * Utility class, cannot be instantiated.
