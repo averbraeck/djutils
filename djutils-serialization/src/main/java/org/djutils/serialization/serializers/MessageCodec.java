@@ -78,7 +78,7 @@ public final class MessageCodec
         for (int i = 0; i < content.length; i++)
         {
             Object object = content[i];
-            result[i] = Codec.findEncoder(utf8, object);
+            result[i] = Codec.findEncoder(object, utf8, false);
         }
 
         return result;
