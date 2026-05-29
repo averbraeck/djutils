@@ -41,7 +41,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
     }
 
     /** Converter for Quantity Vector with float values. */
-    protected static final BasicCodec<Vector<?, ?, ?, ?, ?>> VECTOR_FLOAT = new VectorCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
+    public static final BasicCodec<Vector<?, ?, ?, ?, ?>> VECTOR_FLOAT = new VectorCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
     {
         @Override
         public int size(final Vector<?, ?, ?, ?, ?> vector)
@@ -79,7 +79,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
     };
 
     /** Converter for Quantity Vector with double values. */
-    protected static final BasicCodec<Vector<?, ?, ?, ?, ?>> VECTOR_DOUBLE = new VectorCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
+    public static final BasicCodec<Vector<?, ?, ?, ?, ?>> VECTOR_DOUBLE = new VectorCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
     {
         @Override
         public int size(final Vector<?, ?, ?, ?, ?> vector)

@@ -41,7 +41,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
     }
 
     /** Converter for Quantity Column Vector Array with float values. */
-    protected static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> COL_VECTOR_ARRAY_FLOAT =
+    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> COL_VECTOR_ARRAY_FLOAT =
             new VectorArrayCodec(FieldTypes.FLOAT_32_UNIT_COL_VECTOR_ARRAY)
             {
                 @Override
@@ -101,7 +101,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             };
 
     /** Converter for Quantity Column Vector Array with double values. */
-    protected static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> COL_VECTOR_ARRAY_DOUBLE =
+    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> COL_VECTOR_ARRAY_DOUBLE =
             new VectorArrayCodec(FieldTypes.DOUBLE_64_UNIT_COL_VECTOR_ARRAY)
             {
                 @Override
@@ -161,7 +161,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             };
 
     /** Converter for Quantity Row Vector Array with float values. */
-    protected static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> ROW_VECTOR_ARRAY_FLOAT =
+    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> ROW_VECTOR_ARRAY_FLOAT =
             new VectorArrayCodec(FieldTypes.FLOAT_32_UNIT_ROW_VECTOR_ARRAY)
             {
                 @Override
@@ -210,7 +210,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             };
 
     /** Converter for Quantity Row Vector Array with double values. */
-    protected static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> ROW_VECTOR_ARRAY_DOUBLE =
+    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> ROW_VECTOR_ARRAY_DOUBLE =
             new VectorArrayCodec(FieldTypes.DOUBLE_64_UNIT_ROW_VECTOR_ARRAY)
             {
                 @Override

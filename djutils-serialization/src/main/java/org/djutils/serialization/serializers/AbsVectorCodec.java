@@ -42,7 +42,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
     }
 
     /** Converter for Absolute Vector with a float value. */
-    protected static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> ABS_VECTOR_FLOAT =
+    public static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> ABS_VECTOR_FLOAT =
             new AbsVectorCodec(FieldTypes.FLOAT_32_UNIT_ABS_ARRAY)
             {
                 @Override
@@ -84,7 +84,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
             };
 
     /** Converter for Absolute Vector with a double value. */
-    protected static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> ABS_VECTOR_DOUBLE =
+    public static final BasicCodec<AbsVector<?, ?, ?, ?, ?>> ABS_VECTOR_DOUBLE =
             new AbsVectorCodec(FieldTypes.DOUBLE_64_UNIT_ABS_ARRAY)
             {
                 @Override

@@ -19,10 +19,10 @@ import org.djutils.serialization.SerializationException;
 public abstract class StringCodec extends BasicCodec<String>
 {
     /** the UTF-8 charset. */
-    protected static final Charset UTF8 = Charset.forName("UTF-8");
+    public static final Charset UTF8 = Charset.forName("UTF-8");
 
     /** the UTF-16 charset, big endian variant. */
-    protected static final Charset UTF16 = Charset.forName("UTF-16BE");
+    public static final Charset UTF16 = Charset.forName("UTF-16BE");
 
     /**
      * Construct a StringCodec.
@@ -41,7 +41,7 @@ public abstract class StringCodec extends BasicCodec<String>
     }
 
     /** Converter for String. */
-    protected static final StringCodec STRING16 = new StringCodec(FieldTypes.STRING_UTF16)
+    public static final StringCodec STRING16 = new StringCodec(FieldTypes.STRING_UTF16)
     {
         @Override
         public int size(final String object)
@@ -74,7 +74,7 @@ public abstract class StringCodec extends BasicCodec<String>
     };
 
     /** Converter for String. */
-    protected static final StringCodec STRING8 = new StringCodec(FieldTypes.STRING_UTF8)
+    public static final StringCodec STRING8 = new StringCodec(FieldTypes.STRING_UTF8)
     {
         @Override
         public int size(final String string)

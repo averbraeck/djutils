@@ -19,10 +19,10 @@ import org.djutils.serialization.SerializationException;
 public abstract class StringArrayCodec extends BasicCodec<String[]>
 {
     /** the UTF-8 charset. */
-    protected static final Charset UTF8 = Charset.forName("UTF-8");
+    public static final Charset UTF8 = Charset.forName("UTF-8");
 
     /** the UTF-16 charset, big endian variant. */
-    protected static final Charset UTF16 = Charset.forName("UTF-16BE");
+    public static final Charset UTF16 = Charset.forName("UTF-16BE");
 
     /**
      * Construct a StringArrayCodec.
@@ -41,7 +41,7 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     }
 
     /** Converter for String UTF-8 array. */
-    protected static final StringArrayCodec STRING8_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF8_ARRAY)
+    public static final StringArrayCodec STRING8_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF8_ARRAY)
     {
         @Override
         public int size(final String[] stringArray)
@@ -88,7 +88,7 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     };
 
     /** Converter for String UTF-16 array. */
-    protected static final StringArrayCodec STRING16_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF16_ARRAY)
+    public static final StringArrayCodec STRING16_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF16_ARRAY)
     {
         @Override
         public int size(final String[] stringArray)

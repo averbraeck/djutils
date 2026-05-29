@@ -103,7 +103,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
     public abstract E deSerializeElement(byte[] buffer, int offset, Endianness endianness);
 
     /** Converter for Byte array. */
-    protected static final ObjectArrayCodec<Byte> BYTE_OBJECT_ARRAY =
+    public static final ObjectArrayCodec<Byte> BYTE_OBJECT_ARRAY =
             new ObjectArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1, Byte.class)
             {
                 @Override
@@ -121,7 +121,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
             };
 
     /** Converter for Short array. */
-    protected static final ObjectArrayCodec<Short> SHORT_OBJECT_ARRAY =
+    public static final ObjectArrayCodec<Short> SHORT_OBJECT_ARRAY =
             new ObjectArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2, Short.class)
             {
                 @Override
@@ -139,7 +139,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
             };
 
     /** Converter for Integer array. */
-    protected static final ObjectArrayCodec<Integer> INTEGER_OBJECT_ARRAY =
+    public static final ObjectArrayCodec<Integer> INTEGER_OBJECT_ARRAY =
             new ObjectArrayCodec<>(FieldTypes.INT_32_ARRAY, 4, Integer.class)
             {
                 @Override
@@ -157,7 +157,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
             };
 
     /** Converter for Long array. */
-    protected static final ObjectArrayCodec<Long> LONG_OBJECT_ARRAY =
+    public static final ObjectArrayCodec<Long> LONG_OBJECT_ARRAY =
             new ObjectArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8, Long.class)
             {
                 @Override
@@ -175,7 +175,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
             };
 
     /** Converter for Float array. */
-    protected static final ObjectArrayCodec<Float> FLOAT_OBJECT_ARRAY =
+    public static final ObjectArrayCodec<Float> FLOAT_OBJECT_ARRAY =
             new ObjectArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4, Float.class)
             {
                 @Override
@@ -193,7 +193,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
             };
 
     /** Converter for Double array. */
-    protected static final ObjectArrayCodec<Double> DOUBLE_OBJECT_ARRAY =
+    public static final ObjectArrayCodec<Double> DOUBLE_OBJECT_ARRAY =
             new ObjectArrayCodec<>(FieldTypes.DOUBLE_64_ARRAY, 8, Double.class)
             {
                 @Override
@@ -211,7 +211,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
             };
 
     /** Converter for Boolean array. */
-    protected static final ObjectArrayCodec<Boolean> BOOLEAN_OBJECT_ARRAY =
+    public static final ObjectArrayCodec<Boolean> BOOLEAN_OBJECT_ARRAY =
             new ObjectArrayCodec<>(FieldTypes.BOOLEAN_8_ARRAY, 1, Boolean.class)
             {
                 @Override

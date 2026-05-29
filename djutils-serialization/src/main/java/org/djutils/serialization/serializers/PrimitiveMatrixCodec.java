@@ -51,7 +51,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
     }
 
     /** Converter for byte matrix. */
-    protected static final PrimitiveMatrixCodec<byte[][]> BYTE_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1)
+    public static final PrimitiveMatrixCodec<byte[][]> BYTE_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1)
     {
         @Override
         public int size(final byte[][] matrix)
@@ -96,7 +96,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for short matrix. */
-    protected static final PrimitiveMatrixCodec<short[][]> SHORT_MATRIX =
+    public static final PrimitiveMatrixCodec<short[][]> SHORT_MATRIX =
             new PrimitiveMatrixCodec<short[][]>(FieldTypes.SHORT_16_MATRIX, 2)
             {
                 @Override
@@ -142,7 +142,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for int matrix. */
-    protected static final PrimitiveMatrixCodec<int[][]> INT_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4)
+    public static final PrimitiveMatrixCodec<int[][]> INT_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4)
     {
         @Override
         public int size(final int[][] matrix)
@@ -187,7 +187,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for long matrix. */
-    protected static final PrimitiveMatrixCodec<long[][]> LONG_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8)
+    public static final PrimitiveMatrixCodec<long[][]> LONG_MATRIX = new PrimitiveMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8)
     {
         @Override
         public int size(final long[][] matrix)
@@ -232,7 +232,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for float matrix. */
-    protected static final PrimitiveMatrixCodec<float[][]> FLOAT_MATRIX =
+    public static final PrimitiveMatrixCodec<float[][]> FLOAT_MATRIX =
             new PrimitiveMatrixCodec<>(FieldTypes.FLOAT_32_MATRIX, 4)
             {
                 @Override
@@ -278,7 +278,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for double matrix. */
-    protected static final PrimitiveMatrixCodec<double[][]> DOUBLE_MATRIX =
+    public static final PrimitiveMatrixCodec<double[][]> DOUBLE_MATRIX =
             new PrimitiveMatrixCodec<>(FieldTypes.DOUBLE_64_MATRIX, 8)
             {
                 @Override
@@ -324,7 +324,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for boolean matrix. */
-    protected static final PrimitiveMatrixCodec<boolean[][]> BOOLEAN_MATRIX =
+    public static final PrimitiveMatrixCodec<boolean[][]> BOOLEAN_MATRIX =
             new PrimitiveMatrixCodec<>(FieldTypes.BOOLEAN_8_MATRIX, 1)
             {
                 @Override

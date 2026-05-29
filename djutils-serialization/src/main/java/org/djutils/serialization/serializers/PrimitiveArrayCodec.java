@@ -50,7 +50,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     }
 
     /** Converter for byte array. */
-    protected static final PrimitiveArrayCodec<byte[]> BYTE_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1)
+    public static final PrimitiveArrayCodec<byte[]> BYTE_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1)
     {
         @Override
         public int size(final byte[] array)
@@ -84,7 +84,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for short array. */
-    protected static final PrimitiveArrayCodec<short[]> SHORT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2)
+    public static final PrimitiveArrayCodec<short[]> SHORT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2)
     {
         @Override
         public int size(final short[] array)
@@ -118,7 +118,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for int array. */
-    protected static final PrimitiveArrayCodec<int[]> INT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.INT_32_ARRAY, 4)
+    public static final PrimitiveArrayCodec<int[]> INT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.INT_32_ARRAY, 4)
     {
         @Override
         public int size(final int[] array)
@@ -152,7 +152,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for long array. */
-    protected static final PrimitiveArrayCodec<long[]> LONG_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8)
+    public static final PrimitiveArrayCodec<long[]> LONG_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8)
     {
         @Override
         public int size(final long[] array)
@@ -186,7 +186,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for float array. */
-    protected static final PrimitiveArrayCodec<float[]> FLOAT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4)
+    public static final PrimitiveArrayCodec<float[]> FLOAT_ARRAY = new PrimitiveArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4)
     {
         @Override
         public int size(final float[] array)
@@ -220,7 +220,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for double array. */
-    protected static final PrimitiveArrayCodec<double[]> DOUBLE_ARRAY =
+    public static final PrimitiveArrayCodec<double[]> DOUBLE_ARRAY =
             new PrimitiveArrayCodec<double[]>(FieldTypes.DOUBLE_64_ARRAY, 8)
             {
                 @Override
@@ -255,7 +255,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             };
 
     /** Converter for boolean array. */
-    protected static final PrimitiveArrayCodec<boolean[]> BOOLEAN_ARRAY =
+    public static final PrimitiveArrayCodec<boolean[]> BOOLEAN_ARRAY =
             new PrimitiveArrayCodec<>(FieldTypes.BOOLEAN_8_ARRAY, 1)
             {
                 @Override

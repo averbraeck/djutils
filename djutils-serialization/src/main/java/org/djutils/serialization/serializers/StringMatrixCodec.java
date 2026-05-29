@@ -21,10 +21,10 @@ import org.djutils.serialization.SerializationException;
 public abstract class StringMatrixCodec extends BasicCodec<String[][]>
 {
     /** the UTF-8 charset. */
-    protected static final Charset UTF8 = Charset.forName("UTF-8");
+    public static final Charset UTF8 = Charset.forName("UTF-8");
 
     /** the UTF-16 charset, big endian variant. */
-    protected static final Charset UTF16 = Charset.forName("UTF-16BE");
+    public static final Charset UTF16 = Charset.forName("UTF-16BE");
 
     /**
      * Construct a StringMatrixCodec.
@@ -43,7 +43,7 @@ public abstract class StringMatrixCodec extends BasicCodec<String[][]>
     }
 
     /** Converter for String UTF-8 matrix. */
-    protected static final StringMatrixCodec STRING8_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF8_MATRIX)
+    public static final StringMatrixCodec STRING8_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF8_MATRIX)
     {
         @Override
         public int size(final String[][] stringMatrix)
@@ -103,7 +103,7 @@ public abstract class StringMatrixCodec extends BasicCodec<String[][]>
     };
 
     /** Converter for String UTF-16 matrix. */
-    protected static final StringMatrixCodec STRING16_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF16_MATRIX)
+    public static final StringMatrixCodec STRING16_MATRIX = new StringMatrixCodec(FieldTypes.STRING_UTF16_MATRIX)
     {
         @Override
         public int size(final String[][] stringMatrix)

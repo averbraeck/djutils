@@ -38,7 +38,7 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
     }
 
     /** Converter for Quantity with a float value. */
-    protected static final BasicCodec<Quantity<?>> QUANTITY_FLOAT = new QuantityCodec(FieldTypes.FLOAT_32_UNIT)
+    public static final BasicCodec<Quantity<?>> QUANTITY_FLOAT = new QuantityCodec(FieldTypes.FLOAT_32_UNIT)
     {
         @Override
         public int size(final Quantity<?> quantity)
@@ -67,7 +67,7 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
     };
 
     /** Converter for Quantity with a double value. */
-    protected static final BasicCodec<Quantity<?>> QUANTITY_DOUBLE = new QuantityCodec(FieldTypes.DOUBLE_64_UNIT)
+    public static final BasicCodec<Quantity<?>> QUANTITY_DOUBLE = new QuantityCodec(FieldTypes.DOUBLE_64_UNIT)
     {
         @Override
         public int size(final Quantity<?> quantity)

@@ -41,7 +41,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
     }
 
     /** Converter for Quantity Matrix with float values. */
-    protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_FLOAT = new MatrixCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
+    public static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_FLOAT = new MatrixCodec(FieldTypes.FLOAT_32_UNIT_ARRAY)
     {
         @Override
         public int size(final Matrix<?, ?, ?, ?, ?> matrix)
@@ -88,7 +88,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
     };
 
     /** Converter for Quantity Matrix with double values. */
-    protected static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_DOUBLE = new MatrixCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
+    public static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_DOUBLE = new MatrixCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY)
     {
         @Override
         public int size(final Matrix<?, ?, ?, ?, ?> matrix)
