@@ -62,6 +62,9 @@ public final class Codec
         register(Boolean.class, PrimitiveCodec.BOOLEAN);
         register(boolean.class, PrimitiveCodec.BOOLEAN);
 
+        DECODERS.put(PrimitiveCodec.CHARACTER8.fieldType(), PrimitiveCodec.CHARACTER8);
+        DECODERS.put(PrimitiveCodec.CHARACTER16.fieldType(), PrimitiveCodec.CHARACTER16);
+
         DECODERS.put(StringCodec.STRING8.fieldType(), StringCodec.STRING8);
         DECODERS.put(StringCodec.STRING16.fieldType(), StringCodec.STRING16);
         DECODERS.put(StringArrayCodec.STRING8_ARRAY.fieldType(), StringArrayCodec.STRING8_ARRAY);
