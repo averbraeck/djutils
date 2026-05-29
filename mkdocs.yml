@@ -75,6 +75,7 @@ nav:
     - DJUTILS-MATH API: https://djutils.org/docs/latest/djutils-math/apidocs/index.html
   - DJUTILS-SERIALIZATION:
     - Introduction: djutils-serialization/index.md
+    - Programming: djutils-serialization/programming.md
     - Coding types: djutils-serialization/coding-types.md
     - 'Primitive types (#0 - #8)': djutils-serialization/primitive-types.md
     - 'String types (#9-10, #33-36)': djutils-serialization/string-types.md
@@ -84,7 +85,8 @@ nav:
     - Coding unit types: djutils-serialization/unit-types.md
     - 'Quantity unit types(#25 - #26)': djutils-serialization/quantity-units.md 
     - 'Vector unit types(#27 - #28)': djutils-serialization/vector-units.md 
-    - 'Matrix unit types(#29 - #32)': djutils-serialization/matrix-units.md 
+    - 'Matrix unit types(#29 - #30)': djutils-serialization/matrix-units.md 
+    - 'Table types(#31-32, #43-44)': djutils-serialization/table-units.md 
     - 'Absolute unit types(#37 - #42)': djutils-serialization/absolute-units.md 
     - SERIALIZATION doc: https://djutils.org/docs/latest/djutils-serialization/index.html
     - SERIALIZATION API: https://djutils.org/docs/latest/djutils-serialization/apidocs/index.html
