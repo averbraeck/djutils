@@ -420,20 +420,21 @@ public final class FieldTypes
 
     /**
      * <b>Big endian encoding</b> <br>
-     * Number-preceded dense float array, stored internally in the SI unit, with a unique quantity type and unit type per
-     * column. After the byte with value 31, the matrix types have a 32-bit int indicating the number of rows in the array that
-     * follows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating
-     * it is an int. Then a one-byte quantity type for column 1 follows and a one-byte unit type for column 1. Then the quantity
-     * type and unit type for column 2, etc. The internal storage of the values that are transmitted after that always use the
-     * SI (or standard) unit. Summarized, the coding is as follows:
+     * Dense float array, stored internally in the SI unit, with a unique quantity type and unit type per column. After the byte
+     * with value 31, the matrix types have a 32-bit int indicating the number of rows in the array that follows (i.e., the
+     * number of elements per column vector), followed by a 32-bit int indicating the number of vectors (i.e, the number of
+     * columns). These integers are not preceded by a byte indicating it is an int. Then a one-byte quantity type for column 1
+     * follows (see {@link QuantityType}) and a one-byte unit type for column 1 (see {@link UnitType}). Then the quantity type
+     * and unit type for column 2, etc. The internal storage of the values that are transmitted after that always use the SI (or
+     * standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
-     * |31|  |R|O|W|S|  |C|O|L|S|
+     * |31|  |R|O|W|S|  |V|E|C|S|
      * |UT1|DT1|  |UT2|DT2| ... |UTn|DTn|
-     * |R|1|C|1|  |R|1|C|2| ... |R|1|C|n| 
-     * |R|2|C|1|  |R|2|C|2| ... |R|2|C|n| 
+     * |R|1|V|1|  |R|1|V|2| ... |R|m|V|n| 
+     * |R|2|V|1|  |R|2|V|2| ... |R|m|V|n| 
      * ... 
-     * |R|m|C|1|  |R|m|C|2| ... |R|m|C|n|
+     * |R|n|V|1|  |R|n|V|2| ... |R|m|V|n|
      * </pre>
      * 
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
@@ -458,30 +459,31 @@ public final class FieldTypes
 
     /**
      * <b>Big endian encoding</b> <br>
-     * Number-preceded dense double array, stored internally in the SI unit, with a unique quantity type and unit type per
-     * column. After the byte with value 32, the matrix types have a 32-bit int indicating the number of rows in the array that
-     * follows, followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating
-     * it is an int. Then a one-byte quantity type for column 1 follows (see the table above) and a one-byte unit type for
-     * column 1 (see Appendix A). Then the quantity type and unit type for column 2, etc. The internal storage of the values
-     * that are transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows:
+     * Dense double array, stored internally in the SI unit, with a unique quantity type and unit type per column. After the
+     * byte with value 32, the matrix types have a 32-bit int indicating the number of rows in the array that follows (i.e., the
+     * number of elements per column vector), followed by a 32-bit int indicating the number of vectors (i.e, the number of
+     * columns). These integers are not preceded by a byte indicating it is an int. Then a one-byte quantity type for column 1
+     * follows (see {@link QuantityType}) and a one-byte unit type for column 1 (see {@link UnitType}). Then the quantity type
+     * and unit type for column 2, etc. The internal storage of the values that are transmitted after that always use the SI (or
+     * standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
-     * |32|  |R|O|W|S|  |C|O|L|S|
+     * |32|  |R|O|W|S|  |V|E|C|S|
      * |UT1|DT1|  |UT2|DT2| ... |UTn|DTn|
-     * |R|1|C|1|.|.|.|.|  |R|1|C|2|.|.|.|.| ... |R|1|C|n|.|.|.|.| 
-     * |R|2|C|1|.|.|.|.|  |R|2|C|2|.|.|.|.| ... |R|2|C|n|.|.|.|.| 
+     * |R|1|V|1|.|.|.|.|  |R|1|V|2|.|.|.|.| ... |R|m|V|n|.|.|.|.| 
+     * |R|2|V|1|.|.|.|.|  |R|2|V|2|.|.|.|.| ... |R|m|V|n|.|.|.|.| 
      * ... 
-     * |R|m|C|1|.|.|.|.|  |R|m|C|2|.|.|.|.| ... |R|m|C|n|.|.|.|.|
+     * |R|n|V|1|.|.|.|.|  |R|n|V|2|.|.|.|.| ... |R|m|V|n|.|.|.|.|
      * </pre>
      * 
      * In the language sending or receiving a matrix, the rows are denoted by the outer index, and the columns by the inner
      * index: matrix[row][col]. This data type is ideal for, for instance, sending a time series of values, where column 1
      * indicates the time, and column 2 the value. Suppose that we have a time series of 4 values at dimensionless years {2010,
-     * 2011, 2012, 2013} and costs of dollars per acre of {415.7, 423.4, 428.0, 435.1}, then the coding is as follows:
+     * 2011, 2012, 2013} and areas in acres of {415.7, 423.4, 428.0, 435.1}, then the coding is as follows:
      * 
      * <pre>
      * |32|  |0|0|0|4|  |0|0|0|2|
-     * |0|0|  |101|150|18|
+     * |0|0|  |5|18|
      * |0x40|0x9F|0x68|0x00|0x00|0x00|0x00|0x00|
      * |0x40|0x79|0xFB|0x33|0x33|0x33|0x33|0x33|
      * |0x40|0x9F|0x6C|0x00|0x00|0x00|0x00|0x00|
@@ -775,6 +777,84 @@ public final class FieldTypes
      * little-endian order.
      */
     public static final byte DOUBLE_64_UNIT_ABS_MATRIX = 42;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Dense float matrix, stored internally in the SI unit, with a unique quantity type and unit type per row. This is the
+     * transposed version of type 31. After the byte with value 43, the matrix types have a 32-bit int indicating the number of
+     * vectors in the array that follows, followed by a 32-bit int indicating the number of elements per vector. These integers
+     * are not preceded by a byte indicating it is an int. Then a one-byte quantity type for vector (row) 1 follows (see
+     * {@link QuantityType}) and a one-byte unit type for vector (row) 1 (see {@link UnitType}), followed by the data for the
+     * vector as 4-byte float values. Then the quantity type, unit type and data for vector 2, etc. The internal storage of the
+     * values that are transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows:
+     * 
+     * <pre>
+     * |43|  |V|E|C|S|  |C|O|L|S|
+     * |UT1|DT1| |V|1|C|1|  |V|1|C|2| ... |V|1|C|n| 
+     * |UT2|DT2| |V|2|C|1|  |V|2|C|2| ... |V|2|C|n| 
+     * ... 
+     * |UTn|DTn| |V|m|C|1|  |V|m|C|2| ... |V|m|C|n|
+     * </pre>
+     * 
+     * This data type is ideal for, for instance, sending a time series of values, where vector 1 indicates the time, and vector
+     * 2 the value. Suppose that we have a time series of 4 values at t = {1, 2, 3, 4} hours and dimensionless values v = {20.0,
+     * 40.0, 50.0, 60.0}, then the coding is as follows:
+     * 
+     * <pre>
+     * |31|    |0|0|0|2|  |0|0|0|4|
+     * |26|8|  |0x3F|0x80|0x00|0x00|  |0x40|0x00|0x00|0x00|  |0x40|0x00|0x40|0x00|  |0x40|0x80|0x00|0x00| 
+     * |0|0|   |0x41|0xA0|0x00|0x00|  |0x42|0x20|0x00|0x00|  |0x42|0x48|0x00|0x00|  |0x42|0x70|0x00|0x00|
+     * </pre>
+     * <p>
+     * <b>Little-endian encoding</b> <br>
+     * Dense little-endian float matrix, preceded by a 32-bit little-endian vector count int and a 32-bit little-endian column
+     * count int, with a unique quantity type and unit type per vector row/column.
+     * <p>
+     * Note that this type is the transposed version of type 31, and can easily transfer a <code>Vector[]</code> array where
+     * each vector has its own quantity and unit.
+     * @since version 2.5
+     */
+    public static final byte FLOAT_32_UNIT_VECTOR_ARRAY = 43;
+
+    /**
+     * <b>Big endian encoding</b> <br>
+     * Dense double matrix, stored internally in the SI unit, with a unique quantity type and unit type per row/column. This is
+     * the transposed version of type 32. After the byte with value 44, the matrix types have a 32-bit int indicating the number
+     * of vectors in the array that follows, followed by a 32-bit int indicating the number of elements per vector. These
+     * integers are not preceded by a byte indicating it is an int. Then a one-byte quantity type for vector (row) 1 follows
+     * (see {@link QuantityType}) and a one-byte unit type for vector (row) 1 (see {@link UnitType}), followed by the data for
+     * the vector as 8-byte double values. Then the quantity type, unit type and data for vector 2, etc. The internal storage of
+     * the values that are transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows:
+     * 
+     * <pre>
+     * |44|  |V|E|C|S|  |C|O|L|S|
+     * |UT1|DT1|  |V|1|C|1|.|.|.|.|  |V|1|C|2|.|.|.|.| ... |V|1|C|n|.|.|.|.| 
+     * |UT1|DT1|  |V|2|C|1|.|.|.|.|  |V|2|C|2|.|.|.|.| ... |V|2|C|n|.|.|.|.| 
+     * ... 
+     * |UTn|DTn|  |V|m|C|1|.|.|.|.|  |V|m|C|2|.|.|.|.| ... |V|m|C|n|.|.|.|.|
+     * </pre>
+     * 
+     * This data type is ideal for, for instance, sending a time series of values, where vector 1 indicates the time, and vector
+     * 2 the value. Suppose that we have a time series of 4 values at dimensionless years {2010, 2011, 2012, 2013} and areas in
+     * acres of {415.7, 423.4, 428.0, 435.1}, then the coding is as follows:
+     * 
+     * <pre>
+     * |32|    |0|0|0|4|  |0|0|0|2|
+     * |0|0|   |0x40|0x9F|0x68|0x00|0x00|0x00|0x00|0x00| |0x40|0x9F|0x6C|0x00|0x00|0x00|0x00|0x00|
+     *         |0x40|0x9F|0x70|0x00|0x00|0x00|0x00|0x00| |0x40|0x9F|0x74|0x00|0x00|0x00|0x00|0x00|
+     * |5|18|  |0x40|0x79|0xFB|0x33|0x33|0x33|0x33|0x33| |0x40|0x7A|0x76|0x66|0x66|0x66|0x66|0x66|
+     *         |0x40|0x7A|0xC0|0x00|0x00|0x00|0x00|0x00| |0x40|0x7A|0x91|0x99|0x99|0x99|0x99|0x9A|
+     * </pre>
+     * <p>
+     * <b>Little-endian encoding</b> <br>
+     * Dense little-endian double matrix, preceded by a 32-bit little-endian vector count int and a 32-bit little-endian column
+     * count int, with a unique quantity type and unit type per vector row.
+     * <p>
+     * Note that this type is the transposed version of type 32, and can easily transfer a <code>Vector[]</code> array where
+     * each vector has its own quantity and unit.
+     * @since version 2.5
+     */
+    public static final byte DOUBLE_64_UNIT_VECTOR_ARRAY = 44;
 
     /**
      * Utility class, cannot be instantiated.
