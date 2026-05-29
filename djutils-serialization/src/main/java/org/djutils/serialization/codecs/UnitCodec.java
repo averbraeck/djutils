@@ -1,4 +1,4 @@
-package org.djutils.serialization.serializers;
+package org.djutils.serialization.codecs;
 
 import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.Unit;

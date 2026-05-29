@@ -1,4 +1,4 @@
-package org.djutils.serialization.serializers;
+package org.djutils.serialization.codecs;
 
 import org.djunits.unit.Unit;
 import org.djunits.vecmat.def.AbsVector;

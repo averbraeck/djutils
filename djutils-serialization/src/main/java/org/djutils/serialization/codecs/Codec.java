@@ -1,4 +1,4 @@
-package org.djutils.serialization.serializers;
+package org.djutils.serialization.codecs;
 
 import java.util.HashMap;
 import java.util.Map;

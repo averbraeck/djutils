@@ -11,17 +11,17 @@ import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 import org.djutils.serialization.UnitType;
-import org.djutils.serialization.serializers.BasicCodec;
-import org.djutils.serialization.serializers.Codec;
-import org.djutils.serialization.serializers.ObjectArrayCodec;
-import org.djutils.serialization.serializers.ObjectMatrixCodec;
-import org.djutils.serialization.serializers.Pointer;
-import org.djutils.serialization.serializers.PrimitiveArrayCodec;
-import org.djutils.serialization.serializers.PrimitiveCodec;
-import org.djutils.serialization.serializers.PrimitiveMatrixCodec;
-import org.djutils.serialization.serializers.QuantityCodec;
-import org.djutils.serialization.serializers.StringArrayCodec;
-import org.djutils.serialization.serializers.StringMatrixCodec;
+import org.djutils.serialization.codecs.BasicCodec;
+import org.djutils.serialization.codecs.Codec;
+import org.djutils.serialization.codecs.ObjectArrayCodec;
+import org.djutils.serialization.codecs.ObjectMatrixCodec;
+import org.djutils.serialization.codecs.Pointer;
+import org.djutils.serialization.codecs.PrimitiveArrayCodec;
+import org.djutils.serialization.codecs.PrimitiveCodec;
+import org.djutils.serialization.codecs.PrimitiveMatrixCodec;
+import org.djutils.serialization.codecs.QuantityCodec;
+import org.djutils.serialization.codecs.StringArrayCodec;
+import org.djutils.serialization.codecs.StringMatrixCodec;
 
 /**
  * Decoder for inspection of serialized data. The SerialDataDecoder implements a state machine that processes one byte at a

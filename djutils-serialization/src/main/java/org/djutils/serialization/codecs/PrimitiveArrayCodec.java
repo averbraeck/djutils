@@ -1,4 +1,4 @@
-package org.djutils.serialization.serializers;
+package org.djutils.serialization.codecs;
 
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
