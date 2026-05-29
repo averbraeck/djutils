@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.serialization.codecs.Codec;
+import org.djutils.serialization.codecs.MessageCodec;
 import org.djutils.serialization.util.SerialDataDumper;
 import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
@@ -14,12 +16,12 @@ import org.junit.jupiter.api.Test;
 /**
  * SimpleSerializationTest tests the decode methods for primitives, and compares the big-endian and little-endian results.
  * <p>
- * Copyright (c) 2025-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2025-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * <p>
+ * @author Alexander Verbraeck
  */
 public class SimpleSerializationTest
 {
@@ -55,8 +57,8 @@ public class SimpleSerializationTest
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 // System.out.println("" + endianness + ", UTF8=" + encodeUTF8);
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
-                        : TypedMessage.encodeUTF16(endianness, objects);
+                byte[] serialized = encodeUTF8 ? MessageCodec.encodeUTF8(endianness, objects)
+                        : MessageCodec.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -71,8 +73,8 @@ public class SimpleSerializationTest
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8" : "String_16"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
-                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
+                    Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : MessageCodec.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
@@ -92,32 +94,32 @@ public class SimpleSerializationTest
     public void testDecodeInt() throws SerializationException
     {
         int value = 1024;
-        byte[] intSerBE = TypedObject.encode(Endianness.BIG_ENDIAN, value);
+        byte[] intSerBE = Codec.encode(value, Endianness.BIG_ENDIAN);
         // System.out.println(IntStream.range(0, intSerBE.length).map(i -> intSerBE[i] >= 0 ? intSerBE[i] : intSerBE[i] + 256)
         // .boxed().collect(Collectors.toList()));
-        int intBE = TypedObject.decodeInt(Endianness.BIG_ENDIAN, intSerBE);
+        int intBE = Codec.decodeInt(Endianness.BIG_ENDIAN, intSerBE);
         assertEquals(value, intBE);
 
-        byte[] intSerLE = TypedObject.encode(Endianness.LITTLE_ENDIAN, value);
+        byte[] intSerLE = Codec.encode(value, Endianness.LITTLE_ENDIAN);
         // System.out.println(IntStream.range(0, intSerLE.length).map(i -> intSerLE[i] >= 0 ? intSerLE[i] : intSerLE[i] + 256)
         // .boxed().collect(Collectors.toList()));
-        int intLE = TypedObject.decodeInt(Endianness.LITTLE_ENDIAN, intSerLE);
+        int intLE = Codec.decodeInt(Endianness.LITTLE_ENDIAN, intSerLE);
         assertEquals(value, intLE);
 
         assertNotEquals(intSerBE, intSerLE);
         assertEquals(intBE, intLE);
 
-        assertEquals(Integer.valueOf(value), TypedObject.decodeToObjectDataTypes(Endianness.BIG_ENDIAN, intSerBE));
+        assertEquals(Integer.valueOf(value), Codec.decodeToObjectDataTypes(Endianness.BIG_ENDIAN, intSerBE));
         assertArrayEquals(new Object[] {Integer.valueOf(value)},
-                TypedMessage.decodeToObjectDataTypes(Endianness.BIG_ENDIAN, intSerBE));
-        assertEquals(value, TypedObject.decodeToPrimitiveDataTypes(Endianness.BIG_ENDIAN, intSerBE));
-        assertArrayEquals(new Object[] {value}, TypedMessage.decodeToPrimitiveDataTypes(Endianness.BIG_ENDIAN, intSerBE));
+                MessageCodec.decodeToObjectDataTypes(Endianness.BIG_ENDIAN, intSerBE));
+        assertEquals(value, Codec.decodeToPrimitiveDataTypes(Endianness.BIG_ENDIAN, intSerBE));
+        assertArrayEquals(new Object[] {value}, MessageCodec.decodeToPrimitiveDataTypes(Endianness.BIG_ENDIAN, intSerBE));
 
-        assertEquals(Integer.valueOf(value), TypedObject.decodeToObjectDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
+        assertEquals(Integer.valueOf(value), Codec.decodeToObjectDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
         assertArrayEquals(new Object[] {Integer.valueOf(value)},
-                TypedMessage.decodeToObjectDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
-        assertEquals(value, TypedObject.decodeToPrimitiveDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
-        assertArrayEquals(new Object[] {value}, TypedMessage.decodeToPrimitiveDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
+                MessageCodec.decodeToObjectDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
+        assertEquals(value, Codec.decodeToPrimitiveDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
+        assertArrayEquals(new Object[] {value}, MessageCodec.decodeToPrimitiveDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
     }
 
     /**
@@ -128,12 +130,12 @@ public class SimpleSerializationTest
     public void testDecodeByte() throws SerializationException
     {
         byte value = 55;
-        byte[] valueSerBE = TypedMessage.encode(Endianness.BIG_ENDIAN, value);
-        byte valueBE = TypedObject.decodeByte(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encode(value, Endianness.BIG_ENDIAN);
+        byte valueBE = Codec.decodeByte(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedMessage.encode(Endianness.LITTLE_ENDIAN, value);
-        byte valueLE = TypedObject.decodeByte(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encode(value, Endianness.LITTLE_ENDIAN);
+        byte valueLE = Codec.decodeByte(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -148,12 +150,12 @@ public class SimpleSerializationTest
     public void testDecodeShort() throws SerializationException
     {
         short value = 5534;
-        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
-        short valueBE = TypedObject.decodeShort(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encodeUTF8(value, Endianness.BIG_ENDIAN);
+        short valueBE = Codec.decodeShort(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
-        short valueLE = TypedObject.decodeShort(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encodeUTF8(value, Endianness.LITTLE_ENDIAN);
+        short valueLE = Codec.decodeShort(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -168,12 +170,12 @@ public class SimpleSerializationTest
     public void testDecodeLong() throws SerializationException
     {
         long value = 5534766567L;
-        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
-        long valueBE = TypedObject.decodeLong(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encodeUTF8(value, Endianness.BIG_ENDIAN);
+        long valueBE = Codec.decodeLong(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
-        long valueLE = TypedObject.decodeLong(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encodeUTF8(value, Endianness.LITTLE_ENDIAN);
+        long valueLE = Codec.decodeLong(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -188,12 +190,12 @@ public class SimpleSerializationTest
     public void testDecodeFloat() throws SerializationException
     {
         float value = 5534.123f;
-        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
-        float valueBE = TypedObject.decodeFloat(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encodeUTF8(value, Endianness.BIG_ENDIAN);
+        float valueBE = Codec.decodeFloat(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
-        float valueLE = TypedObject.decodeFloat(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encodeUTF8(value, Endianness.LITTLE_ENDIAN);
+        float valueLE = Codec.decodeFloat(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -208,12 +210,12 @@ public class SimpleSerializationTest
     public void testDecodeDouble() throws SerializationException
     {
         double value = 55346533.77d;
-        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
-        double valueBE = TypedObject.decodeDouble(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encodeUTF8(value, Endianness.BIG_ENDIAN);
+        double valueBE = Codec.decodeDouble(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
-        double valueLE = TypedObject.decodeDouble(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encodeUTF8(value, Endianness.LITTLE_ENDIAN);
+        double valueLE = Codec.decodeDouble(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -228,12 +230,12 @@ public class SimpleSerializationTest
     public void testDecodeBoolean() throws SerializationException
     {
         boolean value = true;
-        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
-        boolean valueBE = TypedObject.decodeBoolean(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encodeUTF8(value, Endianness.BIG_ENDIAN);
+        boolean valueBE = Codec.decodeBoolean(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
-        boolean valueLE = TypedObject.decodeBoolean(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encodeUTF8(value, Endianness.LITTLE_ENDIAN);
+        boolean valueLE = Codec.decodeBoolean(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -248,12 +250,12 @@ public class SimpleSerializationTest
     public void testDecodeCharUtf8() throws SerializationException
     {
         char value = '}';
-        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
-        char valueBE = TypedObject.decodeCharUtf8(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encodeUTF8(value, Endianness.BIG_ENDIAN);
+        char valueBE = Codec.decodeCharUtf8(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
-        char valueLE = TypedObject.decodeCharUtf8(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encodeUTF8(value, Endianness.LITTLE_ENDIAN);
+        char valueLE = Codec.decodeCharUtf8(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -268,12 +270,12 @@ public class SimpleSerializationTest
     public void testDecodeCharUtf16() throws SerializationException
     {
         char value = '\u00A2'; // cent sign
-        byte[] valueSerBE = TypedObject.encodeUTF16(Endianness.BIG_ENDIAN, value);
-        char valueBE = TypedObject.decodeCharUtf16(Endianness.BIG_ENDIAN, valueSerBE);
+        byte[] valueSerBE = Codec.encodeUTF16(value, Endianness.BIG_ENDIAN);
+        char valueBE = Codec.decodeCharUtf16(Endianness.BIG_ENDIAN, valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF16(Endianness.LITTLE_ENDIAN, value);
-        char valueLE = TypedObject.decodeCharUtf16(Endianness.LITTLE_ENDIAN, valueSerLE);
+        byte[] valueSerLE = Codec.encodeUTF16(value, Endianness.LITTLE_ENDIAN);
+        char valueLE = Codec.decodeCharUtf16(Endianness.LITTLE_ENDIAN, valueSerLE);
         assertEquals(value, valueLE);
 
         assertNotEquals(valueSerBE, valueSerLE);
@@ -289,31 +291,31 @@ public class SimpleSerializationTest
         Endianness endianness = Endianness.BIG_ENDIAN;
         final byte[] buffer = new byte[12];
         buffer[0] = 127;
-        UnitTest.testFail(() -> TypedObject.decodeInt(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeShort(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeByte(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeLong(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeFloat(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeDouble(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeBoolean(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeCharUtf8(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeCharUtf16(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeInt(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeShort(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeByte(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeLong(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeFloat(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeDouble(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeBoolean(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeCharUtf8(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeCharUtf16(endianness, buffer), SerializationException.class);
 
         final byte[] buffer2 = new byte[1];
         buffer2[0] = 127;
-        UnitTest.testFail(() -> TypedObject.decodeInt(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeShort(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeByte(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeLong(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeFloat(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeDouble(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeBoolean(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeCharUtf8(endianness, buffer2), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeCharUtf16(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeInt(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeShort(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeByte(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeLong(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeFloat(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeDouble(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeBoolean(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeCharUtf8(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeCharUtf16(endianness, buffer2), SerializationException.class);
 
-        UnitTest.testFail(() -> TypedObject.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedObject.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedMessage.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> TypedMessage.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> MessageCodec.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> MessageCodec.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
     }
 }

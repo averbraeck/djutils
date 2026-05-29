@@ -7,12 +7,12 @@ import java.util.Arrays;
 /**
  * AbstractSerializationTest contain a number of helper methods for different tests.
  * <p>
- * Copyright (c) 2023-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2023-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * <p>
+ * @author Alexander Verbraeck
  */
 public abstract class AbstractSerializationTest
 {
@@ -205,8 +205,7 @@ public abstract class AbstractSerializationTest
      * Compare two arrays of any type (stolen from java.util.Arrays).
      * @param e1 Object (should be some kind of array)
      * @param e2 Object (should be some kind of array)
-     * @return true of the arrays have the same type, size and all elements in the arrays are equal to their
-     *         counterpart
+     * @return true of the arrays have the same type, size and all elements in the arrays are equal to their counterpart
      */
     protected boolean deepEquals0(final Object e1, final Object e2)
     {

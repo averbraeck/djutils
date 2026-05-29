@@ -6,18 +6,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.serialization.codecs.MessageCodec;
+import org.djutils.serialization.codecs.ObjectMatrixCodec;
+import org.djutils.serialization.codecs.PrimitiveMatrixCodec;
 import org.djutils.serialization.util.SerialDataDumper;
 import org.junit.jupiter.api.Test;
 
 /**
  * MatrixSerializationTest tests the encoding and decoding of matrices.
  * <p>
- * Copyright (c) 2023-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2023-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * <p>
+ * @author Alexander Verbraeck
  */
 public class MatrixSerializationTest extends AbstractSerializationTest
 {
@@ -49,8 +52,8 @@ public class MatrixSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
-                        : TypedMessage.encodeUTF16(endianness, objects);
+                byte[] serialized = encodeUTF8 ? MessageCodec.encodeUTF8(endianness, objects)
+                        : MessageCodec.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -65,8 +68,8 @@ public class MatrixSerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("height"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
-                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
+                    Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : MessageCodec.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
@@ -107,7 +110,7 @@ public class MatrixSerializationTest extends AbstractSerializationTest
                 Object[] singleObjectArray = new Object[] {object};
                 try
                 {
-                    TypedMessage.encodeUTF16(endianness, singleObjectArray);
+                    MessageCodec.encodeUTF16(endianness, singleObjectArray);
                     fail("Jagged array should have thrown a SerializationException");
                 }
                 catch (SerializationException se)
@@ -116,7 +119,7 @@ public class MatrixSerializationTest extends AbstractSerializationTest
                 }
                 try
                 {
-                    TypedMessage.encodeUTF8(endianness, singleObjectArray);
+                    MessageCodec.encodeUTF8(endianness, singleObjectArray);
                     fail("Jagged array should have thrown a SerializationException");
                 }
                 catch (SerializationException se)
@@ -133,10 +136,10 @@ public class MatrixSerializationTest extends AbstractSerializationTest
     @Test
     public void testMatrixSerializerDimensions()
     {
-        assertEquals(2, TypedObject.CONVERT_BOOL_MATRIX.getNumberOfDimensions());
-        assertEquals(2, TypedObject.CONVERT_BOOLEAN_MATRIX.getNumberOfDimensions());
-        assertEquals(2, TypedObject.CONVERT_LNG_MATRIX.getNumberOfDimensions());
-        assertEquals(2, TypedObject.CONVERT_LONG_MATRIX.getNumberOfDimensions());
+        assertEquals(2, PrimitiveMatrixCodec.BOOLEAN_MATRIX.getNumberOfDimensions());
+        assertEquals(2, ObjectMatrixCodec.BOOLEAN_OBJECT_MATRIX.getNumberOfDimensions());
+        assertEquals(2, PrimitiveMatrixCodec.LONG_MATRIX.getNumberOfDimensions());
+        assertEquals(2, ObjectMatrixCodec.LONG_OBJECT_MATRIX.getNumberOfDimensions());
     }
 
 }

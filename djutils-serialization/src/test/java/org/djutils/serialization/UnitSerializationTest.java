@@ -6,7 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.djunits.quantity.Quantity;
+import java.util.concurrent.TimeUnit;
+
+import org.djunits.quantity.Dimensionless;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.def.Quantity;
 import org.djunits.unit.AccelerationUnit;
 import org.djunits.unit.AreaUnit;
 import org.djunits.unit.DimensionlessUnit;
@@ -14,18 +18,15 @@ import org.djunits.unit.ElectricalCurrentUnit;
 import org.djunits.unit.ElectricalResistanceUnit;
 import org.djunits.unit.EnergyUnit;
 import org.djunits.unit.LengthUnit;
-import org.djunits.unit.SIUnit;
 import org.djunits.unit.SpeedUnit;
-import org.djunits.unit.TimeUnit;
 import org.djunits.unit.Unit;
 import org.djunits.unit.scale.IdentityScale;
 import org.djunits.unit.si.SIPrefixes;
-import org.djunits.unit.unitsystem.UnitSystem;
+import org.djunits.unit.si.SIUnit;
+import org.djunits.unit.system.UnitSystem;
 import org.djunits.value.ValueRuntimeException;
 import org.djunits.value.storage.StorageType;
 import org.djunits.value.vdouble.matrix.ElectricalCurrentMatrix;
-import org.djunits.value.vdouble.scalar.Dimensionless;
-import org.djunits.value.vdouble.scalar.Length;
 import org.djunits.value.vdouble.scalar.base.DoubleScalarRel;
 import org.djunits.value.vdouble.vector.ElectricalCurrentVector;
 import org.djunits.value.vdouble.vector.LengthVector;
@@ -38,6 +39,7 @@ import org.djunits.value.vfloat.vector.FloatLengthVector;
 import org.djunits.value.vfloat.vector.FloatTimeVector;
 import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.serialization.codecs.MessageCodec;
 import org.djutils.serialization.util.SerialDataDumper;
 import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
@@ -45,12 +47,12 @@ import org.junit.jupiter.api.Test;
 /**
  * UnitSerializationTest tests the encoding / decoding of values (Scalar, Vector, Matrix) with units.
  * <p>
- * Copyright (c) 2023-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2023-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * <p>
+ * @author Alexander Verbraeck
  */
 public class UnitSerializationTest extends AbstractSerializationTest
 {
@@ -68,7 +70,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
         String siUnit = "[m/s^2]";
         QuantityType testAccelerationUnitType = new QuantityType(code, unitClass, name, description, siUnit);
         assertEquals(code, testAccelerationUnitType.getCode(), "code is returned");
-        assertEquals(unitClass, testAccelerationUnitType.getDjunitsType(), "unit class is returned");
+        assertEquals(unitClass, testAccelerationUnitType.getQuantityClass(), "unit class is returned");
         assertEquals(name, testAccelerationUnitType.getName(), "name is returned");
         assertEquals(description, testAccelerationUnitType.getDescription(), "description is returned");
         assertEquals(siUnit, testAccelerationUnitType.getSiUnit(), "SI unit is returned");
@@ -77,15 +79,13 @@ public class UnitSerializationTest extends AbstractSerializationTest
         byte undefined = 126;
         assertEquals(testAccelerationUnitType, QuantityType.getUnitType(code), "new unit is in the byte type map");
         assertNull(QuantityType.getUnitType(undefined), "undefined byte returns null");
-        assertEquals(unitClass, QuantityType.getUnitClass(code), "djunits type is returned");
-        assertNull(QuantityType.getUnitClass(undefined), "undefined byte returns null");
-        assertEquals(QuantityType.SPEED, QuantityType.getUnitType((byte) 22),
-                "speed type can be found by byte code");
-        assertEquals(QuantityType.SPEED, QuantityType.getUnitType(SpeedUnit.SI),
-                "speed type can be found by unit type");
+        assertEquals(unitClass, QuantityType.getQuantityClass(code), "djunits type is returned");
+        assertNull(QuantityType.getQuantityClass(undefined), "undefined byte returns null");
+        assertEquals(QuantityType.SPEED, QuantityType.getUnitType((byte) 22), "speed type can be found by byte code");
+        assertEquals(QuantityType.SPEED, QuantityType.getUnitType(SpeedUnit.SI), "speed type can be found by unit type");
         assertEquals(QuantityType.SPEED, QuantityType.getUnitType(SpeedUnit.FOOT_PER_SECOND),
                 "speed type can be found by non SI unit type");
-        assertEquals(22, QuantityType.getUnitCode(SpeedUnit.SI), "speed unit code can be found by unit type");
+        assertEquals(22, QuantityType.getQuantityCode(SpeedUnit.SI), "speed unit code can be found by unit type");
 
         assertEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, description, siUnit));
         assertNotEquals(testAccelerationUnitType, QuantityType.ACCELERATION);
@@ -97,12 +97,11 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertNotEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, "x", siUnit));
         assertNotEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, description, "N/K"));
 
-        UnitTest.testFail(() -> QuantityType.getUnitCode(SIUnit.of("K/mol")));
+        UnitTest.testFail(() -> QuantityType.getQuantityCode(SIUnit.of("K/mol")));
 
         // restore the cache
-        new QuantityType(QuantityType.ACCELERATION.getCode(), AccelerationUnit.class,
-                QuantityType.ACCELERATION.getName(), QuantityType.ACCELERATION.getDescription(),
-                QuantityType.ACCELERATION.getSiUnit());
+        new QuantityType(QuantityType.ACCELERATION.getCode(), AccelerationUnit.class, QuantityType.ACCELERATION.getName(),
+                QuantityType.ACCELERATION.getDescription(), QuantityType.ACCELERATION.getSiUnit());
         new QuantityType(QuantityType.LENGTH.getCode(), LengthUnit.class, QuantityType.LENGTH.getName(),
                 QuantityType.LENGTH.getDescription(), QuantityType.LENGTH.getSiUnit());
     }
@@ -130,7 +129,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
         Object[] objects = new Object[] {length, value, area, currents, resistors, currentMatrix, resistorMatrix};
         for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
-            byte[] serialized = TypedMessage.encodeUTF16(endianness, objects);
+            byte[] serialized = MessageCodec.encodeUTF16(endianness, objects);
             HexDumper.hexDumper(serialized);
             String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
             assertFalse(sdd.contains("Error"));
@@ -142,8 +141,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
             assertTrue(sdd.contains("Djunits_FloatMatrix"));
             for (boolean primitive : new boolean[] {false, true})
             {
-                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
-                        : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
+                Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
+                        : MessageCodec.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
                 {
@@ -165,8 +164,11 @@ public class UnitSerializationTest extends AbstractSerializationTest
 
         /** The SI unit for acceleration is kg.K/mol.s. */
         public static final NonsenseUnit2 SI = new NonsenseUnit2().build(new Unit.Builder<NonsenseUnit2>().setQuantity(BASE)
-                .setId("kg.K/mol.s").setName("x").setUnitSystem(UnitSystem.SI_DERIVED).setSiPrefixes(SIPrefixes.NONE, 1.0)
-                .setScale(IdentityScale.SCALE));
+            .setId("kg.K/mol.s")
+            .setName("x")
+            .setUnitSystem(UnitSystem.SI_DERIVED)
+            .setSiPrefixes(SIPrefixes.NONE, 1.0)
+            .setScale(IdentityScale.SCALE));
     }
 
     /** Non-existing scalar. */
@@ -209,9 +211,9 @@ public class UnitSerializationTest extends AbstractSerializationTest
     {
         for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
-            UnitTest.testFail(() -> TypedObject.encode(endianness, NonsenseUnit2.SI));
+            UnitTest.testFail(() -> TypedObject.encode(NonsenseUnit2.SI, endianness));
             NonsenseScalar ns = new NonsenseScalar(1.0, NonsenseUnit2.SI);
-            UnitTest.testFail(() -> TypedObject.encode(endianness, ns));
+            UnitTest.testFail(() -> TypedObject.encode(ns, endianness));
         }
 
     }
@@ -228,11 +230,11 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertEquals("Area", areaSerUnit.getName());
         assertEquals("Area (m2)", areaSerUnit.getDescription());
         assertEquals(5, areaSerUnit.getCode());
-        assertEquals(AreaUnit.class, areaSerUnit.getDjunitsType());
+        assertEquals(AreaUnit.class, areaSerUnit.getQuantityClass());
         assertEquals("[m^2]", areaSerUnit.getSiUnit());
 
-        assertEquals(LengthUnit.class, QuantityType.getUnitClass((byte) 16));
-        assertEquals(16, QuantityType.getUnitCode(LengthUnit.INCH));
+        assertEquals(LengthUnit.class, QuantityType.getQuantityClass((byte) 16));
+        assertEquals(16, QuantityType.getQuantityCode(LengthUnit.INCH));
         assertEquals(areaSerUnit, QuantityType.getUnitType((byte) 5));
         assertEquals(areaSerUnit, QuantityType.getUnitType(AreaUnit.ARE));
 
@@ -257,8 +259,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertEquals("m2", aream2.getAbbreviation());
         assertEquals(0, aream2.getByteCode());
         assertEquals(18, areaacre.getByteCode());
-        assertEquals(AreaUnit.SQUARE_METER, aream2.getDjunitsType());
-        assertEquals(AreaUnit.ACRE, areaacre.getDjunitsType());
+        assertEquals(AreaUnit.SQUARE_METER, aream2.getUnit());
+        assertEquals(AreaUnit.ACRE, areaacre.getUnit());
         assertEquals(0, aream2.getIntCode());
         assertEquals(18, areaacre.getIntCode());
         assertEquals("SQUARE_METER", aream2.getName());
@@ -267,9 +269,9 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertEquals(areaacre.getUnitType(), aream2.getUnitType());
 
         assertEquals(8, UnitType.getByteCode(ElectricalResistanceUnit.STATOHM));
-        assertEquals(areaacre, UnitType.getDisplayType(AreaUnit.ACRE));
-        assertEquals(UnitType.ENERGY_CALORIE, UnitType.getDisplayType((byte) 11, 30));
-        assertEquals(areaacre, UnitType.getDisplayType(areaSerUnit, 18));
+        assertEquals(areaacre, UnitType.getUnitType(AreaUnit.ACRE));
+        assertEquals(UnitType.ENERGY_CALORIE, UnitType.getUnitType((byte) 11, 30));
+        assertEquals(areaacre, UnitType.getUnitType(areaSerUnit, 18));
         assertEquals(30, UnitType.getIntCode(EnergyUnit.CALORIE));
         assertEquals(EnergyUnit.CALORIE, UnitType.getUnit((byte) 11, 30));
         assertEquals(AreaUnit.ACRE, UnitType.getUnit(areaSerUnit, 18));
@@ -298,9 +300,9 @@ public class UnitSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
-                        : TypedMessage.encodeUTF16(endianness, objects);
-                assertEquals(FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX, serialized[0]);
+                byte[] serialized = encodeUTF8 ? MessageCodec.encodeUTF8(endianness, objects)
+                        : MessageCodec.encodeUTF16(endianness, objects);
+                assertEquals(FieldTypes.DOUBLE_64_UNIT_COL_VECTOR_ARRAY, serialized[0]);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -315,8 +317,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("30.3min"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
-                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
+                    Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : MessageCodec.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
@@ -357,9 +359,9 @@ public class UnitSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
-                        : TypedMessage.encodeUTF16(endianness, objects);
-                assertEquals(FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX, serialized[0]);
+                byte[] serialized = encodeUTF8 ? MessageCodec.encodeUTF8(endianness, objects)
+                        : MessageCodec.encodeUTF16(endianness, objects);
+                assertEquals(FieldTypes.FLOAT_32_UNIT_COL_VECTOR_ARRAY, serialized[0]);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -373,8 +375,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("0.3in"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
-                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
+                    Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : MessageCodec.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
@@ -411,8 +413,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
         FloatVector<?, ?, ?>[] fRagged =
                 new FloatVector[] {new FloatLengthVector(new float[] {0.1f, 0.2f, 0.3f}, LengthUnit.INCH, StorageType.DENSE),
                         new FloatTimeVector(new float[] {10.1f, 20.2f}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
-        UnitTest.testFail(() -> TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, dRagged));
-        UnitTest.testFail(() -> TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, fRagged));
+        UnitTest.testFail(() -> TypedObject.encodeUTF8(dRagged, Endianness.BIG_ENDIAN));
+        UnitTest.testFail(() -> TypedObject.encodeUTF8(fRagged, Endianness.BIG_ENDIAN));
     }
 
 }

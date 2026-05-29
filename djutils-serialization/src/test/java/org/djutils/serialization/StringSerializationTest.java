@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.UnsupportedEncodingException;
 
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.serialization.codecs.Codec;
+import org.djutils.serialization.codecs.MessageCodec;
 import org.djutils.serialization.util.SerialDataDumper;
 import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
@@ -14,12 +16,12 @@ import org.junit.jupiter.api.Test;
 /**
  * StringSerializationTest tests the encoding and decoding of strings and string arrays/matrices.
  * <p>
- * Copyright (c) 2023-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2023-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * <p>
+ * @author Alexander Verbraeck
  */
 public class StringSerializationTest extends AbstractSerializationTest
 {
@@ -45,24 +47,24 @@ public class StringSerializationTest extends AbstractSerializationTest
         testString(2, 2, xi);
         testString(4, 4, smiley);
 
-        compare(TypedMessage.encodeUTF8(Endianness.BIG_ENDIAN, permille),
+        compare(Codec.encodeUTF8(permille, Endianness.BIG_ENDIAN),
                 new byte[] {9, 0, 0, 0, 3, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
-        compare(TypedMessage.encodeUTF16(Endianness.BIG_ENDIAN, permille),
+        compare(Codec.encodeUTF16(permille, Endianness.BIG_ENDIAN),
                 new byte[] {10, 0, 0, 0, 1, (byte) 0x20, (byte) 0x30});
 
-        compare(TypedMessage.encodeUTF8(Endianness.BIG_ENDIAN, smiley),
+        compare(Codec.encodeUTF8(smiley, Endianness.BIG_ENDIAN),
                 new byte[] {9, 0, 0, 0, 4, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
-        compare(TypedMessage.encodeUTF16(Endianness.BIG_ENDIAN, smiley),
+        compare(Codec.encodeUTF16(smiley, Endianness.BIG_ENDIAN),
                 new byte[] {10, 0, 0, 0, 2, (byte) 0xD8, (byte) 0x3D, (byte) 0xDE, (byte) 0x00});
 
-        compare(TypedMessage.encodeUTF8(Endianness.LITTLE_ENDIAN, permille),
+        compare(Codec.encodeUTF8(permille, Endianness.LITTLE_ENDIAN),
                 new byte[] {9, 3, 0, 0, 0, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
-        compare(TypedMessage.encodeUTF16(Endianness.LITTLE_ENDIAN, permille),
+        compare(Codec.encodeUTF16(permille, Endianness.LITTLE_ENDIAN),
                 new byte[] {10, 1, 0, 0, 0, (byte) 0x30, (byte) 0x20});
 
-        compare(TypedMessage.encodeUTF8(Endianness.LITTLE_ENDIAN, smiley),
+        compare(Codec.encodeUTF8(smiley, Endianness.LITTLE_ENDIAN),
                 new byte[] {9, 4, 0, 0, 0, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
-        compare(TypedMessage.encodeUTF16(Endianness.LITTLE_ENDIAN, smiley),
+        compare(Codec.encodeUTF16(smiley, Endianness.LITTLE_ENDIAN),
                 new byte[] {10, 2, 0, 0, 0, (byte) 0x3D, (byte) 0xD8, (byte) 0x00, (byte) 0xDE});
 
         Object[] objects = new Object[] {copyright, xi, permille, smiley, abc, complex};
@@ -70,13 +72,13 @@ public class StringSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
-                        : TypedMessage.encodeUTF16(endianness, objects);
+                byte[] serialized = encodeUTF8 ? MessageCodec.encodeUTF8(endianness, objects)
+                        : MessageCodec.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8" : "String_16"));
-                Object[] decodedObjects = TypedMessage.decodeToObjectDataTypes(endianness, serialized);
+                Object[] decodedObjects = MessageCodec.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
                 {
@@ -102,10 +104,10 @@ public class StringSerializationTest extends AbstractSerializationTest
         assertEquals(expected16, s.getBytes("UTF-16BE").length);
         assertEquals(expected16, s.getBytes("UTF-16LE").length);
 
-        byte[] b8BE = TypedMessage.encodeUTF8(Endianness.BIG_ENDIAN, s);
-        byte[] b8LE = TypedMessage.encodeUTF8(Endianness.LITTLE_ENDIAN, s);
-        byte[] b16BE = TypedMessage.encodeUTF16(Endianness.BIG_ENDIAN, s);
-        byte[] b16LE = TypedMessage.encodeUTF16(Endianness.LITTLE_ENDIAN, s);
+        byte[] b8BE = Codec.encodeUTF8(s, Endianness.BIG_ENDIAN);
+        byte[] b8LE = Codec.encodeUTF8(s, Endianness.LITTLE_ENDIAN);
+        byte[] b16BE = Codec.encodeUTF16(s, Endianness.BIG_ENDIAN);
+        byte[] b16LE = Codec.encodeUTF16(s, Endianness.LITTLE_ENDIAN);
 
         assertEquals(expected8, b8BE.length - 5);
         assertEquals(expected8, b8LE.length - 5);
@@ -143,12 +145,12 @@ public class StringSerializationTest extends AbstractSerializationTest
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized =
-                        encodeUTF8 ? TypedObject.encodeUTF8(endianness, sa) : TypedObject.encodeUTF16(endianness, sa);
+                        encodeUTF8 ? Codec.encodeUTF8(sa, endianness) : Codec.encodeUTF16(sa, endianness);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_array" : "String_16_array"));
-                String[] decodedObjects = (String[]) TypedObject.decodeToObjectDataTypes(endianness, serialized);
+                String[] decodedObjects = (String[]) Codec.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(sa.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < sa.length; i++)
                 {
@@ -179,12 +181,12 @@ public class StringSerializationTest extends AbstractSerializationTest
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized =
-                        encodeUTF8 ? TypedObject.encodeUTF8(endianness, sm) : TypedObject.encodeUTF16(endianness, sm);
+                        encodeUTF8 ? Codec.encodeUTF8(sm, endianness) : Codec.encodeUTF16(sm, endianness);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_matrix" : "String_16_matrix"));
-                String[][] decodedObjects = (String[][]) TypedObject.decodeToObjectDataTypes(endianness, serialized);
+                String[][] decodedObjects = (String[][]) Codec.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(sm.length, decodedObjects.length, "Row size of decoded matches");
                 for (int i = 0; i < sm.length; i++)
                 {
@@ -204,8 +206,8 @@ public class StringSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                UnitTest.testFail(() -> encodeUTF8 ? TypedObject.encodeUTF8(endianness, smRagged)
-                        : TypedObject.encodeUTF16(endianness, smRagged));
+                UnitTest.testFail(() -> encodeUTF8 ? Codec.encodeUTF8(smRagged, endianness)
+                        : Codec.encodeUTF16(smRagged, endianness));
             }
         }
     }

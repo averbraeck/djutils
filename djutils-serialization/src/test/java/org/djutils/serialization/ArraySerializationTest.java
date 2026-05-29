@@ -5,18 +5,21 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.serialization.codecs.MessageCodec;
+import org.djutils.serialization.codecs.ObjectArrayCodec;
+import org.djutils.serialization.codecs.PrimitiveArrayCodec;
 import org.djutils.serialization.util.SerialDataDumper;
 import org.junit.jupiter.api.Test;
 
 /**
  * ArraySerializationTest tests the encoding and decoding of arrays.
  * <p>
- * Copyright (c) 2023-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2023-2026 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * <p>
+ * @author Alexander Verbraeck
  */
 public class ArraySerializationTest extends AbstractSerializationTest
 {
@@ -48,8 +51,8 @@ public class ArraySerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
-                        : TypedMessage.encodeUTF16(endianness, objects);
+                byte[] serialized = encodeUTF8 ? MessageCodec.encodeUTF8(endianness, objects)
+                        : MessageCodec.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -63,8 +66,8 @@ public class ArraySerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("length"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
-                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
+                    Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : MessageCodec.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
@@ -82,10 +85,10 @@ public class ArraySerializationTest extends AbstractSerializationTest
     @Test
     public void testArraySerializerDimensions()
     {
-        assertEquals(1, TypedObject.CONVERT_BOOL_ARRAY.getNumberOfDimensions());
-        assertEquals(1, TypedObject.CONVERT_BOOLEAN_ARRAY.getNumberOfDimensions());
-        assertEquals(1, TypedObject.CONVERT_LNG_ARRAY.getNumberOfDimensions());
-        assertEquals(1, TypedObject.CONVERT_LONG_ARRAY.getNumberOfDimensions());
+        assertEquals(1, PrimitiveArrayCodec.BOOLEAN_ARRAY.getNumberOfDimensions());
+        assertEquals(1, ObjectArrayCodec.BOOLEAN_OBJECT_ARRAY.getNumberOfDimensions());
+        assertEquals(1, PrimitiveArrayCodec.LONG_ARRAY.getNumberOfDimensions());
+        assertEquals(1, ObjectArrayCodec.LONG_OBJECT_ARRAY.getNumberOfDimensions());
     }
 
 }
