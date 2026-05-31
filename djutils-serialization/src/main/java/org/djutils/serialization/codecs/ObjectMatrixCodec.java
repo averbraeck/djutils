@@ -34,10 +34,12 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
      * @param type the field type as defined by the {@link FieldTypes} class
      * @param elementSize the number of bytes needed to encode one additional array element
      * @param elementClass the element classs to instantiate
+     * @param shortName the short name of the codec
      */
-    public ObjectMatrixCodec(final byte type, final int elementSize, final Class<? extends E> elementClass)
+    public ObjectMatrixCodec(final byte type, final int elementSize, final Class<? extends E> elementClass,
+            final String shortName)
     {
-        super(type);
+        super(type, shortName);
         this.elementSize = elementSize;
         this.elementClass = elementClass;
     }
@@ -58,8 +60,16 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
     }
 
     @Override
-    public final int size(final E[][] matrix)
+    public final int size(final E[][] matrix) throws SerializationException
     {
+        int height = matrix.length;
+        Throw.when(0 == height, SerializationException.class, "Zero height matrix is not allowed");
+        int width = matrix[0].length;
+        Throw.when(0 == width, SerializationException.class, "Zero width matrix is not allowed");
+        for (int i = 0; i < height; i++)
+        {
+            Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+        }
         return 4 + 4 + getElementSize() * matrix.length * matrix[0].length;
     }
 
@@ -120,7 +130,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
 
     /** Converter for Byte matrix. */
     public static final ObjectMatrixCodec<Byte> BYTE_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1, Byte.class)
+            new ObjectMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1, Byte.class, "Byte_8_matrix")
             {
                 @Override
                 public void serializeElement(final Byte object, final byte[] buffer, final int offset,
@@ -138,7 +148,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
 
     /** Converter for Short matrix. */
     public static final ObjectMatrixCodec<Short> SHORT_OBJECT_MATRIX =
-            new ObjectMatrixCodec<Short>(FieldTypes.SHORT_16_MATRIX, 2, Short.class)
+            new ObjectMatrixCodec<Short>(FieldTypes.SHORT_16_MATRIX, 2, Short.class, "Short_16_matrix")
             {
                 @Override
                 public void serializeElement(final Short object, final byte[] buffer, final int offset,
@@ -156,7 +166,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
 
     /** Converter for Integer matrix. */
     public static final ObjectMatrixCodec<Integer> INTEGER_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4, Integer.class)
+            new ObjectMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4, Integer.class, "Integer_32_matrix")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset,
@@ -174,7 +184,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
 
     /** Converter for Long matrix. */
     public static final ObjectMatrixCodec<Long> LONG_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8, Long.class)
+            new ObjectMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8, Long.class, "Long_64_matrix")
             {
                 @Override
                 public void serializeElement(final Long object, final byte[] buffer, final int offset,
@@ -192,7 +202,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
 
     /** Converter for Float matrix. */
     public static final ObjectMatrixCodec<Float> FLOAT_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.FLOAT_32_MATRIX, 4, Float.class)
+            new ObjectMatrixCodec<>(FieldTypes.FLOAT_32_MATRIX, 4, Float.class, "Float_32_matrix")
             {
                 @Override
                 public void serializeElement(final Float object, final byte[] buffer, final int offset,
@@ -210,7 +220,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
 
     /** Converter for Double matrix. */
     public static final ObjectMatrixCodec<Double> DOUBLE_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class)
+            new ObjectMatrixCodec<>(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class, "Double_64_matrix")
             {
                 @Override
                 public void serializeElement(final Double object, final byte[] buffer, final int offset,
@@ -228,7 +238,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
 
     /** Converter for Boolean matrix. */
     public static final ObjectMatrixCodec<Boolean> BOOLEAN_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class)
+            new ObjectMatrixCodec<>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class, "Boolean_8_matrix")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset,

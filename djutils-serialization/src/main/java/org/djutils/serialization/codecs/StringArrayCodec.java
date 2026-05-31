@@ -27,10 +27,11 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     /**
      * Construct a StringArrayCodec.
      * @param fieldType the field type as defined by the {@link FieldTypes} class
+     * @param shortName the short name of the codec
      */
-    public StringArrayCodec(final byte fieldType)
+    public StringArrayCodec(final byte fieldType, final String shortName)
     {
-        super(fieldType);
+        super(fieldType, shortName);
     }
 
     /** {@inheritDoc} */
@@ -41,7 +42,7 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     }
 
     /** Converter for String UTF-8 array. */
-    public static final StringArrayCodec STRING8_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF8_ARRAY)
+    public static final StringArrayCodec STRING8_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF8_ARRAY, "String_8_array")
     {
         @Override
         public int size(final String[] stringArray)
@@ -88,7 +89,7 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     };
 
     /** Converter for String UTF-16 array. */
-    public static final StringArrayCodec STRING16_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF16_ARRAY)
+    public static final StringArrayCodec STRING16_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF16_ARRAY, "String_16_array")
     {
         @Override
         public int size(final String[] stringArray)

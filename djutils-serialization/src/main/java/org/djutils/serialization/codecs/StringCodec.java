@@ -27,10 +27,11 @@ public abstract class StringCodec extends BasicCodec<String>
     /**
      * Construct a StringCodec.
      * @param fieldType the field type as defined by the {@link FieldTypes} class
+     * @param shortName the short name of the codec
      */
-    public StringCodec(final byte fieldType)
+    public StringCodec(final byte fieldType, final String shortName)
     {
-        super(fieldType);
+        super(fieldType, shortName);
     }
 
     /** {@inheritDoc} */
@@ -41,7 +42,7 @@ public abstract class StringCodec extends BasicCodec<String>
     }
 
     /** Converter for String. */
-    public static final StringCodec STRING16 = new StringCodec(FieldTypes.STRING_UTF16)
+    public static final StringCodec STRING16 = new StringCodec(FieldTypes.STRING_UTF16, "String_16")
     {
         @Override
         public int size(final String object)
@@ -74,7 +75,7 @@ public abstract class StringCodec extends BasicCodec<String>
     };
 
     /** Converter for String. */
-    public static final StringCodec STRING8 = new StringCodec(FieldTypes.STRING_UTF8)
+    public static final StringCodec STRING8 = new StringCodec(FieldTypes.STRING_UTF8, "String_8")
     {
         @Override
         public int size(final String string)

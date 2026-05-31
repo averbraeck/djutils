@@ -32,10 +32,12 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
      * @param type the field type as defined by the {@link FieldTypes} class
      * @param elementSize the number of bytes needed to encode one additional array element
      * @param elementClass the element classs to instantiate
+     * @param shortName the short name of the codec
      */
-    public ObjectArrayCodec(final byte type, final int elementSize, final Class<? extends E> elementClass)
+    public ObjectArrayCodec(final byte type, final int elementSize, final Class<? extends E> elementClass,
+            final String shortName)
     {
-        super(type);
+        super(type, shortName);
         this.elementSize = elementSize;
         this.elementClass = elementClass;
     }
@@ -104,7 +106,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
 
     /** Converter for Byte array. */
     public static final ObjectArrayCodec<Byte> BYTE_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1, Byte.class)
+            new ObjectArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1, Byte.class, "Byte_8_array")
             {
                 @Override
                 public void serializeElement(final Byte object, final byte[] buffer, final int offset,
@@ -122,7 +124,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
 
     /** Converter for Short array. */
     public static final ObjectArrayCodec<Short> SHORT_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2, Short.class)
+            new ObjectArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2, Short.class, "Short_16_array")
             {
                 @Override
                 public void serializeElement(final Short object, final byte[] buffer, final int offset,
@@ -140,7 +142,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
 
     /** Converter for Integer array. */
     public static final ObjectArrayCodec<Integer> INTEGER_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.INT_32_ARRAY, 4, Integer.class)
+            new ObjectArrayCodec<>(FieldTypes.INT_32_ARRAY, 4, Integer.class, "Integer_32_array")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset,
@@ -158,7 +160,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
 
     /** Converter for Long array. */
     public static final ObjectArrayCodec<Long> LONG_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8, Long.class)
+            new ObjectArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8, Long.class, "Long_64_array")
             {
                 @Override
                 public void serializeElement(final Long object, final byte[] buffer, final int offset,
@@ -176,7 +178,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
 
     /** Converter for Float array. */
     public static final ObjectArrayCodec<Float> FLOAT_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4, Float.class)
+            new ObjectArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4, Float.class, "Float_32_array")
             {
                 @Override
                 public void serializeElement(final Float object, final byte[] buffer, final int offset,
@@ -194,7 +196,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
 
     /** Converter for Double array. */
     public static final ObjectArrayCodec<Double> DOUBLE_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.DOUBLE_64_ARRAY, 8, Double.class)
+            new ObjectArrayCodec<>(FieldTypes.DOUBLE_64_ARRAY, 8, Double.class, "Double_64_array")
             {
                 @Override
                 public void serializeElement(final Double object, final byte[] buffer, final int offset,
@@ -212,7 +214,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
 
     /** Converter for Boolean array. */
     public static final ObjectArrayCodec<Boolean> BOOLEAN_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.BOOLEAN_8_ARRAY, 1, Boolean.class)
+            new ObjectArrayCodec<>(FieldTypes.BOOLEAN_8_ARRAY, 1, Boolean.class, "Boolean_8_array")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset,

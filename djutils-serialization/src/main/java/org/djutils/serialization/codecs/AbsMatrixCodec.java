@@ -22,10 +22,11 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
     /**
      * Construct the AbsMatrixCodec.
      * @param type the field type as defined by the {@link FieldTypes} class
+     * @param shortName the short name of the codec
      */
-    public AbsMatrixCodec(final byte type)
+    public AbsMatrixCodec(final byte type, final String shortName)
     {
-        super(type);
+        super(type, shortName);
     }
 
     @Override
@@ -42,7 +43,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
 
     /** Converter for Absolute Matrix with a float value. */
     public static final BasicCodec<AbsMatrix<?, ?, ?, ?, ?>> ABS_MATRIX_FLOAT =
-            new AbsMatrixCodec(FieldTypes.FLOAT_32_UNIT_ABS_MATRIX)
+            new AbsMatrixCodec(FieldTypes.FLOAT_32_UNIT_ABS_MATRIX, "abs_matrix_32_unit")
             {
                 @Override
                 public int size(final AbsMatrix<?, ?, ?, ?, ?> absMatrix)
@@ -94,7 +95,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
 
     /** Converter for Absolute Matrix with a double value. */
     public static final BasicCodec<AbsMatrix<?, ?, ?, ?, ?>> ABS_MATRIX_DOUBLE =
-            new AbsMatrixCodec(FieldTypes.DOUBLE_64_UNIT_ABS_MATRIX)
+            new AbsMatrixCodec(FieldTypes.DOUBLE_64_UNIT_ABS_MATRIX, "abs_matrix_64_unit")
             {
                 @Override
                 public int size(final AbsMatrix<?, ?, ?, ?, ?> absMatrix)

@@ -24,10 +24,11 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
      * Construct a PrimitiveCodec.
      * @param fieldType the field type as defined by the {@link FieldTypes} class
      * @param serializedDataSize number of bytes required for the serialized object
+     * @param shortName the short name of the codec
      */
-    public PrimitiveCodec(final byte fieldType, final int serializedDataSize)
+    public PrimitiveCodec(final byte fieldType, final int serializedDataSize, final String shortName)
     {
-        super(fieldType);
+        super(fieldType, shortName);
         this.dataSize = serializedDataSize;
     }
 
@@ -44,7 +45,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     }
 
     /** Converter for Byte. */
-    public static final PrimitiveCodec<Byte> BYTE = new PrimitiveCodec<>(FieldTypes.BYTE_8, 1)
+    public static final PrimitiveCodec<Byte> BYTE = new PrimitiveCodec<>(FieldTypes.BYTE_8, 1, "Byte_8")
     {
         @Override
         public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -60,7 +61,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Short. */
-    public static final PrimitiveCodec<Short> SHORT = new PrimitiveCodec<>(FieldTypes.SHORT_16, 2)
+    public static final PrimitiveCodec<Short> SHORT = new PrimitiveCodec<>(FieldTypes.SHORT_16, 2, "Short_16")
     {
         @Override
         public void serialize(final Short object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -76,7 +77,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Integer. */
-    public static final PrimitiveCodec<Integer> INTEGER = new PrimitiveCodec<>(FieldTypes.INT_32, 4)
+    public static final PrimitiveCodec<Integer> INTEGER = new PrimitiveCodec<>(FieldTypes.INT_32, 4, "Integer_32")
     {
         @Override
         public void serialize(final Integer object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -92,7 +93,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Integer. */
-    public static final PrimitiveCodec<Long> LONG = new PrimitiveCodec<>(FieldTypes.LONG_64, 8)
+    public static final PrimitiveCodec<Long> LONG = new PrimitiveCodec<>(FieldTypes.LONG_64, 8, "Long_64")
     {
         @Override
         public void serialize(final Long object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -108,7 +109,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Float. */
-    public static final PrimitiveCodec<Float> FLOAT = new PrimitiveCodec<>(FieldTypes.FLOAT_32, 4)
+    public static final PrimitiveCodec<Float> FLOAT = new PrimitiveCodec<>(FieldTypes.FLOAT_32, 4, "Float_32")
     {
         @Override
         public void serialize(final Float object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -124,7 +125,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Double. */
-    public static final PrimitiveCodec<Double> DOUBLE = new PrimitiveCodec<>(FieldTypes.DOUBLE_64, 8)
+    public static final PrimitiveCodec<Double> DOUBLE = new PrimitiveCodec<>(FieldTypes.DOUBLE_64, 8, "Double_64")
     {
         @Override
         public void serialize(final Double object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -140,7 +141,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Boolean. */
-    public static final PrimitiveCodec<Boolean> BOOLEAN = new PrimitiveCodec<>(FieldTypes.BOOLEAN_8, 1)
+    public static final PrimitiveCodec<Boolean> BOOLEAN = new PrimitiveCodec<>(FieldTypes.BOOLEAN_8, 1, "Boolean_8")
     {
         @Override
         public void serialize(final Boolean object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -156,7 +157,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Character. */
-    public static final PrimitiveCodec<Character> CHARACTER16 = new PrimitiveCodec<>(FieldTypes.CHAR_16, 2)
+    public static final PrimitiveCodec<Character> CHARACTER16 = new PrimitiveCodec<>(FieldTypes.CHAR_16, 2, "Char_16")
     {
         @Override
         public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
@@ -172,7 +173,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Character. */
-    public static final PrimitiveCodec<Character> CHARACTER8 = new PrimitiveCodec<>(FieldTypes.CHAR_8, 1)
+    public static final PrimitiveCodec<Character> CHARACTER8 = new PrimitiveCodec<>(FieldTypes.CHAR_8, 1, "Char_8")
     {
         @Override
         public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
