@@ -47,7 +47,6 @@ public final class Codec
     static
     {
         register(Byte.class, PrimitiveCodec.BYTE);
-        register(Byte.class, PrimitiveCodec.BYTE);
         register(byte.class, PrimitiveCodec.BYTE);
         register(Short.class, PrimitiveCodec.SHORT);
         register(short.class, PrimitiveCodec.SHORT);
@@ -202,7 +201,8 @@ public final class Codec
             throws SerializationException
     {
         BasicCodec<?> codec = ENCODERS.get(object.getClass());
-
+        // System.out.println(object.getClass() + "   " + codec.fieldType() + " - " + codec.getShortName());
+        
         if (codec != null)
             return codec;
 
