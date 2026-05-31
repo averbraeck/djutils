@@ -249,8 +249,8 @@ public class UnitType
             new UnitType(QuantityType.AREA, 11, Area.Unit.km2, "SQUARE_KILOMETER", "km2");
 
     /** Area.SQUARE_MEGAMETER unit type with code 12. */
-    public static final UnitType AREA_SQUARE_MEGAMETER =
-            new UnitType(QuantityType.AREA, 12, Units.resolve(Area.Unit.class, "Mm2"), "SQUARE_MEGAMETER", "Mm2");
+    public static final UnitType AREA_SQUARE_MEGAMETER = new UnitType(QuantityType.AREA, 12,
+            Area.Unit.SI.deriveUnit("Mm2", "square megameter", 1E12, UnitSystem.SI_BASE), "SQUARE_MEGAMETER", "Mm2");
 
     /** Area.SQUARE_INCH unit type with code 13. */
     public static final UnitType AREA_SQUARE_INCH = new UnitType(QuantityType.AREA, 13, Area.Unit.in2, "SQUARE_INCH", "in2");
@@ -1370,24 +1370,24 @@ public class UnitType
     public static final UnitType VOLUME_CUBIC_METER = new UnitType(QuantityType.VOLUME, 0, Volume.Unit.m3, "CUBIC_METER", "m3");
 
     /** Volume.CUBIC_ATTOMETER unit type with code 1. */
-    public static final UnitType VOLUME_CUBIC_ATTOMETER =
-            new UnitType(QuantityType.VOLUME, 1, Units.resolve(Volume.Unit.class, "am3"), "CUBIC_ATTOMETER", "am3");
+    public static final UnitType VOLUME_CUBIC_ATTOMETER = new UnitType(QuantityType.VOLUME, 1,
+            Volume.Unit.m3.deriveUnit("am3", "cubic attometer", 1E-54, UnitSystem.SI_BASE), "CUBIC_ATTOMETER", "am3");
 
     /** Volume.CUBIC_FEMTOMETER unit type with code 2. */
-    public static final UnitType VOLUME_CUBIC_FEMTOMETER =
-            new UnitType(QuantityType.VOLUME, 2, Units.resolve(Volume.Unit.class, "fm3"), "CUBIC_FEMTOMETER", "fm3");
+    public static final UnitType VOLUME_CUBIC_FEMTOMETER = new UnitType(QuantityType.VOLUME, 2,
+            Volume.Unit.m3.deriveUnit("fm3", "cubic femtometer", 1E-45, UnitSystem.SI_BASE), "CUBIC_FEMTOMETER", "fm3");
 
     /** Volume.CUBIC_PICOMETER unit type with code 3. */
-    public static final UnitType VOLUME_CUBIC_PICOMETER =
-            new UnitType(QuantityType.VOLUME, 3, Units.resolve(Volume.Unit.class, "pm3"), "CUBIC_PICOMETER", "pm3");
+    public static final UnitType VOLUME_CUBIC_PICOMETER = new UnitType(QuantityType.VOLUME, 3,
+            Volume.Unit.m3.deriveUnit("pm3", "cubic picometer", 1E-36, UnitSystem.SI_BASE), "CUBIC_PICOMETER", "pm3");
 
     /** Volume.CUBIC_NANOMETER unit type with code 4. */
-    public static final UnitType VOLUME_CUBIC_NANOMETER =
-            new UnitType(QuantityType.VOLUME, 4, Units.resolve(Volume.Unit.class, "nm3"), "CUBIC_NANOMETER", "nm3");
+    public static final UnitType VOLUME_CUBIC_NANOMETER = new UnitType(QuantityType.VOLUME, 4,
+            Volume.Unit.m3.deriveUnit("nm3", "cubic nanometer", 1E-27, UnitSystem.SI_BASE), "CUBIC_NANOMETER", "nm3");
 
     /** Volume.CUBIC_MICROMETER unit type with code 5. */
-    public static final UnitType VOLUME_CUBIC_MICROMETER =
-            new UnitType(QuantityType.VOLUME, 5, Units.resolve(Volume.Unit.class, "mum3"), "CUBIC_MICROMETER", "μm3");
+    public static final UnitType VOLUME_CUBIC_MICROMETER = new UnitType(QuantityType.VOLUME, 5,
+            Volume.Unit.m3.deriveUnit("mum3", "μm3", "cubic micrometer", 1E-18, UnitSystem.SI_BASE), "CUBIC_MICROMETER", "μm3");
 
     /** Volume.CUBIC_MILLIMETER unit type with code 6. */
     public static final UnitType VOLUME_CUBIC_MILLIMETER =
@@ -1402,8 +1402,8 @@ public class UnitType
             new UnitType(QuantityType.VOLUME, 8, Volume.Unit.dm3, "CUBIC_DECIMETER", "dm3");
 
     /** Volume.CUBIC_DEKAMETER unit type with code 9. */
-    public static final UnitType VOLUME_CUBIC_DEKAMETER =
-            new UnitType(QuantityType.VOLUME, 9, Units.resolve(Volume.Unit.class, "dam3"), "CUBIC_DEKAMETER", "dam3");
+    public static final UnitType VOLUME_CUBIC_DEKAMETER = new UnitType(QuantityType.VOLUME, 9,
+            Volume.Unit.m3.deriveUnit("dam3", "cubic dekameter", 1E3, UnitSystem.SI_BASE), "CUBIC_DEKAMETER", "dam3");
 
     /** Volume.CUBIC_HECTOMETER unit type with code 10. */
     public static final UnitType VOLUME_CUBIC_HECTOMETER =
@@ -1414,8 +1414,8 @@ public class UnitType
             new UnitType(QuantityType.VOLUME, 11, Volume.Unit.km3, "CUBIC_KILOMETER", "km3");
 
     /** Volume.CUBIC_MEGAMETER unit type with code 12. */
-    public static final UnitType VOLUME_CUBIC_MEGAMETER =
-            new UnitType(QuantityType.VOLUME, 12, Units.resolve(Volume.Unit.class, "Mm3"), "CUBIC_MEGAMETER", "Mm3");
+    public static final UnitType VOLUME_CUBIC_MEGAMETER = new UnitType(QuantityType.VOLUME, 12,
+            Volume.Unit.m3.deriveUnit("dam3", "cubic dekameter", 1E18, UnitSystem.SI_BASE), "CUBIC_MEGAMETER", "Mm3");
 
     /** Volume.CUBIC_INCH unit type with code 13. */
     public static final UnitType VOLUME_CUBIC_INCH =
