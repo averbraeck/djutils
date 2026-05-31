@@ -19,13 +19,18 @@ public abstract class BasicCodec<T>
     /** The field type that usually prefixes the serialized data. */
     private final byte type;
 
+    /** The short name of the codec. */
+    private final String shortName;
+    
     /**
      * Construct the BasicCodec.
      * @param type the field type as defined by the {@link FieldTypes} class
+     * @param shortName the short name of the codec
      */
-    public BasicCodec(final byte type)
+    public BasicCodec(final byte type, final String shortName)
     {
         this.type = type;
+        this.shortName = shortName;
     }
 
     /**
@@ -33,8 +38,9 @@ public abstract class BasicCodec<T>
      * of type T is next in the data stream).
      * @param object Instance of the object
      * @return the number of bytes needed to serialize an object of type T
+     * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    public abstract int size(T object);
+    public abstract int size(T object) throws SerializationException;
 
     /**
      * Compute the number of bytes needed to serialize an object of type T (including the byte(s) that indicate that an object
@@ -55,6 +61,15 @@ public abstract class BasicCodec<T>
     public final byte fieldType()
     {
         return this.type;
+    }
+
+    /**
+     * Return the short name of this codec.
+     * @return the short name of this codec
+     */
+    public String getShortName()
+    {
+        return this.shortName;
     }
 
     /**
