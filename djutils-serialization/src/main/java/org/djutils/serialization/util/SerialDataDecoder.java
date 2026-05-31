@@ -10,6 +10,7 @@ import org.djutils.logger.CategoryLogger;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
+import org.djutils.serialization.SerializationRuntimeException;
 import org.djutils.serialization.UnitType;
 import org.djutils.serialization.codecs.BasicCodec;
 import org.djutils.serialization.codecs.Codec;
@@ -155,7 +156,7 @@ public class SerialDataDecoder implements Decoder
             this.buffer.append(String.format("Error: Bad field type %02x - resynchronizing", this.currentFieldType));
             return true;
         }
-        this.buffer.append(this.currentCodec.getClass().getSimpleName()
+        this.buffer.append(this.currentCodec.getShortName()
                 + (this.currentCodec.getNumberOfDimensions() > 0 || this.currentCodec.hasUnit() ? " " : ": "));
 
         this.columnCount = 0;
@@ -166,8 +167,16 @@ public class SerialDataDecoder implements Decoder
         // check the type and prepare for what is expected; primitive types
         if (this.currentCodec instanceof PrimitiveCodec || this.currentCodec instanceof QuantityCodec)
         {
-            int size = this.currentCodec.size(null);
-            prepareForDataElement(size);
+            try
+            {
+                int size = this.currentCodec.size(null);
+                prepareForDataElement(size);
+            }
+            catch (SerializationException se)
+            {
+                // cannot happen
+                throw new SerializationRuntimeException(se);
+            }
             return false;
         }
 
@@ -278,7 +287,7 @@ public class SerialDataDecoder implements Decoder
                 if (this.displayUnit == null)
                 {
                     result = processUnit();
-                    prepareForDataElement(this.currentCodec.getClass().getSimpleName().contains("FLOAT") ? 4 : 8);
+                    prepareForDataElement(this.currentCodec.getShortName().contains("Float") ? 4 : 8);
                     return result;
                 }
                 result = appendDjunitsElement();
@@ -322,7 +331,15 @@ public class SerialDataDecoder implements Decoder
      */
     private int getSize()
     {
-        return this.currentCodec.size(null);
+        try
+        {
+            return this.currentCodec.size(null);
+        }
+        catch (SerializationException se)
+        {
+            // cannot happen for a fixed-size element
+            throw new SerializationRuntimeException(se);
+        }
     }
 
     /**
@@ -349,7 +366,7 @@ public class SerialDataDecoder implements Decoder
      */
     private void appendString()
     {
-        int elementSize = this.currentCodec.getClass().getSimpleName().contains("UTF8") ? 1 : 2;
+        int elementSize = this.currentCodec.getShortName().contains("8") ? 1 : 2;
         if (this.charCount == 0)
         {
             this.charCount = this.endianness.decodeInt(this.dataElementBytes, 0);
