@@ -62,7 +62,7 @@ public class ArraySerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("byte_8_array"));
                 assertTrue(sdd.contains("float_32_array"));
                 assertTrue(sdd.contains("double_64_array"));
-                assertTrue(sdd.contains("bool_8_array"));
+                assertTrue(sdd.contains("boolean_8_array"));
                 assertTrue(sdd.contains("length"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
