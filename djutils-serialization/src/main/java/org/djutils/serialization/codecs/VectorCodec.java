@@ -59,7 +59,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
                     UnitCodec.encodeQuantityUnit(vector.get(0), buffer, pointer);
                     for (int i = 0; i < vector.size(); i++)
                     {
-                        endianness.encodeFloat((float) vector.get(i).si(), buffer, pointer.getAndIncrement(4));
+                        endianness.encodeFloat((float) vector.si(i), buffer, pointer.getAndIncrement(4));
                     }
                 }
 
@@ -74,7 +74,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
                     {
                         dataSi[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
                     }
-                    VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, 1, size), unit);
+                    VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, size, 1), unit);
                     UnitCodec.setDisplayUnit(vector, unit);
                     return vector;
                 }
@@ -113,7 +113,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
                     {
                         dataSi[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
                     }
-                    VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, 1, size), unit);
+                    VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, size, 1), unit);
                     UnitCodec.setDisplayUnit(vector, unit);
                     return vector;
                 }
