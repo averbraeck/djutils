@@ -29,7 +29,8 @@ public final class MessageCodec
     }
 
     /**
-     * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
+     * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String. In case quantities,
+     * vectors or matrices with a unit are encoded, double precision (8 bytes per variable) will be used.
      * @param endianness encoder to use for multi-byte values
      * @param content the objects to encode
      * @return the encoded message to send as a byte array
@@ -41,7 +42,8 @@ public final class MessageCodec
     }
 
     /**
-     * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
+     * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String. In case quantities,
+     * vectors or matrices with a unit are encoded, double precision (8 bytes per variable) will be used.
      * @param endianness encoder to use for multi-byte values
      * @param content the objects to encode
      * @return the encoded message to send as a byte array
@@ -65,38 +67,57 @@ public final class MessageCodec
     }
 
     /**
-     * Build the list of serializers corresponding to the data in an Object array.
-     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters and
-     *            Strings
-     * @param content the objects for which the serializers must be returned
-     * @return array filled with the serializers needed for the objects in the Object array
-     * @throws SerializationException when an object in <code>content</code> cannot be serialized
-     */
-    protected static BasicCodec<?>[] buildEncoderList(final boolean utf8, final Object... content) throws SerializationException
-    {
-        BasicCodec<?>[] result = new BasicCodec[content.length];
-        for (int i = 0; i < content.length; i++)
-        {
-            Object object = content[i];
-            result[i] = Codec.findEncoder(object, utf8, false);
-        }
-
-        return result;
-    }
-
-    /**
-     * Encode the object array into a message, taking the endianness into account.
+     * Encode the object array into a message, taking the endianness and String encoding into account. In case quantities,
+     * vectors or matrices with a unit are encoded, double precision (8 bytes per variable) will be used.
      * @param utf8 whether to encode String fields and characters in utf8 or not
      * @param endianness encoder for multi-byte values
      * @param content the objects to encode
      * @return the encoded message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private static byte[] encode(final boolean utf8, final Endianness endianness, final Object... content)
             throws SerializationException
     {
-        BasicCodec[] serializers = buildEncoderList(utf8, content);
+        return encode(utf8, false, endianness, content);
+    }
+
+    /**
+     * Build the list of serializers corresponding to the data in an Object array.
+     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters and
+     *            Strings
+     * @param floatQuantity if true, use float encoding for quantities, vectors and matrices
+     * @param content the objects for which the serializers must be returned
+     * @return array filled with the serializers needed for the objects in the Object array
+     * @throws SerializationException when an object in <code>content</code> cannot be serialized
+     */
+    protected static BasicCodec<?>[] buildEncoderList(final boolean utf8, final boolean floatQuantity, final Object... content)
+            throws SerializationException
+    {
+        BasicCodec<?>[] result = new BasicCodec[content.length];
+        for (int i = 0; i < content.length; i++)
+        {
+            Object object = content[i];
+            result[i] = Codec.findEncoder(object, utf8, floatQuantity);
+        }
+
+        return result;
+    }
+
+    /**
+     * Encode the object array into a byte array, conforming to the provided endianness, floating point precision and string
+     * encoding.
+     * @param utf8 whether to encode String fields and characters in utf8 or not
+     * @param floatQuantity if true, use float encoding for quantities, vectors and matrices
+     * @param endianness encoder for multi-byte values
+     * @param content the objects to encode
+     * @return the encoded message to send as a byte array
+     * @throws SerializationException on unknown data type
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static byte[] encode(final boolean utf8, final boolean floatQuantity, final Endianness endianness,
+            final Object... content) throws SerializationException
+    {
+        BasicCodec[] serializers = buildEncoderList(utf8, floatQuantity, content);
         // Pass one: compute total size
         int size = 0;
         for (int i = 0; i < serializers.length; i++)

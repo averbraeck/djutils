@@ -201,8 +201,8 @@ public final class Codec
             throws SerializationException
     {
         BasicCodec<?> codec = ENCODERS.get(object.getClass());
-        // System.out.println(object.getClass() + "   " + codec.fieldType() + " - " + codec.getShortName());
-        
+        // System.out.println(object.getClass() + " " + codec.fieldType() + " - " + codec.getShortName());
+
         if (codec != null)
             return codec;
 
@@ -237,7 +237,7 @@ public final class Codec
     }
 
     /**
-     * Encode the object array into a byte array, conforming to the provided endianness and string encodin.
+     * Encode the object into a byte array, conforming to the provided endianness, floating point precision and string encoding.
      * @param content the objects to encode
      * @param endianness encoder for multi-byte values
      * @param utf8 whether to encode String fields and characters in utf8 or not
@@ -250,20 +250,20 @@ public final class Codec
             final boolean floatQuantity) throws SerializationException
     {
         BasicCodec codec = findEncoder(content, utf8, floatQuantity);
-        
+
         // Pass one: compute total size
         int size = codec.sizeWithPrefix(content);
-        
+
         // Allocate buffer
         byte[] buffer = new byte[size];
 
         // Pass 2 fill buffer
         Pointer pointer = new Pointer();
         codec.serializeWithPrefix(content, buffer, pointer, endianness);
-        
+
         Throw.when(pointer.get() != buffer.length, SerializationException.class, "Data size error (reserved %d, used %d)",
                 buffer.length, pointer.get());
-        
+
         return buffer;
     }
 
