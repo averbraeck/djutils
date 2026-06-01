@@ -43,7 +43,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
 
     /** Converter for Quantity Matrix with float values. */
     public static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_FLOAT =
-            new MatrixCodec(FieldTypes.FLOAT_32_UNIT_ARRAY, "matrix_32_unit")
+            new MatrixCodec(FieldTypes.FLOAT_32_UNIT_MATRIX, "matrix_32_unit")
             {
                 @Override
                 public int size(final Matrix<?, ?, ?, ?, ?> matrix)
@@ -62,7 +62,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
                     {
                         for (int j = 0; j < matrix.cols(); j++)
                         {
-                            endianness.encodeFloat((float) matrix.get(i, j).si(), buffer, pointer.getAndIncrement(4));
+                            endianness.encodeFloat((float) matrix.si(i, j), buffer, pointer.getAndIncrement(4));
                         }
                     }
                 }
@@ -83,7 +83,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
                         }
                     }
                     @SuppressWarnings({"unchecked", "rawtypes"})
-                    MatrixNxM<?> matrix = new MatrixNxM(DenseFloatDataSi.of(dataSi, unit), unit);
+                    MatrixNxM<?> matrix = new MatrixNxM(DenseFloatDataSi.ofSi(dataSi), unit);
                     UnitCodec.setDisplayUnit(matrix, unit);
                     return matrix;
                 }
@@ -91,7 +91,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
 
     /** Converter for Quantity Matrix with double values. */
     public static final BasicCodec<Matrix<?, ?, ?, ?, ?>> MATRIX_DOUBLE =
-            new MatrixCodec(FieldTypes.DOUBLE_64_UNIT_ARRAY, "matrix_64_unit")
+            new MatrixCodec(FieldTypes.DOUBLE_64_UNIT_MATRIX, "matrix_64_unit")
             {
                 @Override
                 public int size(final Matrix<?, ?, ?, ?, ?> matrix)
@@ -110,7 +110,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
                     {
                         for (int j = 0; j < matrix.cols(); j++)
                         {
-                            endianness.encodeDouble(matrix.get(i, j).si(), buffer, pointer.getAndIncrement(4));
+                            endianness.encodeDouble(matrix.si(i, j), buffer, pointer.getAndIncrement(8));
                         }
                     }
                 }
@@ -127,11 +127,11 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
                     {
                         for (int j = 0; j < cols; j++)
                         {
-                            dataSi[i][j] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
+                            dataSi[i][j] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
                         }
                     }
                     @SuppressWarnings({"unchecked", "rawtypes"})
-                    MatrixNxM<?> matrix = new MatrixNxM(DenseDoubleDataSi.of(dataSi, unit), unit);
+                    MatrixNxM<?> matrix = new MatrixNxM(DenseDoubleDataSi.ofSi(dataSi), unit);
                     UnitCodec.setDisplayUnit(matrix, unit);
                     return matrix;
                 }
