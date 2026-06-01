@@ -287,7 +287,7 @@ public class SerialDataDecoder implements Decoder
                 if (this.displayUnit == null)
                 {
                     result = processUnit();
-                    prepareForDataElement(this.currentCodec.getShortName().contains("Float") ? 4 : 8);
+                    prepareForDataElement(this.currentCodec.getShortName().contains("32") ? 4 : 8);
                     return result;
                 }
                 result = appendDjunitsElement();
