@@ -57,7 +57,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                 {
                     endianness.encodeInt(absMatrix.rows(), buffer, pointer.getAndIncrement(4));
                     endianness.encodeInt(absMatrix.cols(), buffer, pointer.getAndIncrement(4));
-                    UnitCodec.encodeQuantityUnit(absMatrix.getRelativeVecMat().get(0, 0), buffer, pointer);
+                    AbsUnitCodec.encodeAbsQuantityUnit(absMatrix.get(0, 0), buffer, pointer);
                     StringCodec.STRING8.serializeWithPrefix(absMatrix.getReference().getId(), buffer, pointer, endianness);
                     for (int i = 0; i < absMatrix.rows(); i++)
                     {
@@ -75,7 +75,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                 {
                     int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
                     int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                    Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
                     Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
                     String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
                     float[][] dataSi = new float[rows][cols];
@@ -109,7 +109,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                 {
                     endianness.encodeInt(absMatrix.rows(), buffer, pointer.getAndIncrement(4));
                     endianness.encodeInt(absMatrix.cols(), buffer, pointer.getAndIncrement(4));
-                    UnitCodec.encodeQuantityUnit(absMatrix.getRelativeVecMat().get(0, 0), buffer, pointer);
+                    AbsUnitCodec.encodeAbsQuantityUnit(absMatrix.get(0, 0), buffer, pointer);
                     StringCodec.STRING8.serializeWithPrefix(absMatrix.getReference().getId(), buffer, pointer, endianness);
                     for (int i = 0; i < absMatrix.rows(); i++)
                     {
@@ -127,7 +127,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
                 {
                     int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
                     int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                    Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
                     Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
                     String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
                     double[][] dataSi = new double[rows][cols];
