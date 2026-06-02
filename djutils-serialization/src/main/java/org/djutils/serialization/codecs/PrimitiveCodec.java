@@ -1,7 +1,9 @@
 package org.djutils.serialization.codecs;
 
+import org.djutils.exceptions.Throw;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
+import org.djutils.serialization.SerializationException;
 
 /**
  * PrimitiveCodec is responsible for the serialization and deserialization of primitive types, which can be offered as the
@@ -33,7 +35,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     }
 
     @Override
-    public final int size(final Object object)
+    public final int size(final T object)
     {
         return this.dataSize;
     }
@@ -45,8 +47,17 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     }
 
     /** Converter for Byte. */
-    public static final PrimitiveCodec<Byte> BYTE = new PrimitiveCodec<>(FieldTypes.BYTE_8, 1, "Byte_8")
+    public static final ByteCodec BYTE = new ByteCodec();
+
+    /** Converter class for Byte. */
+    public static final class ByteCodec extends PrimitiveCodec<Byte>
     {
+        /** Construct the ByteCodec. */
+        public ByteCodec()
+        {
+            super(FieldTypes.BYTE_8, 1, "Byte_8");
+        }
+
         @Override
         public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -61,8 +72,17 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Short. */
-    public static final PrimitiveCodec<Short> SHORT = new PrimitiveCodec<>(FieldTypes.SHORT_16, 2, "Short_16")
+    public static final ShortCodec SHORT = new ShortCodec();
+
+    /** Converter class for Short. */
+    public static final class ShortCodec extends PrimitiveCodec<Short>
     {
+        /** Construct the ShortCodec. */
+        public ShortCodec()
+        {
+            super(FieldTypes.SHORT_16, 2, "Short_16");
+        }
+
         @Override
         public void serialize(final Short object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -77,8 +97,17 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Integer. */
-    public static final PrimitiveCodec<Integer> INTEGER = new PrimitiveCodec<>(FieldTypes.INT_32, 4, "Integer_32")
+    public static final IntegerCodec INTEGER = new IntegerCodec();
+
+    /** Converter class for Integer. */
+    public static final class IntegerCodec extends PrimitiveCodec<Integer>
     {
+        /** Construct the IntegerCodec. */
+        public IntegerCodec()
+        {
+            super(FieldTypes.INT_32, 4, "Integer_32");
+        }
+
         @Override
         public void serialize(final Integer object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -92,9 +121,18 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         }
     };
 
-    /** Converter for Integer. */
-    public static final PrimitiveCodec<Long> LONG = new PrimitiveCodec<>(FieldTypes.LONG_64, 8, "Long_64")
+    /** Converter for Long. */
+    public static final LongCodec LONG = new LongCodec();
+
+    /** Converter class for Long. */
+    public static final class LongCodec extends PrimitiveCodec<Long>
     {
+        /** Construct the LongCodec. */
+        public LongCodec()
+        {
+            super(FieldTypes.LONG_64, 8, "Long_64");
+        }
+
         @Override
         public void serialize(final Long object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -109,8 +147,17 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Float. */
-    public static final PrimitiveCodec<Float> FLOAT = new PrimitiveCodec<>(FieldTypes.FLOAT_32, 4, "Float_32")
+    public static final FloatCodec FLOAT = new FloatCodec();
+
+    /** Converter class for Float. */
+    public static final class FloatCodec extends PrimitiveCodec<Float>
     {
+        /** Construct the FloatCodec. */
+        public FloatCodec()
+        {
+            super(FieldTypes.FLOAT_32, 4, "Float_32");
+        }
+
         @Override
         public void serialize(final Float object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -125,8 +172,17 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Double. */
-    public static final PrimitiveCodec<Double> DOUBLE = new PrimitiveCodec<>(FieldTypes.DOUBLE_64, 8, "Double_64")
+    public static final DoubleCodec DOUBLE = new DoubleCodec();
+
+    /** Converter class for Double. */
+    public static final class DoubleCodec extends PrimitiveCodec<Double>
     {
+        /** Construct the DoubleCodec. */
+        public DoubleCodec()
+        {
+            super(FieldTypes.DOUBLE_64, 8, "Double_64");
+        }
+
         @Override
         public void serialize(final Double object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -141,8 +197,17 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
     };
 
     /** Converter for Boolean. */
-    public static final PrimitiveCodec<Boolean> BOOLEAN = new PrimitiveCodec<>(FieldTypes.BOOLEAN_8, 1, "Boolean_8")
+    public static final BooleanCodec BOOLEAN = new BooleanCodec();
+
+    /** Converter class for Boolean. */
+    public static final class BooleanCodec extends PrimitiveCodec<Boolean>
     {
+        /** Construct the BooleanCodec. */
+        public BooleanCodec()
+        {
+            super(FieldTypes.BOOLEAN_8, 1, "Boolean_8");
+        }
+
         @Override
         public void serialize(final Boolean object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -156,9 +221,46 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         }
     };
 
-    /** Converter for Character. */
-    public static final PrimitiveCodec<Character> CHARACTER16 = new PrimitiveCodec<>(FieldTypes.CHAR_16, 2, "Char_16")
+    /** Converter for UTF-8 Character. */
+    public static final Character8Codec CHARACTER8 = new Character8Codec();
+
+    /** Converter class for UTF-8 Character. */
+    public static final class Character8Codec extends PrimitiveCodec<Character>
     {
+        /** Construct the Character8Codec. */
+        public Character8Codec()
+        {
+            super(FieldTypes.CHAR_8, 1, "Char_8");
+        }
+
+        @Override
+        public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            Throw.when(object > 0xFF, SerializationException.class, "Character '%c' (U+%04X) exceeds 8-bit range", object,
+                    (int) object);
+            buffer[pointer.getAndIncrement(size(object))] = (byte) (object & 0xFF);
+        }
+
+        @Override
+        public Character deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            return Character.valueOf((char) buffer[pointer.getAndIncrement(1)]);
+        }
+    };
+
+    /** Converter for UTF-16 Character. */
+    public static final Character16Codec CHARACTER16 = new Character16Codec();
+
+    /** Converter class for UTF-16 Character. */
+    public static final class Character16Codec extends PrimitiveCodec<Character>
+    {
+        /** Construct the Character16Codec. */
+        public Character16Codec()
+        {
+            super(FieldTypes.CHAR_16, 2, "Char_16");
+        }
+
         @Override
         public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
@@ -169,22 +271,6 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         public Character deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
         {
             return endianness.decodeChar(buffer, pointer.getAndIncrement(2));
-        }
-    };
-
-    /** Converter for Character. */
-    public static final PrimitiveCodec<Character> CHARACTER8 = new PrimitiveCodec<>(FieldTypes.CHAR_8, 1, "Char_8")
-    {
-        @Override
-        public void serialize(final Character object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
-        {
-            buffer[pointer.getAndIncrement(size(object))] = (byte) (object & 0xFF);
-        }
-
-        @Override
-        public Character deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-        {
-            return Character.valueOf((char) buffer[pointer.getAndIncrement(1)]);
         }
     };
 
