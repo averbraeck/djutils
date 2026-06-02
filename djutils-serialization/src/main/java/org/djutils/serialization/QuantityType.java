@@ -15,7 +15,6 @@ import org.djunits.quantity.ArealObjectDensity;
 import org.djunits.quantity.CatalyticActivity;
 import org.djunits.quantity.Density;
 import org.djunits.quantity.Dimensionless;
-import org.djunits.quantity.Direction;
 import org.djunits.quantity.Duration;
 import org.djunits.quantity.ElectricCharge;
 import org.djunits.quantity.ElectricCurrent;
@@ -40,15 +39,12 @@ import org.djunits.quantity.MagneticFlux;
 import org.djunits.quantity.MagneticFluxDensity;
 import org.djunits.quantity.Mass;
 import org.djunits.quantity.Momentum;
-import org.djunits.quantity.Position;
 import org.djunits.quantity.Power;
 import org.djunits.quantity.Pressure;
 import org.djunits.quantity.RadioActivity;
 import org.djunits.quantity.SolidAngle;
 import org.djunits.quantity.Speed;
-import org.djunits.quantity.Temperature;
 import org.djunits.quantity.TemperatureDifference;
-import org.djunits.quantity.Time;
 import org.djunits.quantity.Torque;
 import org.djunits.quantity.Volume;
 import org.djunits.quantity.VolumetricObjectDensity;
@@ -86,9 +82,6 @@ public class QuantityType
 
     /** {@link Angle} quantity type with code 3. */
     public static final QuantityType ANGLE = new QuantityType(3, Angle.class, "Angle", "Angle (relative)", "[rad]");
-
-    /** {@link Direction} quantity type with code 4. */
-    public static final QuantityType DIRECTION = new QuantityType(4, Angle.class, "Direction", "Angle (absolute)", "[rad]");
 
     /** {@link Area} quantity type with code 5. */
     public static final QuantityType AREA = new QuantityType(5, Area.class, "Area", "Area (m2)", "[m^2]");
@@ -132,9 +125,6 @@ public class QuantityType
     /** {@link Length} quantity type with code 16. */
     public static final QuantityType LENGTH = new QuantityType(16, Length.class, "Length", "Length (relative)", "[m]");
 
-    /** {@link Position} quantity type with code 17. */
-    public static final QuantityType POSITION = new QuantityType(17, Length.class, "Position", "Length (absolute)", "[m]");
-
     /** {@link LinearDensity} quantity type with code 18. */
     public static final QuantityType LINEARDENSITY =
             new QuantityType(18, LinearDensity.class, "LinearDensity", "Linear density ", "[1/m]");
@@ -156,15 +146,8 @@ public class QuantityType
     public static final QuantityType TEMPERATUREDIFFERENCE = new QuantityType(23, TemperatureDifference.class,
             "TemperatureDifference", "Temperature difference (relative)", "[K]");
 
-    /** {@link Temperature} quantity type with code 24. */
-    public static final QuantityType TEMPERATURE =
-            new QuantityType(24, TemperatureDifference.class, "Temperature", "Temperature (absolute)", "[K]");
-
     /** {@link Duration} quantity type with code 25. */
     public static final QuantityType DURATION = new QuantityType(25, Duration.class, "Duration", "Time (relative)", "[s]");
-
-    /** {@link Time} quantity type with code 26. */
-    public static final QuantityType TIME = new QuantityType(26, Duration.class, "Time", "Time (absolute)", "[s]");
 
     /** {@link Torque} quantity type with code 27. */
     public static final QuantityType TORQUE =
@@ -314,7 +297,6 @@ public class QuantityType
     {
         return quantityTypeMap.get(quantity.getClass());
     }
-
 
     /**
      * Return the quantity type belonging to the unit.
