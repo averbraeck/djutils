@@ -168,37 +168,6 @@ public class UnitType
     /** Angle.PERCENT unit type with code 7. */
     public static final UnitType ANGLE_PERCENT = new UnitType(QuantityType.ANGLE, 7, Angle.Unit.percent, "PERCENT", "%");
 
-    /* =================================================== DIRECTION =================================================== */
-
-    /** Direction.RADIAN unit type with code 0. */
-    public static final UnitType DIRECTION_RADIAN = new UnitType(QuantityType.DIRECTION, 0, Angle.Unit.rad, "RADIAN", "rad");
-
-    /** Direction.ARCMINUTE unit type with code 1. */
-    public static final UnitType DIRECTION_ARCMINUTE =
-            new UnitType(QuantityType.DIRECTION, 1, Angle.Unit.arcmin, "ARCMINUTE", "arcmin");
-
-    /** Direction.ARCSECOND unit type with code 2. */
-    public static final UnitType DIRECTION_ARCSECOND =
-            new UnitType(QuantityType.DIRECTION, 2, Angle.Unit.arcsec, "ARCSECOND", "arcsec");
-
-    /** Direction.CENTESIMAL_ARCMINUTE unit type with code 3. */
-    public static final UnitType DIRECTION_CENTESIMAL_ARCMINUTE =
-            new UnitType(QuantityType.DIRECTION, 3, Angle.Unit.cdm, "CENTESIMAL_ARCMINUTE", "centesimal_arcmin");
-
-    /** Direction.CENTESIMAL_ARCSECOND unit type with code 4. */
-    public static final UnitType DIRECTION_CENTESIMAL_ARCSECOND =
-            new UnitType(QuantityType.DIRECTION, 4, Angle.Unit.cds, "CENTESIMAL_ARCSECOND", "centesimal_arcsec");
-
-    /** Direction.DEGREE unit type with code 5. */
-    public static final UnitType DIRECTION_DEGREE = new UnitType(QuantityType.DIRECTION, 5, Angle.Unit.deg, "DEGREE", "deg");
-
-    /** Direction.GRAD unit type with code 6. */
-    public static final UnitType DIRECTION_GRAD = new UnitType(QuantityType.DIRECTION, 6, Angle.Unit.grad, "GRAD", "grad");
-
-    /** Direction.PERCENT unit type with code 7. */
-    public static final UnitType DIRECTION_PERCENT =
-            new UnitType(QuantityType.DIRECTION, 7, Angle.Unit.percent, "PERCENT", "%");
-
     /* ===================================================== AREA ====================================================== */
 
     /** Area.SQUARE_METER unit type with code 0. */
@@ -856,87 +825,6 @@ public class UnitType
     /** Length.ANGSTROM unit type with code 21. */
     public static final UnitType LENGTH_ANGSTROM = new UnitType(QuantityType.LENGTH, 21, Length.Unit.A, "ANGSTROM", "Å");
 
-    /* =================================================== POSITION ==================================================== */
-
-    /** Position.METER unit type with code 0. */
-    public static final UnitType POSITION_METER = new UnitType(QuantityType.POSITION, 0, Length.Unit.m, "METER", "m");
-
-    /** Position.ATTOMETER unit type with code 1. */
-    public static final UnitType POSITION_ATTOMETER =
-            new UnitType(QuantityType.POSITION, 1, Units.resolve(Length.Unit.class, "am"), "ATTOMETER", "am");
-
-    /** Position.FEMTOMETER unit type with code 2. */
-    public static final UnitType POSITION_FEMTOMETER =
-            new UnitType(QuantityType.POSITION, 2, Units.resolve(Length.Unit.class, "fm"), "FEMTOMETER", "fm");
-
-    /** Position.PICOMETER unit type with code 3. */
-    public static final UnitType POSITION_PICOMETER =
-            new UnitType(QuantityType.POSITION, 3, Units.resolve(Length.Unit.class, "pm"), "PICOMETER", "pm");
-
-    /** Position.NANOMETER unit type with code 4. */
-    public static final UnitType POSITION_NANOMETER = new UnitType(QuantityType.POSITION, 4, Length.Unit.nm, "NANOMETER", "nm");
-
-    /** Position.MICROMETER unit type with code 5. */
-    public static final UnitType POSITION_MICROMETER =
-            new UnitType(QuantityType.POSITION, 5, Length.Unit.mum, "MICROMETER", "μm");
-
-    /** Position.MILLIMETER unit type with code 6. */
-    public static final UnitType POSITION_MILLIMETER =
-            new UnitType(QuantityType.POSITION, 6, Length.Unit.mm, "MILLIMETER", "mm");
-
-    /** Position.CENTIMETER unit type with code 7. */
-    public static final UnitType POSITION_CENTIMETER =
-            new UnitType(QuantityType.POSITION, 7, Length.Unit.cm, "CENTIMETER", "cm");
-
-    /** Position.DECIMETER unit type with code 8. */
-    public static final UnitType POSITION_DECIMETER = new UnitType(QuantityType.POSITION, 8, Length.Unit.dm, "DECIMETER", "dm");
-
-    /** Position.DEKAMETER unit type with code 9. */
-    public static final UnitType POSITION_DEKAMETER =
-            new UnitType(QuantityType.POSITION, 9, Units.resolve(Length.Unit.class, "dam"), "DEKAMETER", "dam");
-
-    /** Position.HECTOMETER unit type with code 10. */
-    public static final UnitType POSITION_HECTOMETER =
-            new UnitType(QuantityType.POSITION, 10, Length.Unit.hm, "HECTOMETER", "hm");
-
-    /** Position.KILOMETER unit type with code 11. */
-    public static final UnitType POSITION_KILOMETER =
-            new UnitType(QuantityType.POSITION, 11, Length.Unit.km, "KILOMETER", "km");
-
-    /** Position.MEGAMETER unit type with code 12. */
-    public static final UnitType POSITION_MEGAMETER =
-            new UnitType(QuantityType.POSITION, 12, Units.resolve(Length.Unit.class, "Mm"), "MEGAMETER", "Mm");
-
-    /** Position.INCH unit type with code 13. */
-    public static final UnitType POSITION_INCH = new UnitType(QuantityType.POSITION, 13, Length.Unit.in, "INCH", "in");
-
-    /** Position.FOOT unit type with code 14. */
-    public static final UnitType POSITION_FOOT = new UnitType(QuantityType.POSITION, 14, Length.Unit.ft, "FOOT", "ft");
-
-    /** Position.YARD unit type with code 15. */
-    public static final UnitType POSITION_YARD = new UnitType(QuantityType.POSITION, 15, Length.Unit.yd, "YARD", "yd");
-
-    /** Position.MILE unit type with code 16. */
-    public static final UnitType POSITION_MILE = new UnitType(QuantityType.POSITION, 16, Length.Unit.mi, "MILE", "mi");
-
-    /** Position.NAUTICAL_MILE unit type with code 17. */
-    public static final UnitType POSITION_NAUTICAL_MILE =
-            new UnitType(QuantityType.POSITION, 17, Length.Unit.NM, "NAUTICAL_MILE", "NM");
-
-    /** Position.ASTRONOMICAL_UNIT unit type with code 18. */
-    public static final UnitType POSITION_ASTRONOMICAL_UNIT =
-            new UnitType(QuantityType.POSITION, 18, Length.Unit.AU, "ASTRONOMICAL_UNIT", "AU");
-
-    /** Position.PARSEC unit type with code 19. */
-    public static final UnitType POSITION_PARSEC = new UnitType(QuantityType.POSITION, 19, Length.Unit.pc, "PARSEC", "pc");
-
-    /** Position.LIGHTYEAR unit type with code 20. */
-    public static final UnitType POSITION_LIGHTYEAR =
-            new UnitType(QuantityType.POSITION, 20, Length.Unit.ly, "LIGHTYEAR", "ly");
-
-    /** Position.ANGSTROM unit type with code 21. */
-    public static final UnitType POSITION_ANGSTROM = new UnitType(QuantityType.POSITION, 21, Length.Unit.A, "ANGSTROM", "Å");
-
     /* ================================================= LINEARDENSITY ================================================= */
 
     /** LinearDensity.KG_PER_METER unit type with code 0. */
@@ -1224,7 +1112,7 @@ public class UnitType
     /** Speed.KNOT unit type with code 13. */
     public static final UnitType SPEED_KNOT = new UnitType(QuantityType.SPEED, 13, Speed.Unit.kt, "KNOT", "kt");
 
-    /* ================================================== TEMPERATURE ================================================== */
+    /* ============================================== TEMPERATUREDIFFERENCE ============================================ */
 
     /** Temperature.KELVIN unit type with code 0. */
     public static final UnitType TEMPERATURE_KELVIN =
@@ -1245,28 +1133,6 @@ public class UnitType
     /** Temperature.DEGREE_REAUMUR unit type with code 4. */
     public static final UnitType TEMPERATURE_DEGREE_REAUMUR =
             new UnitType(QuantityType.TEMPERATUREDIFFERENCE, 4, Temperature.Unit.degRe, "DEGREE_REAUMUR", "ORé");
-
-    /* ============================================= ABSOLUTETEMPERATURE =============================================== */
-
-    /** AbsoluteTemperature.KELVIN unit type with code 0. */
-    public static final UnitType ABSOLUTETEMPERATURE_KELVIN =
-            new UnitType(QuantityType.TEMPERATURE, 0, Temperature.Unit.K, "K", "K");
-
-    /** AbsoluteTemperature.DEGREE_CELSIUS unit type with code 1. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_CELSIUS =
-            new UnitType(QuantityType.TEMPERATURE, 1, Temperature.Unit.degC, "DEGREE_CELSIUS", "OC");
-
-    /** AbsoluteTemperature.DEGREE_FAHRENHEIT unit type with code 2. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_FAHRENHEIT =
-            new UnitType(QuantityType.TEMPERATURE, 2, Temperature.Unit.degF, "DEGREE_FAHRENHEIT", "OF");
-
-    /** AbsoluteTemperature.DEGREE_RANKINE unit type with code 3. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_RANKINE =
-            new UnitType(QuantityType.TEMPERATURE, 3, Temperature.Unit.degR, "DEGREE_RANKINE", "OR");
-
-    /** AbsoluteTemperature.DEGREE_REAUMUR unit type with code 4. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_REAUMUR =
-            new UnitType(QuantityType.TEMPERATURE, 4, Temperature.Unit.degRe, "DEGREE_REAUMUR", "ORé");
 
     /* =================================================== DURATION ==================================================== */
 
@@ -1308,43 +1174,6 @@ public class UnitType
 
     /** Duration.WEEK unit type with code 10. */
     public static final UnitType DURATION_WEEK = new UnitType(QuantityType.DURATION, 10, Duration.Unit.wk, "WEEK", "wk");
-
-    /* ===================================================== TIME ====================================================== */
-
-    /** Time.SECOND unit type with code 0. */
-    public static final UnitType TIME_SECOND = new UnitType(QuantityType.TIME, 0, Duration.Unit.s, "SECOND", "s");
-
-    /** Time.ATTOSECOND unit type with code 1. */
-    public static final UnitType TIME_ATTOSECOND =
-            new UnitType(QuantityType.TIME, 1, Units.resolve(Duration.Unit.class, "as"), "ATTOSECOND", "as");
-
-    /** Time.FEMTOSECOND unit type with code 2. */
-    public static final UnitType TIME_FEMTOSECOND =
-            new UnitType(QuantityType.TIME, 2, Units.resolve(Duration.Unit.class, "fs"), "FEMTOSECOND", "fs");
-
-    /** Time.PICOSECOND unit type with code 3. */
-    public static final UnitType TIME_PICOSECOND = new UnitType(QuantityType.TIME, 3, Duration.Unit.ps, "PICOSECOND", "ps");
-
-    /** Time.NANOSECOND unit type with code 4. */
-    public static final UnitType TIME_NANOSECOND = new UnitType(QuantityType.TIME, 4, Duration.Unit.ns, "NANOSECOND", "ns");
-
-    /** Time.MICROSECOND unit type with code 5. */
-    public static final UnitType TIME_MICROSECOND = new UnitType(QuantityType.TIME, 5, Duration.Unit.mus, "MICROSECOND", "μs");
-
-    /** Time.MILLISECOND unit type with code 6. */
-    public static final UnitType TIME_MILLISECOND = new UnitType(QuantityType.TIME, 6, Duration.Unit.ms, "MILLISECOND", "ms");
-
-    /** Time.MINUTE unit type with code 7. */
-    public static final UnitType TIME_MINUTE = new UnitType(QuantityType.TIME, 7, Duration.Unit.min, "MINUTE", "min");
-
-    /** Time.HOUR unit type with code 8. */
-    public static final UnitType TIME_HOUR = new UnitType(QuantityType.TIME, 8, Duration.Unit.h, "HOUR", "hr");
-
-    /** Time.DAY unit type with code 9. */
-    public static final UnitType TIME_DAY = new UnitType(QuantityType.TIME, 9, Duration.Unit.day, "DAY", "day");
-
-    /** Time.WEEK unit type with code 10. */
-    public static final UnitType TIME_WEEK = new UnitType(QuantityType.TIME, 10, Duration.Unit.wk, "WEEK", "wk");
 
     /* ==================================================== TORQUE ===================================================== */
 
@@ -1808,23 +1637,23 @@ public class UnitType
 
     /**
      * Make a unit type for serialization.
-     * @param unitType the corresponding serialization unit type
+     * @param quantityType the corresponding serialization quantity type
      * @param code the code of the unit provided as an int
-     * @param unit the djunits data type
+     * @param unit the unit
      * @param name the unit name
      * @param abbreviation the unit abbreviation
      */
-    public UnitType(final QuantityType unitType, final int code, final Unit<?, ?> unit, final String name,
+    public UnitType(final QuantityType quantityType, final int code, final Unit<?, ?> unit, final String name,
             final String abbreviation)
     {
-        Throw.whenNull(unitType, "unitType should not be null");
-        Throw.whenNull(unit, "djunitsType should not be null");
+        Throw.whenNull(quantityType, "quantityType should not be null");
+        Throw.whenNull(unit, "unit should not be null");
         Throw.whenNull(name, "name should not be null");
         Throw.whenNull(abbreviation, "abbreviation should not be null");
         Throw.when(name.length() == 0, SerializationRuntimeException.class, "name should not be empty");
         Throw.when(abbreviation.length() == 0, SerializationRuntimeException.class, "abbreviation should not be empty");
 
-        this.quantityType = unitType;
+        this.quantityType = quantityType;
         this.code = code;
         this.unit = unit;
         this.name = name;
@@ -1879,13 +1708,13 @@ public class UnitType
 
     /**
      * Return the unit belonging to the display code.
-     * @param unitType the unit type to search for
+     * @param quantityType the unit type to search for
      * @param code the code to search for.
      * @return the unit type, or null if not found.
      */
-    public static Unit<?, ?> getUnit(final QuantityType unitType, final int code)
+    public static Unit<?, ?> getUnit(final QuantityType quantityType, final int code)
     {
-        Map<Integer, UnitType> codeMap = codeUnitMap.get(unitType);
+        Map<Integer, UnitType> codeMap = codeUnitMap.get(quantityType);
         return codeMap == null ? null : codeMap.get(code) == null ? null : codeMap.get(code).unit;
     }
 
