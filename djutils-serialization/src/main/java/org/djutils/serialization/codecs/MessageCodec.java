@@ -148,7 +148,7 @@ public final class MessageCodec
     public static Object[] decodeToPrimitiveDataTypes(final Endianness endianness, final byte[] buffer)
             throws SerializationException
     {
-        return decode(endianness, buffer, Codec.DECODERS);
+        return decode(endianness, buffer, Codec.PRIMITIVE_DECODERS);
     }
 
     /**
@@ -161,7 +161,7 @@ public final class MessageCodec
     public static Object[] decodeToObjectDataTypes(final Endianness endianness, final byte[] buffer)
             throws SerializationException
     {
-        return decode(endianness, buffer, Codec.DECODERS);
+        return decode(endianness, buffer, Codec.OBJECT_DECODERS);
     }
 
     /**

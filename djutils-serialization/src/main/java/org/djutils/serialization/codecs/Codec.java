@@ -42,93 +42,117 @@ public final class Codec
     protected static final Map<Class<?>, BasicCodec<?>> ENCODERS = new HashMap<>();
 
     /** All the converters that decode into arrays and matrices of Objects, keyed by prefix. */
-    protected static final Map<Byte, BasicCodec<?>> DECODERS = new HashMap<>();
+    protected static final Map<Byte, BasicCodec<?>> OBJECT_DECODERS = new HashMap<>();
+
+    /** All the converters that decode into arrays and matrices of primitive types, keyed by prefix. */
+    protected static final Map<Byte, BasicCodec<?>> PRIMITIVE_DECODERS = new HashMap<>();
 
     static
     {
-        register(Byte.class, PrimitiveCodec.BYTE);
-        register(byte.class, PrimitiveCodec.BYTE);
-        register(Short.class, PrimitiveCodec.SHORT);
-        register(short.class, PrimitiveCodec.SHORT);
-        register(Integer.class, PrimitiveCodec.INTEGER);
-        register(int.class, PrimitiveCodec.INTEGER);
-        register(Long.class, PrimitiveCodec.LONG);
-        register(long.class, PrimitiveCodec.LONG);
-        register(Float.class, PrimitiveCodec.FLOAT);
-        register(float.class, PrimitiveCodec.FLOAT);
-        register(Double.class, PrimitiveCodec.DOUBLE);
-        register(double.class, PrimitiveCodec.DOUBLE);
-        register(Boolean.class, PrimitiveCodec.BOOLEAN);
-        register(boolean.class, PrimitiveCodec.BOOLEAN);
+        registerObject(Byte.class, PrimitiveCodec.BYTE);
+        registerPrimitive(byte.class, PrimitiveCodec.BYTE);
+        registerObject(Short.class, PrimitiveCodec.SHORT);
+        registerPrimitive(short.class, PrimitiveCodec.SHORT);
+        registerObject(Integer.class, PrimitiveCodec.INTEGER);
+        registerPrimitive(int.class, PrimitiveCodec.INTEGER);
+        registerObject(Long.class, PrimitiveCodec.LONG);
+        registerPrimitive(long.class, PrimitiveCodec.LONG);
+        registerObject(Float.class, PrimitiveCodec.FLOAT);
+        registerPrimitive(float.class, PrimitiveCodec.FLOAT);
+        registerObject(Double.class, PrimitiveCodec.DOUBLE);
+        registerPrimitive(double.class, PrimitiveCodec.DOUBLE);
+        registerObject(Boolean.class, PrimitiveCodec.BOOLEAN);
+        registerPrimitive(boolean.class, PrimitiveCodec.BOOLEAN);
 
-        DECODERS.put(PrimitiveCodec.CHARACTER8.fieldType(), PrimitiveCodec.CHARACTER8);
-        DECODERS.put(PrimitiveCodec.CHARACTER16.fieldType(), PrimitiveCodec.CHARACTER16);
+        registerDecoder(PrimitiveCodec.CHARACTER8);
+        registerDecoder(PrimitiveCodec.CHARACTER16);
 
-        DECODERS.put(StringCodec.STRING8.fieldType(), StringCodec.STRING8);
-        DECODERS.put(StringCodec.STRING16.fieldType(), StringCodec.STRING16);
-        DECODERS.put(StringArrayCodec.STRING8_ARRAY.fieldType(), StringArrayCodec.STRING8_ARRAY);
-        DECODERS.put(StringArrayCodec.STRING16_ARRAY.fieldType(), StringArrayCodec.STRING16_ARRAY);
-        DECODERS.put(StringMatrixCodec.STRING8_MATRIX.fieldType(), StringMatrixCodec.STRING8_MATRIX);
-        DECODERS.put(StringMatrixCodec.STRING16_MATRIX.fieldType(), StringMatrixCodec.STRING16_MATRIX);
+        registerDecoder(StringCodec.STRING8);
+        registerDecoder(StringCodec.STRING16);
+        registerDecoder(StringArrayCodec.STRING8_ARRAY);
+        registerDecoder(StringArrayCodec.STRING16_ARRAY);
+        registerDecoder(StringMatrixCodec.STRING8_MATRIX);
+        registerDecoder(StringMatrixCodec.STRING16_MATRIX);
 
-        register(Byte[].class, ObjectArrayCodec.BYTE_OBJECT_ARRAY);
-        register(byte[].class, PrimitiveArrayCodec.BYTE_ARRAY);
-        register(Short[].class, ObjectArrayCodec.SHORT_OBJECT_ARRAY);
-        register(short[].class, PrimitiveArrayCodec.SHORT_ARRAY);
-        register(Integer[].class, ObjectArrayCodec.INTEGER_OBJECT_ARRAY);
-        register(int[].class, PrimitiveArrayCodec.INT_ARRAY);
-        register(Long[].class, ObjectArrayCodec.LONG_OBJECT_ARRAY);
-        register(long[].class, PrimitiveArrayCodec.LONG_ARRAY);
-        register(Float[].class, ObjectArrayCodec.FLOAT_OBJECT_ARRAY);
-        register(float[].class, PrimitiveArrayCodec.FLOAT_ARRAY);
-        register(Double[].class, ObjectArrayCodec.DOUBLE_OBJECT_ARRAY);
-        register(double[].class, PrimitiveArrayCodec.DOUBLE_ARRAY);
-        register(Boolean[].class, ObjectArrayCodec.BOOLEAN_OBJECT_ARRAY);
-        register(boolean[].class, PrimitiveArrayCodec.BOOLEAN_ARRAY);
+        registerObject(Byte[].class, ObjectArrayCodec.BYTE_OBJECT_ARRAY);
+        registerPrimitive(byte[].class, PrimitiveArrayCodec.BYTE_ARRAY);
+        registerObject(Short[].class, ObjectArrayCodec.SHORT_OBJECT_ARRAY);
+        registerPrimitive(short[].class, PrimitiveArrayCodec.SHORT_ARRAY);
+        registerObject(Integer[].class, ObjectArrayCodec.INTEGER_OBJECT_ARRAY);
+        registerPrimitive(int[].class, PrimitiveArrayCodec.INT_ARRAY);
+        registerObject(Long[].class, ObjectArrayCodec.LONG_OBJECT_ARRAY);
+        registerPrimitive(long[].class, PrimitiveArrayCodec.LONG_ARRAY);
+        registerObject(Float[].class, ObjectArrayCodec.FLOAT_OBJECT_ARRAY);
+        registerPrimitive(float[].class, PrimitiveArrayCodec.FLOAT_ARRAY);
+        registerObject(Double[].class, ObjectArrayCodec.DOUBLE_OBJECT_ARRAY);
+        registerPrimitive(double[].class, PrimitiveArrayCodec.DOUBLE_ARRAY);
+        registerObject(Boolean[].class, ObjectArrayCodec.BOOLEAN_OBJECT_ARRAY);
+        registerPrimitive(boolean[].class, PrimitiveArrayCodec.BOOLEAN_ARRAY);
 
-        register(Byte[][].class, ObjectMatrixCodec.BYTE_OBJECT_MATRIX);
-        register(byte[][].class, PrimitiveMatrixCodec.BYTE_MATRIX);
-        register(Short[][].class, ObjectMatrixCodec.SHORT_OBJECT_MATRIX);
-        register(short[][].class, PrimitiveMatrixCodec.SHORT_MATRIX);
-        register(Integer[][].class, ObjectMatrixCodec.INTEGER_OBJECT_MATRIX);
-        register(int[][].class, PrimitiveMatrixCodec.INT_MATRIX);
-        register(Long[][].class, ObjectMatrixCodec.LONG_OBJECT_MATRIX);
-        register(long[][].class, PrimitiveMatrixCodec.LONG_MATRIX);
-        register(Float[][].class, ObjectMatrixCodec.FLOAT_OBJECT_MATRIX);
-        register(float[][].class, PrimitiveMatrixCodec.FLOAT_MATRIX);
-        register(Double[][].class, ObjectMatrixCodec.DOUBLE_OBJECT_MATRIX);
-        register(double[][].class, PrimitiveMatrixCodec.DOUBLE_MATRIX);
-        register(Boolean[][].class, ObjectMatrixCodec.BOOLEAN_OBJECT_MATRIX);
-        register(boolean[][].class, PrimitiveMatrixCodec.BOOLEAN_MATRIX);
+        registerObject(Byte[][].class, ObjectMatrixCodec.BYTE_OBJECT_MATRIX);
+        registerPrimitive(byte[][].class, PrimitiveMatrixCodec.BYTE_MATRIX);
+        registerObject(Short[][].class, ObjectMatrixCodec.SHORT_OBJECT_MATRIX);
+        registerPrimitive(short[][].class, PrimitiveMatrixCodec.SHORT_MATRIX);
+        registerObject(Integer[][].class, ObjectMatrixCodec.INTEGER_OBJECT_MATRIX);
+        registerPrimitive(int[][].class, PrimitiveMatrixCodec.INT_MATRIX);
+        registerObject(Long[][].class, ObjectMatrixCodec.LONG_OBJECT_MATRIX);
+        registerPrimitive(long[][].class, PrimitiveMatrixCodec.LONG_MATRIX);
+        registerObject(Float[][].class, ObjectMatrixCodec.FLOAT_OBJECT_MATRIX);
+        registerPrimitive(float[][].class, PrimitiveMatrixCodec.FLOAT_MATRIX);
+        registerObject(Double[][].class, ObjectMatrixCodec.DOUBLE_OBJECT_MATRIX);
+        registerPrimitive(double[][].class, PrimitiveMatrixCodec.DOUBLE_MATRIX);
+        registerObject(Boolean[][].class, ObjectMatrixCodec.BOOLEAN_OBJECT_MATRIX);
+        registerPrimitive(boolean[][].class, PrimitiveMatrixCodec.BOOLEAN_MATRIX);
 
-        DECODERS.put(QuantityCodec.QUANTITY_FLOAT.fieldType(), QuantityCodec.QUANTITY_FLOAT);
-        DECODERS.put(QuantityCodec.QUANTITY_DOUBLE.fieldType(), QuantityCodec.QUANTITY_DOUBLE);
-        DECODERS.put(AbsQuantityCodec.ABS_QUANTITY_FLOAT.fieldType(), AbsQuantityCodec.ABS_QUANTITY_FLOAT);
-        DECODERS.put(AbsQuantityCodec.ABS_QUANTITY_DOUBLE.fieldType(), AbsQuantityCodec.ABS_QUANTITY_DOUBLE);
-        DECODERS.put(VectorCodec.VECTOR_FLOAT.fieldType(), VectorCodec.VECTOR_FLOAT);
-        DECODERS.put(VectorCodec.VECTOR_DOUBLE.fieldType(), VectorCodec.VECTOR_DOUBLE);
-        DECODERS.put(AbsVectorCodec.ABS_VECTOR_FLOAT.fieldType(), AbsVectorCodec.ABS_VECTOR_FLOAT);
-        DECODERS.put(AbsVectorCodec.ABS_VECTOR_DOUBLE.fieldType(), AbsVectorCodec.ABS_VECTOR_DOUBLE);
-        DECODERS.put(MatrixCodec.MATRIX_FLOAT.fieldType(), MatrixCodec.MATRIX_FLOAT);
-        DECODERS.put(MatrixCodec.MATRIX_DOUBLE.fieldType(), MatrixCodec.MATRIX_DOUBLE);
-        DECODERS.put(AbsMatrixCodec.ABS_MATRIX_FLOAT.fieldType(), AbsMatrixCodec.ABS_MATRIX_FLOAT);
-        DECODERS.put(AbsMatrixCodec.ABS_MATRIX_DOUBLE.fieldType(), AbsMatrixCodec.ABS_MATRIX_DOUBLE);
+        registerDecoder(QuantityCodec.QUANTITY_FLOAT);
+        registerDecoder(QuantityCodec.QUANTITY_DOUBLE);
+        registerDecoder(AbsQuantityCodec.ABS_QUANTITY_FLOAT);
+        registerDecoder(AbsQuantityCodec.ABS_QUANTITY_DOUBLE);
+        registerDecoder(VectorCodec.VECTOR_FLOAT);
+        registerDecoder(VectorCodec.VECTOR_DOUBLE);
+        registerDecoder(AbsVectorCodec.ABS_VECTOR_FLOAT);
+        registerDecoder(AbsVectorCodec.ABS_VECTOR_DOUBLE);
+        registerDecoder(MatrixCodec.MATRIX_FLOAT);
+        registerDecoder(MatrixCodec.MATRIX_DOUBLE);
+        registerDecoder(AbsMatrixCodec.ABS_MATRIX_FLOAT);
+        registerDecoder(AbsMatrixCodec.ABS_MATRIX_DOUBLE);
 
-        DECODERS.put(VectorArrayCodec.COL_VECTOR_ARRAY_FLOAT.fieldType(), VectorArrayCodec.COL_VECTOR_ARRAY_FLOAT);
-        DECODERS.put(VectorArrayCodec.COL_VECTOR_ARRAY_DOUBLE.fieldType(), VectorArrayCodec.COL_VECTOR_ARRAY_DOUBLE);
-        DECODERS.put(VectorArrayCodec.ROW_VECTOR_ARRAY_FLOAT.fieldType(), VectorArrayCodec.ROW_VECTOR_ARRAY_FLOAT);
-        DECODERS.put(VectorArrayCodec.ROW_VECTOR_ARRAY_DOUBLE.fieldType(), VectorArrayCodec.ROW_VECTOR_ARRAY_DOUBLE);
+        registerDecoder(VectorArrayCodec.COL_VECTOR_ARRAY_FLOAT);
+        registerDecoder(VectorArrayCodec.COL_VECTOR_ARRAY_DOUBLE);
+        registerDecoder(VectorArrayCodec.ROW_VECTOR_ARRAY_FLOAT);
+        registerDecoder(VectorArrayCodec.ROW_VECTOR_ARRAY_DOUBLE);
     }
 
     /**
-     * Register a serializer for a primitive class (including arrays and matrices of primitive types).
+     * Register a codec for a primitive class (including arrays and matrices of primitive types).
      * @param clazz the class for which the serializer is registered
-     * @param serializer the serializer for the class
+     * @param codec the codec for the class
      */
-    private static void register(final Class<?> clazz, final BasicCodec<?> serializer)
+    private static void registerPrimitive(final Class<?> clazz, final BasicCodec<?> codec)
     {
-        ENCODERS.put(clazz, serializer);
-        DECODERS.put(serializer.fieldType(), serializer);
+        ENCODERS.put(clazz, codec);
+        PRIMITIVE_DECODERS.put(codec.fieldType(), codec);
+    }
+
+    /**
+     * Register a codec for an object class (including arrays and matrices of primitive object wrappers).
+     * @param clazz the class for which the serializer is registered
+     * @param codec the codec for the class
+     */
+    private static void registerObject(final Class<?> clazz, final BasicCodec<?> codec)
+    {
+        ENCODERS.put(clazz, codec);
+        OBJECT_DECODERS.put(codec.fieldType(), codec);
+    }
+
+    /**
+     * Register a codec for deserialization only.
+     * @param codec the codec for which the deserializer is registered
+     */
+    private static void registerDecoder(final BasicCodec<?> codec)
+    {
+        PRIMITIVE_DECODERS.put(codec.fieldType(), codec);
+        OBJECT_DECODERS.put(codec.fieldType(), codec);
     }
 
     /**
@@ -141,12 +165,21 @@ public final class Codec
     }
 
     /**
-     * Return a safe copy of the decoder map.
-     * @return a safe copy of the decoder map
+     * Return a safe copy of the decoder map to primitive types.
+     * @return a safe copy of the decoder map to primitive types
      */
-    public static Map<Byte, BasicCodec<?>> getDecoders()
+    public static Map<Byte, BasicCodec<?>> getPrimitiveDecoders()
     {
-        return new HashMap<>(DECODERS);
+        return new HashMap<>(PRIMITIVE_DECODERS);
+    }
+
+    /**
+     * Return a safe copy of the decoder map to object types.
+     * @return a safe copy of the decoder map to object types
+     */
+    public static Map<Byte, BasicCodec<?>> getObjectDecoders()
+    {
+        return new HashMap<>(OBJECT_DECODERS);
     }
 
     /**
@@ -274,10 +307,10 @@ public final class Codec
      * @return an object of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object decodeToPrimitiveDataTypes(final Endianness endianness, final byte[] buffer)
+    public static Object decodeToPrimitiveDataType(final Endianness endianness, final byte[] buffer)
             throws SerializationException
     {
-        return decode(endianness, buffer, DECODERS);
+        return decode(endianness, buffer, PRIMITIVE_DECODERS);
     }
 
     /**
@@ -287,9 +320,9 @@ public final class Codec
      * @return an object of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object decodeToObjectDataTypes(final Endianness endianness, final byte[] buffer) throws SerializationException
+    public static Object decodeToObjectDataType(final Endianness endianness, final byte[] buffer) throws SerializationException
     {
-        return decode(endianness, buffer, DECODERS);
+        return decode(endianness, buffer, OBJECT_DECODERS);
     }
 
     /**
@@ -329,7 +362,7 @@ public final class Codec
         Throw.when(buffer.length < 2, SerializationException.class, "decodeByte expects a buffer of at least 2 bytes");
         if (buffer[0] == FieldTypes.BYTE_8)
         {
-            return (byte) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (byte) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeByte did not detect byte in first byte");
     }
@@ -346,7 +379,7 @@ public final class Codec
         Throw.when(buffer.length < 3, SerializationException.class, "decodeShort expects a buffer of at least 3 bytes");
         if (buffer[0] == FieldTypes.SHORT_16)
         {
-            return (short) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (short) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeShort did not detect short in first byte");
     }
@@ -363,7 +396,7 @@ public final class Codec
         Throw.when(buffer.length < 5, SerializationException.class, "decodeInt expects a buffer of at least 5 bytes");
         if (buffer[0] == FieldTypes.INT_32)
         {
-            return (int) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (int) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeInt did not detect integer in first byte");
     }
@@ -380,7 +413,7 @@ public final class Codec
         Throw.when(buffer.length < 9, SerializationException.class, "decodeLong expects a buffer of at least 9 bytes");
         if (buffer[0] == FieldTypes.LONG_64)
         {
-            return (long) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (long) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeLong did not detect long in first byte");
     }
@@ -397,7 +430,7 @@ public final class Codec
         Throw.when(buffer.length < 5, SerializationException.class, "decodeFloat expects a buffer of at least 5 bytes");
         if (buffer[0] == FieldTypes.FLOAT_32)
         {
-            return (float) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (float) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeFloat did not detect float in first byte");
     }
@@ -414,7 +447,7 @@ public final class Codec
         Throw.when(buffer.length < 9, SerializationException.class, "decodeDouble expects a buffer of at least 9 bytes");
         if (buffer[0] == FieldTypes.DOUBLE_64)
         {
-            return (double) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (double) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeDouble did not detect double in first byte");
     }
@@ -431,7 +464,7 @@ public final class Codec
         Throw.when(buffer.length < 2, SerializationException.class, "decodeBoolean expects a buffer of at least 2 bytes");
         if (buffer[0] == FieldTypes.BOOLEAN_8)
         {
-            return (boolean) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (boolean) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeBoolean did not detect boolean in first byte");
     }
@@ -448,7 +481,7 @@ public final class Codec
         Throw.when(buffer.length < 2, SerializationException.class, "decodeShort expects a buffer of at least 2 bytes");
         if (buffer[0] == FieldTypes.CHAR_8)
         {
-            return (char) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (char) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeCharUtf8 did not detect char in first byte");
     }
@@ -465,7 +498,7 @@ public final class Codec
         Throw.when(buffer.length < 3, SerializationException.class, "decodeShort expects a buffer of at least 3 bytes");
         if (buffer[0] == FieldTypes.CHAR_16)
         {
-            return (char) decodeToPrimitiveDataTypes(endianness, buffer);
+            return (char) decodeToPrimitiveDataType(endianness, buffer);
         }
         throw new SerializationException("decodeCharUtf8 did not detect char in first byte");
     }
