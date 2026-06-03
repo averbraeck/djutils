@@ -129,129 +129,178 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
     public abstract E deSerializeElement(byte[] buffer, int offset, Endianness endianness);
 
     /** Converter for Byte matrix. */
-    public static final ObjectMatrixCodec<Byte> BYTE_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.BYTE_8_MATRIX, 1, Byte.class, "Byte_8_matrix")
-            {
-                @Override
-                public void serializeElement(final Byte object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    buffer[offset] = object;
-                }
+    public static final ByteMatrixCodec BYTE_OBJECT_MATRIX = new ByteMatrixCodec();
 
-                @Override
-                public Byte deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return buffer[offset];
-                }
-            };
+    /** Converter class for Byte matrix. */
+    public static final class ByteMatrixCodec extends ObjectMatrixCodec<Byte>
+    {
+        /** Construct the ByteMatrixCodec. */
+        public ByteMatrixCodec()
+        {
+            super(FieldTypes.BYTE_8_MATRIX, 1, Byte.class, "Byte_8_matrix");
+        }
+
+        @Override
+        public void serializeElement(final Byte object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            buffer[offset] = object;
+        }
+
+        @Override
+        public Byte deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return buffer[offset];
+        }
+    };
 
     /** Converter for Short matrix. */
-    public static final ObjectMatrixCodec<Short> SHORT_OBJECT_MATRIX =
-            new ObjectMatrixCodec<Short>(FieldTypes.SHORT_16_MATRIX, 2, Short.class, "Short_16_matrix")
-            {
-                @Override
-                public void serializeElement(final Short object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeShort(object, buffer, offset);
-                }
+    public static final ShortMatrixCodec SHORT_OBJECT_MATRIX = new ShortMatrixCodec();
 
-                @Override
-                public Short deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeShort(buffer, offset);
-                }
-            };
+    /** Converter class for Short matrix. */
+    public static final class ShortMatrixCodec extends ObjectMatrixCodec<Short>
+    {
+        /** Construct the ShortMatrixCodec. */
+        public ShortMatrixCodec()
+        {
+            super(FieldTypes.SHORT_16_MATRIX, 2, Short.class, "Short_16_matrix");
+        }
+
+        @Override
+        public void serializeElement(final Short object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeShort(object, buffer, offset);
+        }
+
+        @Override
+        public Short deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeShort(buffer, offset);
+        }
+    };
 
     /** Converter for Integer matrix. */
-    public static final ObjectMatrixCodec<Integer> INTEGER_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.INT_32_MATRIX, 4, Integer.class, "Integer_32_matrix")
-            {
-                @Override
-                public void serializeElement(final Integer object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeInt(object, buffer, offset);
-                }
+    public static final IntegerMatrixCodec INTEGER_OBJECT_MATRIX = new IntegerMatrixCodec();
 
-                @Override
-                public Integer deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeInt(buffer, offset);
-                }
-            };
+    /** Converter class for Integer matrix. */
+    public static final class IntegerMatrixCodec extends ObjectMatrixCodec<Integer>
+    {
+        /** Construct the IntegerMatrixCodec. */
+        public IntegerMatrixCodec()
+        {
+            super(FieldTypes.INT_32_MATRIX, 4, Integer.class, "Integer_32_matrix");
+        }
+
+        @Override
+        public void serializeElement(final Integer object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeInt(object, buffer, offset);
+        }
+
+        @Override
+        public Integer deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeInt(buffer, offset);
+        }
+    };
 
     /** Converter for Long matrix. */
-    public static final ObjectMatrixCodec<Long> LONG_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.LONG_64_MATRIX, 8, Long.class, "Long_64_matrix")
-            {
-                @Override
-                public void serializeElement(final Long object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeLong(object, buffer, offset);
-                }
+    public static final LongMatrixCodec LONG_OBJECT_MATRIX = new LongMatrixCodec();
 
-                @Override
-                public Long deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeLong(buffer, offset);
-                }
-            };
+    /** Converter class for Long matrix. */
+    public static final class LongMatrixCodec extends ObjectMatrixCodec<Long>
+    {
+        /** Construct the LongMatrixCodec. */
+        public LongMatrixCodec()
+        {
+            super(FieldTypes.LONG_64_MATRIX, 8, Long.class, "Long_64_matrix");
+        }
+
+        @Override
+        public void serializeElement(final Long object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeLong(object, buffer, offset);
+        }
+
+        @Override
+        public Long deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeLong(buffer, offset);
+        }
+    };
 
     /** Converter for Float matrix. */
-    public static final ObjectMatrixCodec<Float> FLOAT_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.FLOAT_32_MATRIX, 4, Float.class, "Float_32_matrix")
-            {
-                @Override
-                public void serializeElement(final Float object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeFloat(object, buffer, offset);
-                }
+    public static final FloatMatrixCodec FLOAT_OBJECT_MATRIX = new FloatMatrixCodec();
 
-                @Override
-                public Float deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeFloat(buffer, offset);
-                }
-            };
+    /** Converter class for Float matrix. */
+    public static final class FloatMatrixCodec extends ObjectMatrixCodec<Float>
+    {
+        /** Construct the FloatMatrixCodec. */
+        public FloatMatrixCodec()
+        {
+            super(FieldTypes.FLOAT_32_MATRIX, 4, Float.class, "Float_32_matrix");
+        }
+
+        @Override
+        public void serializeElement(final Float object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeFloat(object, buffer, offset);
+        }
+
+        @Override
+        public Float deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeFloat(buffer, offset);
+        }
+    };
 
     /** Converter for Double matrix. */
-    public static final ObjectMatrixCodec<Double> DOUBLE_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class, "Double_64_matrix")
-            {
-                @Override
-                public void serializeElement(final Double object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeDouble(object, buffer, offset);
-                }
+    public static final DoubleMatrixCodec DOUBLE_OBJECT_MATRIX = new DoubleMatrixCodec();
 
-                @Override
-                public Double deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeDouble(buffer, offset);
-                }
-            };
+    /** Converter class for Double matrix. */
+    public static final class DoubleMatrixCodec extends ObjectMatrixCodec<Double>
+    {
+        /** Construct the DoubleMatrixCodec. */
+        public DoubleMatrixCodec()
+        {
+            super(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class, "Double_64_matrix");
+        }
+
+        @Override
+        public void serializeElement(final Double object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeDouble(object, buffer, offset);
+        }
+
+        @Override
+        public Double deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeDouble(buffer, offset);
+        }
+    };
 
     /** Converter for Boolean matrix. */
-    public static final ObjectMatrixCodec<Boolean> BOOLEAN_OBJECT_MATRIX =
-            new ObjectMatrixCodec<>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class, "Boolean_8_matrix")
-            {
-                @Override
-                public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    buffer[offset] = (byte) (object ? 1 : 0);
-                }
+    public static final BooleanMatrixCodec BOOLEAN_OBJECT_MATRIX = new BooleanMatrixCodec();
 
-                @Override
-                public Boolean deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return buffer[offset] != 0;
-                }
-            };
+    /** Converter class for Boolean matrix. */
+    public static final class BooleanMatrixCodec extends ObjectMatrixCodec<Boolean>
+    {
+        /** Construct the BooleanMatrixCodec. */
+        public BooleanMatrixCodec()
+        {
+            super(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class, "Boolean_8_matrix");
+        }
+
+        @Override
+        public void serializeElement(final Boolean object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            buffer[offset] = (byte) (object ? 1 : 0);
+        }
+
+        @Override
+        public Boolean deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return buffer[offset] != 0;
+        }
+    };
 
 }
