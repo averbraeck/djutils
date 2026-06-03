@@ -105,129 +105,178 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
     public abstract E deSerializeElement(byte[] buffer, int offset, Endianness endianness);
 
     /** Converter for Byte array. */
-    public static final ObjectArrayCodec<Byte> BYTE_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.BYTE_8_ARRAY, 1, Byte.class, "Byte_8_array")
-            {
-                @Override
-                public void serializeElement(final Byte object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    buffer[offset] = object;
-                }
+    public static final ByteObjectArrayCodec BYTE_OBJECT_ARRAY = new ByteObjectArrayCodec();
 
-                @Override
-                public Byte deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return buffer[offset];
-                }
-            };
+    /** Converter class for Byte array. */
+    public static final class ByteObjectArrayCodec extends ObjectArrayCodec<Byte>
+    {
+        /** Construct the ByteObjectArrayCodec. */
+        public ByteObjectArrayCodec()
+        {
+            super(FieldTypes.BYTE_8_ARRAY, 1, Byte.class, "Byte_8_array");
+        }
+
+        @Override
+        public void serializeElement(final Byte object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            buffer[offset] = object;
+        }
+
+        @Override
+        public Byte deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return buffer[offset];
+        }
+    };
 
     /** Converter for Short array. */
-    public static final ObjectArrayCodec<Short> SHORT_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.SHORT_16_ARRAY, 2, Short.class, "Short_16_array")
-            {
-                @Override
-                public void serializeElement(final Short object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeShort(object, buffer, offset);
-                }
+    public static final ShortObjectArrayCodec SHORT_OBJECT_ARRAY = new ShortObjectArrayCodec();
 
-                @Override
-                public Short deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeShort(buffer, offset);
-                }
-            };
+    /** Converter class for Short array. */
+    public static final class ShortObjectArrayCodec extends ObjectArrayCodec<Short>
+    {
+        /** Construct the ShortObjectArrayCodec. */
+        public ShortObjectArrayCodec()
+        {
+            super(FieldTypes.SHORT_16_ARRAY, 2, Short.class, "Short_16_array");
+        }
+
+        @Override
+        public void serializeElement(final Short object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeShort(object, buffer, offset);
+        }
+
+        @Override
+        public Short deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeShort(buffer, offset);
+        }
+    };
 
     /** Converter for Integer array. */
-    public static final ObjectArrayCodec<Integer> INTEGER_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.INT_32_ARRAY, 4, Integer.class, "Integer_32_array")
-            {
-                @Override
-                public void serializeElement(final Integer object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeInt(object, buffer, offset);
-                }
+    public static final IntegerObjectArrayCodec INTEGER_OBJECT_ARRAY = new IntegerObjectArrayCodec();
 
-                @Override
-                public Integer deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeInt(buffer, offset);
-                }
-            };
+    /** Converter class for Integer array. */
+    public static final class IntegerObjectArrayCodec extends ObjectArrayCodec<Integer>
+    {
+        /** Construct the IntegerObjectArrayCodec. */
+        public IntegerObjectArrayCodec()
+        {
+            super(FieldTypes.INT_32_ARRAY, 4, Integer.class, "Integer_32_array");
+        }
+
+        @Override
+        public void serializeElement(final Integer object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeInt(object, buffer, offset);
+        }
+
+        @Override
+        public Integer deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeInt(buffer, offset);
+        }
+    };
 
     /** Converter for Long array. */
-    public static final ObjectArrayCodec<Long> LONG_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.LONG_64_ARRAY, 8, Long.class, "Long_64_array")
-            {
-                @Override
-                public void serializeElement(final Long object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeLong(object, buffer, offset);
-                }
+    public static final LongObjectArrayCodec LONG_OBJECT_ARRAY = new LongObjectArrayCodec();
 
-                @Override
-                public Long deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeLong(buffer, offset);
-                }
-            };
+    /** Converter class for Long array. */
+    public static final class LongObjectArrayCodec extends ObjectArrayCodec<Long>
+    {
+        /** Construct the LongObjectArrayCodec. */
+        public LongObjectArrayCodec()
+        {
+            super(FieldTypes.LONG_64_ARRAY, 8, Long.class, "Long_64_array");
+        }
+
+        @Override
+        public void serializeElement(final Long object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeLong(object, buffer, offset);
+        }
+
+        @Override
+        public Long deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeLong(buffer, offset);
+        }
+    };
 
     /** Converter for Float array. */
-    public static final ObjectArrayCodec<Float> FLOAT_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.FLOAT_32_ARRAY, 4, Float.class, "Float_32_array")
-            {
-                @Override
-                public void serializeElement(final Float object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeFloat(object, buffer, offset);
-                }
+    public static final FloatObjectArrayCodec FLOAT_OBJECT_ARRAY = new FloatObjectArrayCodec();
 
-                @Override
-                public Float deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeFloat(buffer, offset);
-                }
-            };
+    /** Converter class for Float array. */
+    public static final class FloatObjectArrayCodec extends ObjectArrayCodec<Float>
+    {
+        /** Construct the FloatObjectArrayCodec. */
+        public FloatObjectArrayCodec()
+        {
+            super(FieldTypes.FLOAT_32_ARRAY, 4, Float.class, "Float_32_array");
+        }
+
+        @Override
+        public void serializeElement(final Float object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeFloat(object, buffer, offset);
+        }
+
+        @Override
+        public Float deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeFloat(buffer, offset);
+        }
+    };
 
     /** Converter for Double array. */
-    public static final ObjectArrayCodec<Double> DOUBLE_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.DOUBLE_64_ARRAY, 8, Double.class, "Double_64_array")
-            {
-                @Override
-                public void serializeElement(final Double object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    endianness.encodeDouble(object, buffer, offset);
-                }
+    public static final DoubleObjectArrayCodec DOUBLE_OBJECT_ARRAY = new DoubleObjectArrayCodec();
 
-                @Override
-                public Double deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return endianness.decodeDouble(buffer, offset);
-                }
-            };
+    /** Converter class for Double array. */
+    public static final class DoubleObjectArrayCodec extends ObjectArrayCodec<Double>
+    {
+        /** Construct the DoubleObjectArrayCodec. */
+        public DoubleObjectArrayCodec()
+        {
+            super(FieldTypes.DOUBLE_64_ARRAY, 8, Double.class, "Double_64_array");
+        }
+
+        @Override
+        public void serializeElement(final Double object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            endianness.encodeDouble(object, buffer, offset);
+        }
+
+        @Override
+        public Double deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return endianness.decodeDouble(buffer, offset);
+        }
+    };
 
     /** Converter for Boolean array. */
-    public static final ObjectArrayCodec<Boolean> BOOLEAN_OBJECT_ARRAY =
-            new ObjectArrayCodec<>(FieldTypes.BOOLEAN_8_ARRAY, 1, Boolean.class, "Boolean_8_array")
-            {
-                @Override
-                public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
-                        final Endianness endianness)
-                {
-                    buffer[offset] = (byte) (object ? 1 : 0);
-                }
+    public static final BooleanObjectArrayCodec BOOLEAN_OBJECT_ARRAY = new BooleanObjectArrayCodec();
 
-                @Override
-                public Boolean deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
-                {
-                    return buffer[offset] != 0;
-                }
-            };
+    /** Converter class for Boolean array. */
+    public static final class BooleanObjectArrayCodec extends ObjectArrayCodec<Boolean>
+    {
+        /** Construct the BooleanObjectArrayCodec. */
+        public BooleanObjectArrayCodec()
+        {
+            super(FieldTypes.BOOLEAN_8_ARRAY, 1, Boolean.class, "Boolean_8_array");
+        }
+
+        @Override
+        public void serializeElement(final Boolean object, final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            buffer[offset] = (byte) (object ? 1 : 0);
+        }
+
+        @Override
+        public Boolean deSerializeElement(final byte[] buffer, final int offset, final Endianness endianness)
+        {
+            return buffer[offset] != 0;
+        }
+    };
 
 }
