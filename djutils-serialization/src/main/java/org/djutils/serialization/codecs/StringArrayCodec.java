@@ -42,8 +42,17 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
     }
 
     /** Converter for String UTF-8 array. */
-    public static final StringArrayCodec STRING8_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF8_ARRAY, "String_8_array")
+    public static final String8ArrayCodec STRING8_ARRAY = new String8ArrayCodec();
+
+    /** Converter class for String array (UTF-8). */
+    public static final class String8ArrayCodec extends StringArrayCodec
     {
+        /** Construct the String8ArrayCodec. */
+        public String8ArrayCodec()
+        {
+            super(FieldTypes.STRING_UTF8_ARRAY, "String_8_array");
+        }
+
         @Override
         public int size(final String[] stringArray)
         {
@@ -86,11 +95,20 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
             return result;
         }
 
-    };
+    }
 
     /** Converter for String UTF-16 array. */
-    public static final StringArrayCodec STRING16_ARRAY = new StringArrayCodec(FieldTypes.STRING_UTF16_ARRAY, "String_16_array")
+    public static final String16ArrayCodec STRING16_ARRAY = new String16ArrayCodec();
+
+    /** Converter class for String array (UTF-16). */
+    public static final class String16ArrayCodec extends StringArrayCodec
     {
+        /** Construct the String16ArrayCodec. */
+        public String16ArrayCodec()
+        {
+            super(FieldTypes.STRING_UTF16_ARRAY, "String_16_array");
+        }
+
         @Override
         public int size(final String[] stringArray)
         {
@@ -134,6 +152,6 @@ public abstract class StringArrayCodec extends BasicCodec<String[]>
             }
             return result;
         }
-    };
+    }
 
 }
