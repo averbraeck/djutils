@@ -39,8 +39,17 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
     }
 
     /** Converter for Quantity with a float value. */
-    public static final BasicCodec<Quantity<?>> QUANTITY_FLOAT = new QuantityCodec(FieldTypes.FLOAT_32_UNIT, "quantity_32_unit")
+    public static final FloatQuantityCodec QUANTITY_FLOAT = new FloatQuantityCodec();
+
+    /** Converter class for Quantity with a float value. */
+    public static final class FloatQuantityCodec extends QuantityCodec
     {
+        /** Construct the FloatQuantityCodec. */
+        public FloatQuantityCodec()
+        {
+            super(FieldTypes.FLOAT_32_UNIT, "quantity_32_unit");
+        }
+
         @Override
         public int size(final Quantity<?> quantity)
         {
@@ -65,36 +74,44 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
             UnitCodec.setDisplayUnit(quantity, unit);
             return quantity;
         }
-    };
+    }
 
     /** Converter for Quantity with a double value. */
-    public static final BasicCodec<Quantity<?>> QUANTITY_DOUBLE =
-            new QuantityCodec(FieldTypes.DOUBLE_64_UNIT, "quantity_64_unit")
-            {
-                @Override
-                public int size(final Quantity<?> quantity)
-                {
-                    return 2 + 8;
-                }
+    public static final DoubleQuantityCodec QUANTITY_DOUBLE = new DoubleQuantityCodec();
 
-                @Override
-                public void serialize(final Quantity<?> quantity, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    UnitCodec.encodeQuantityUnit(quantity, buffer, pointer);
-                    double v = quantity.si();
-                    endianness.encodeDouble(v, buffer, pointer.getAndIncrement(8));
-                }
+    /** Converter class for Quantity with a double value. */
+    public static final class DoubleQuantityCodec extends QuantityCodec
+    {
+        /** Construct the DoubleQuantityCodec. */
+        public DoubleQuantityCodec()
+        {
+            super(FieldTypes.DOUBLE_64_UNIT, "quantity_64_unit");
+        }
 
-                @Override
-                public Quantity<?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
-                    Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)));
-                    UnitCodec.setDisplayUnit(quantity, unit);
-                    return quantity;
-                }
-            };
+        @Override
+        public int size(final Quantity<?> quantity)
+        {
+            return 2 + 8;
+        }
+
+        @Override
+        public void serialize(final Quantity<?> quantity, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            UnitCodec.encodeQuantityUnit(quantity, buffer, pointer);
+            double v = quantity.si();
+            endianness.encodeDouble(v, buffer, pointer.getAndIncrement(8));
+        }
+
+        @Override
+        public Quantity<?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+            Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)));
+            UnitCodec.setDisplayUnit(quantity, unit);
+            return quantity;
+        }
+    }
 
 }
