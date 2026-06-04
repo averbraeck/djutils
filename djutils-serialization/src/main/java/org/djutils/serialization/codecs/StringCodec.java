@@ -34,16 +34,64 @@ public abstract class StringCodec extends BasicCodec<String>
         super(fieldType, shortName);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getNumberOfDimensions()
     {
         return 0;
     }
 
-    /** Converter for String. */
-    public static final StringCodec STRING16 = new StringCodec(FieldTypes.STRING_UTF16, "String_16")
+    /** Converter for String (UTF-8). */
+    public static final String8Codec STRING8 = new String8Codec();
+
+    /** Converter class for String (UTF-8). */
+    public static final class String8Codec extends StringCodec
     {
+        /** Construct the String8Codec. */
+        public String8Codec()
+        {
+            super(FieldTypes.STRING_UTF8, "String_8");
+        }
+
+        @Override
+        public int size(final String string)
+        {
+            return 4 + string.getBytes(UTF8).length;
+        }
+
+        @Override
+        public void serialize(final String string, final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            byte[] s = string.getBytes(UTF8);
+            endianness.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+            for (byte b : s)
+            {
+                buffer[pointer.getAndIncrement(1)] = b;
+            }
+        }
+
+        @Override
+        public String deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int bytesUsed = endianness.decodeInt(buffer, pointer.get());
+            String s = endianness.decodeUTF8String(buffer, pointer.get());
+            pointer.getAndIncrement(4 + bytesUsed);
+            return s;
+        }
+    }
+
+    /** Converter for String (UTF-16). */
+    public static final String16Codec STRING16 = new String16Codec();
+
+    /** Converter class for String (UTF-16). */
+    public static final class String16Codec extends StringCodec
+    {
+        /** Construct the String16Codec. */
+        public String16Codec()
+        {
+            super(FieldTypes.STRING_UTF16, "String_16");
+        }
+
         @Override
         public int size(final String object)
         {
@@ -72,37 +120,6 @@ public abstract class StringCodec extends BasicCodec<String>
             pointer.getAndIncrement(4 + s.length() * 2);
             return s;
         }
-    };
-
-    /** Converter for String. */
-    public static final StringCodec STRING8 = new StringCodec(FieldTypes.STRING_UTF8, "String_8")
-    {
-        @Override
-        public int size(final String string)
-        {
-            return 4 + string.getBytes(UTF8).length;
-        }
-
-        @Override
-        public void serialize(final String string, final byte[] buffer, final Pointer pointer, final Endianness endianness)
-        {
-            byte[] s = string.getBytes(UTF8);
-            endianness.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
-            for (byte b : s)
-            {
-                buffer[pointer.getAndIncrement(1)] = b;
-            }
-        }
-
-        @Override
-        public String deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                throws SerializationException
-        {
-            int bytesUsed = endianness.decodeInt(buffer, pointer.get());
-            String s = endianness.decodeUTF8String(buffer, pointer.get());
-            pointer.getAndIncrement(4 + bytesUsed);
-            return s;
-        }
-    };
+    }
 
 }
