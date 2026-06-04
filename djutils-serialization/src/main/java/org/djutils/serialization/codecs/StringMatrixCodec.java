@@ -44,129 +44,143 @@ public abstract class StringMatrixCodec extends BasicCodec<String[][]>
     }
 
     /** Converter for String UTF-8 matrix. */
-    public static final StringMatrixCodec STRING8_MATRIX =
-            new StringMatrixCodec(FieldTypes.STRING_UTF8_MATRIX, "String_8_matrix")
+    public static final String8MatrixCodec STRING8_MATRIX = new String8MatrixCodec();
+
+    /** Converter class for String matrix (UTF-8). */
+    public static final class String8MatrixCodec extends StringMatrixCodec
+    {
+        /** Construct the String8MatrixCodec. */
+        public String8MatrixCodec()
+        {
+            super(FieldTypes.STRING_UTF8_MATRIX, "String_8_matrix");
+        }
+
+        @Override
+        public int size(final String[][] stringMatrix)
+        {
+            int size = 8;
+            for (String[] stringArray : stringMatrix)
             {
-                @Override
-                public int size(final String[][] stringMatrix)
+                for (String string : stringArray)
                 {
-                    int size = 8;
-                    for (String[] stringArray : stringMatrix)
-                    {
-                        for (String string : stringArray)
-                        {
-                            size += 4 + string.getBytes(UTF8).length;
-                        }
-                    }
-                    return size;
+                    size += 4 + string.getBytes(UTF8).length;
                 }
+            }
+            return size;
+        }
 
-                @Override
-                public void serialize(final String[][] stringMatrix, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public void serialize(final String[][] stringMatrix, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            int height = stringMatrix.length;
+            int width = stringMatrix[0].length;
+            endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < height; i++)
+            {
+                Throw.when(stringMatrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                for (int j = 0; j < width; j++)
                 {
-                    int height = stringMatrix.length;
-                    int width = stringMatrix[0].length;
-                    endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < height; i++)
+                    byte[] s = stringMatrix[i][j].getBytes(UTF8);
+                    endianness.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+                    for (byte b : s)
                     {
-                        Throw.when(stringMatrix[i].length != width, SerializationException.class,
-                                "Jagged matrix is not allowed");
-                        for (int j = 0; j < width; j++)
-                        {
-                            byte[] s = stringMatrix[i][j].getBytes(UTF8);
-                            endianness.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
-                            for (byte b : s)
-                            {
-                                buffer[pointer.getAndIncrement(1)] = b;
-                            }
-                        }
+                        buffer[pointer.getAndIncrement(1)] = b;
                     }
                 }
+            }
+        }
 
-                @Override
-                public String[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
+        @Override
+        public String[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            String[][] result = new String[height][width];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
                 {
-                    int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    String[][] result = new String[height][width];
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int j = 0; j < width; j++)
-                        {
-                            int bytesUsed = endianness.decodeInt(buffer, pointer.get());
-                            result[i][j] = endianness.decodeUTF8String(buffer, pointer.get());
-                            pointer.getAndIncrement(4 + bytesUsed);
-                        }
-                    }
-                    return result;
+                    int bytesUsed = endianness.decodeInt(buffer, pointer.get());
+                    result[i][j] = endianness.decodeUTF8String(buffer, pointer.get());
+                    pointer.getAndIncrement(4 + bytesUsed);
                 }
-            };
+            }
+            return result;
+        }
+    }
 
     /** Converter for String UTF-16 matrix. */
-    public static final StringMatrixCodec STRING16_MATRIX =
-            new StringMatrixCodec(FieldTypes.STRING_UTF16_MATRIX, "String_16_matrix")
+    public static final String16MatrixCodec STRING16_MATRIX = new String16MatrixCodec();
+
+    /** Converter class for String matrix (UTF-16). */
+    public static final class String16MatrixCodec extends StringMatrixCodec
+    {
+        /** Construct the String16MatrixCodec. */
+        public String16MatrixCodec()
+        {
+            super(FieldTypes.STRING_UTF16_MATRIX, "String_16_matrix");
+        }
+
+        @Override
+        public int size(final String[][] stringMatrix)
+        {
+            int size = 8;
+            for (String[] stringArray : stringMatrix)
             {
-                @Override
-                public int size(final String[][] stringMatrix)
+                for (String string : stringArray)
                 {
-                    int size = 8;
-                    for (String[] stringArray : stringMatrix)
-                    {
-                        for (String string : stringArray)
-                        {
-                            size += 4 + string.getBytes(UTF16).length;
-                        }
-                    }
-                    return size;
+                    size += 4 + string.getBytes(UTF16).length;
                 }
+            }
+            return size;
+        }
 
-                @Override
-                public void serialize(final String[][] stringMatrix, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public void serialize(final String[][] stringMatrix, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            int height = stringMatrix.length;
+            int width = stringMatrix[0].length;
+            endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
+            for (int i = 0; i < height; i++)
+            {
+                Throw.when(stringMatrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                for (int j = 0; j < width; j++)
                 {
-                    int height = stringMatrix.length;
-                    int width = stringMatrix[0].length;
-                    endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < height; i++)
+                    // Note that according to https://stackoverflow.com/questions/74887443, String.length returns
+                    // the number of code units (i.e. the number of 16-bit char values) needed to make up the String
+                    // and not the number of Unicode codepoints.
+                    char[] chars = new char[stringMatrix[i][j].length()];
+                    stringMatrix[i][j].getChars(0, chars.length, chars, 0);
+                    endianness.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
+                    for (char c : chars)
                     {
-                        Throw.when(stringMatrix[i].length != width, SerializationException.class,
-                                "Jagged matrix is not allowed");
-                        for (int j = 0; j < width; j++)
-                        {
-                            // Note that according to https://stackoverflow.com/questions/74887443, String.length returns
-                            // the number of code units (i.e. the number of 16-bit char values) needed to make up the String
-                            // and not the number of Unicode codepoints.
-                            char[] chars = new char[stringMatrix[i][j].length()];
-                            stringMatrix[i][j].getChars(0, chars.length, chars, 0);
-                            endianness.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
-                            for (char c : chars)
-                            {
-                                endianness.encodeChar(c, buffer, pointer.getAndIncrement(2));
-                            }
-                        }
+                        endianness.encodeChar(c, buffer, pointer.getAndIncrement(2));
                     }
                 }
+            }
+        }
 
-                @Override
-                public String[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        @Override
+        public String[][] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        {
+            int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            String[][] result = new String[height][width];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
                 {
-                    int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    String[][] result = new String[height][width];
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int j = 0; j < width; j++)
-                        {
-                            result[i][j] = endianness.decodeUTF16String(buffer, pointer.get());
-                            pointer.getAndIncrement(4 + result[i][j].length() * 2);
-                        }
-                    }
-                    return result;
+                    result[i][j] = endianness.decodeUTF16String(buffer, pointer.get());
+                    pointer.getAndIncrement(4 + result[i][j].length() * 2);
                 }
-            };
+            }
+            return result;
+        }
+    };
 
 }
