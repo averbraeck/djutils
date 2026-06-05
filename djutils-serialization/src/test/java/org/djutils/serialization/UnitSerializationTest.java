@@ -125,9 +125,9 @@ public class UnitSerializationTest extends AbstractSerializationTest
             assertFalse(sdd.contains("quantity_32_unit"));
             assertFalse(sdd.contains("vector_32_unit"));
             assertFalse(sdd.contains("matrix_32_unit"));
-            assertTrue(sdd.contains("quantity_64_unit"));
-            assertTrue(sdd.contains("vector_64_unit"));
-            assertTrue(sdd.contains("matrix_64_unit"));
+            assertTrue(sdd.contains("Quantity_64_unit"));
+            assertTrue(sdd.contains("Vector_64_unit"));
+            assertTrue(sdd.contains("Matrix_64_unit"));
             for (boolean primitive : new boolean[] {false, true})
             {
                 Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
@@ -148,12 +148,12 @@ public class UnitSerializationTest extends AbstractSerializationTest
             HexDumper.hexDumper(serialized);
             String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
             assertFalse(sdd.contains("Error"));
-            assertTrue(sdd.contains("quantity_32_unit"));
-            assertTrue(sdd.contains("vector_32_unit"));
-            assertTrue(sdd.contains("matrix_32_unit"));
-            assertFalse(sdd.contains("quantity_64_unit"));
-            assertFalse(sdd.contains("vector_64_unit"));
-            assertFalse(sdd.contains("matrix_64_unit"));
+            assertTrue(sdd.contains("Quantity_32_unit"));
+            assertTrue(sdd.contains("Vector_32_unit"));
+            assertTrue(sdd.contains("Matrix_32_unit"));
+            assertFalse(sdd.contains("Quantity_64_unit"));
+            assertFalse(sdd.contains("Vector_64_unit"));
+            assertFalse(sdd.contains("Matrix_64_unit"));
             for (boolean primitive : new boolean[] {false, true})
             {
                 Object[] decodedObjects = primitive ? MessageCodec.decodeToPrimitiveDataTypes(endianness, serialized)
