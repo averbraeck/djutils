@@ -69,7 +69,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return buffer[pointer.getAndIncrement(1)];
         }
-    };
+    }
 
     /** Converter for Short. */
     public static final ShortCodec SHORT = new ShortCodec();
@@ -94,7 +94,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return endianness.decodeShort(buffer, pointer.getAndIncrement(2));
         }
-    };
+    }
 
     /** Converter for Integer. */
     public static final IntegerCodec INTEGER = new IntegerCodec();
@@ -119,7 +119,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return endianness.decodeInt(buffer, pointer.getAndIncrement(4));
         }
-    };
+    }
 
     /** Converter for Long. */
     public static final LongCodec LONG = new LongCodec();
@@ -144,7 +144,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return endianness.decodeLong(buffer, pointer.getAndIncrement(8));
         }
-    };
+    }
 
     /** Converter for Float. */
     public static final FloatCodec FLOAT = new FloatCodec();
@@ -169,7 +169,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
         }
-    };
+    }
 
     /** Converter for Double. */
     public static final DoubleCodec DOUBLE = new DoubleCodec();
@@ -194,7 +194,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
         }
-    };
+    }
 
     /** Converter for Boolean. */
     public static final BooleanCodec BOOLEAN = new BooleanCodec();
@@ -219,7 +219,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return buffer[pointer.getAndIncrement(1)] != 0;
         }
-    };
+    }
 
     /** Converter for UTF-8 Character. */
     public static final Character8Codec CHARACTER8 = new Character8Codec();
@@ -247,7 +247,7 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return Character.valueOf((char) buffer[pointer.getAndIncrement(1)]);
         }
-    };
+    }
 
     /** Converter for UTF-16 Character. */
     public static final Character16Codec CHARACTER16 = new Character16Codec();
@@ -272,6 +272,6 @@ public abstract class PrimitiveCodec<T> extends BasicCodec<T>
         {
             return endianness.decodeChar(buffer, pointer.getAndIncrement(2));
         }
-    };
+    }
 
 }

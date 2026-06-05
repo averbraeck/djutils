@@ -103,7 +103,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for short matrix. */
     public static final ShortMatrixCodec SHORT_MATRIX = new ShortMatrixCodec();
@@ -157,7 +157,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for int matrix. */
     public static final IntMatrixCodec INT_MATRIX = new IntMatrixCodec();
@@ -211,7 +211,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for long matrix. */
     public static final LongMatrixCodec LONG_MATRIX = new LongMatrixCodec();
@@ -265,7 +265,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for float matrix. */
     public static final FloatMatrixCodec FLOAT_MATRIX = new FloatMatrixCodec();
@@ -319,7 +319,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for double matrix. */
     public static final DoubleMatrixCodec DOUBLE_MATRIX = new DoubleMatrixCodec();
@@ -373,7 +373,7 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for boolean matrix. */
     public static final BooleanMatrixCodec BOOLEAN_MATRIX = new BooleanMatrixCodec();
@@ -427,6 +427,6 @@ public abstract class PrimitiveMatrixCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
 }

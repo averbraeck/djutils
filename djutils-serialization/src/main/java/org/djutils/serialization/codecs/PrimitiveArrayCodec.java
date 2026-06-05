@@ -91,7 +91,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for short array. */
     public static final ShortArrayCodec SHORT_ARRAY = new ShortArrayCodec();
@@ -134,7 +134,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for int array. */
     public static final IntArrayCodec INT_ARRAY = new IntArrayCodec();
@@ -177,7 +177,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for long array. */
     public static final LongArrayCodec LONG_ARRAY = new LongArrayCodec();
@@ -220,7 +220,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for float array. */
     public static final FloatArrayCodec FLOAT_ARRAY = new FloatArrayCodec();
@@ -263,7 +263,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for double array. */
     public static final DoubleArrayCodec DOUBLE_ARRAY = new DoubleArrayCodec();
@@ -306,7 +306,7 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
     /** Converter for boolean array. */
     public static final BooleanArrayCodec BOOLEAN_ARRAY = new BooleanArrayCodec();
@@ -349,6 +349,6 @@ public abstract class PrimitiveArrayCodec<T> extends BasicCodec<T>
             }
             return result;
         }
-    };
+    }
 
 }

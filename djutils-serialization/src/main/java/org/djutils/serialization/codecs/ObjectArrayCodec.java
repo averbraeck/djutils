@@ -127,7 +127,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
         {
             return buffer[offset];
         }
-    };
+    }
 
     /** Converter for Short array. */
     public static final ShortObjectArrayCodec SHORT_OBJECT_ARRAY = new ShortObjectArrayCodec();
@@ -152,7 +152,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
         {
             return endianness.decodeShort(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Integer array. */
     public static final IntegerObjectArrayCodec INTEGER_OBJECT_ARRAY = new IntegerObjectArrayCodec();
@@ -177,7 +177,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
         {
             return endianness.decodeInt(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Long array. */
     public static final LongObjectArrayCodec LONG_OBJECT_ARRAY = new LongObjectArrayCodec();
@@ -202,7 +202,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
         {
             return endianness.decodeLong(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Float array. */
     public static final FloatObjectArrayCodec FLOAT_OBJECT_ARRAY = new FloatObjectArrayCodec();
@@ -227,7 +227,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
         {
             return endianness.decodeFloat(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Double array. */
     public static final DoubleObjectArrayCodec DOUBLE_OBJECT_ARRAY = new DoubleObjectArrayCodec();
@@ -252,7 +252,7 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
         {
             return endianness.decodeDouble(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Boolean array. */
     public static final BooleanObjectArrayCodec BOOLEAN_OBJECT_ARRAY = new BooleanObjectArrayCodec();
@@ -277,6 +277,6 @@ public abstract class ObjectArrayCodec<E> extends BasicCodec<E[]>
         {
             return buffer[offset] != 0;
         }
-    };
+    }
 
 }

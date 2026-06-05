@@ -151,7 +151,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
         {
             return buffer[offset];
         }
-    };
+    }
 
     /** Converter for Short matrix. */
     public static final ShortMatrixCodec SHORT_OBJECT_MATRIX = new ShortMatrixCodec();
@@ -176,7 +176,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
         {
             return endianness.decodeShort(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Integer matrix. */
     public static final IntegerMatrixCodec INTEGER_OBJECT_MATRIX = new IntegerMatrixCodec();
@@ -201,7 +201,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
         {
             return endianness.decodeInt(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Long matrix. */
     public static final LongMatrixCodec LONG_OBJECT_MATRIX = new LongMatrixCodec();
@@ -226,7 +226,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
         {
             return endianness.decodeLong(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Float matrix. */
     public static final FloatMatrixCodec FLOAT_OBJECT_MATRIX = new FloatMatrixCodec();
@@ -251,7 +251,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
         {
             return endianness.decodeFloat(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Double matrix. */
     public static final DoubleMatrixCodec DOUBLE_OBJECT_MATRIX = new DoubleMatrixCodec();
@@ -276,7 +276,7 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
         {
             return endianness.decodeDouble(buffer, offset);
         }
-    };
+    }
 
     /** Converter for Boolean matrix. */
     public static final BooleanMatrixCodec BOOLEAN_OBJECT_MATRIX = new BooleanMatrixCodec();
@@ -301,6 +301,6 @@ public abstract class ObjectMatrixCodec<E> extends BasicCodec<E[][]>
         {
             return buffer[offset] != 0;
         }
-    };
+    }
 
 }

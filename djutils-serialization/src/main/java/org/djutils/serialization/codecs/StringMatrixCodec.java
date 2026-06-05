@@ -181,6 +181,6 @@ public abstract class StringMatrixCodec extends BasicCodec<String[][]>
             }
             return result;
         }
-    };
+    }
 
 }
