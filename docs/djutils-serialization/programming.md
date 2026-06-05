@@ -16,19 +16,19 @@ Each codec has a short name that can be requested with `getShortName()`. This ca
 - String arrays: "String" + "_" + number of bits for UTF type + "_array", i.e., `String_8_array` and `String_16_array`.
 - String matrices: "String" + "_" + number of bits for UTF type + "_matrix", i.e., `String_8_matrix` and `String_16_matrix`.
 
-All djunits quantity, vector and matrix types have a `float` and `double` variant, indicated by the number of bits (32 or 64), and carry the term `unit` to denote that a unit is attached. Absolute quantity, vector and matrix types have a short name that starts with `abs_`.
+All djunits quantity, vector and matrix types have a `float` and `double` variant, indicated by the number of bits (32 or 64), and carry the term `unit` to denote that a unit is attached. Absolute quantity, vector and matrix types have a short name that starts with `Abs`.
 
-- Quantity: "quantity_" + nr of bits + "_unit", i.e., `quantity_32_unit` and `quantity_64_unit`.
-- Absolute Quantity: "abs_quantity_" + nr of bits + "_unit", i.e., `abs_quantity_32_unit` and `abs_quantity_64_unit`.
-- Vector: "vector_" + nr of bits + "_unit", i.e., `vector_32_unit` and `vector_64_unit`.
-- Absolute Vector: "abs_vector_" + nr of bits + "_unit", i.e., `abs_vector_32_unit` and `abs_vector_64_unit`.
-- Matrix: "matrix_" + nr of bits + "_unit", i.e., `matrix_32_unit` and `matrix_64_unit`.
-- Absolute Matrix: "abs_matrix_" + nr of bits + "_unit", i.e., `abs_matrix_32_unit` and `abs_matrix_64_unit`.
+- Quantity: "Quantity_" + nr of bits + "_unit", i.e., `Quantity_32_unit` and `Quantity_64_unit`.
+- Absolute Quantity: "AbsQuantity_" + nr of bits + "_unit", i.e., `AbsQuantity_32_unit` and `AbsQuantity_64_unit`.
+- Vector: "Vector_" + nr of bits + "_unit", i.e., `Vector_32_unit` and `Vector_64_unit`.
+- Absolute Vector: "AbsVector_" + nr of bits + "_unit", i.e., `AbsVector_32_unit` and `AbsVector_64_unit`.
+- Matrix: "Matrix_" + nr of bits + "_unit", i.e., `Matrix_32_unit` and `Matrix_64_unit`.
+- Absolute Matrix: "AbsMatrix_" + nr of bits + "_unit", i.e., `AbsMatrix_32_unit` and `AbsMatrix_64_unit`.
 
-The vector arrays are special, since they distinguish between arrays of row vectors (with the unit per row), and arrays of column vectors (spreadsheet-like, with the unit per column). Therefore, they carry the following elements: `vector`, `32` or `64`, `row` or `column`, `array`, and `unit`:
+The vector arrays are special, since they distinguish between arrays of row vectors (with the unit per row), and arrays of column vectors (spreadsheet-like, with the unit per column). Therefore, they carry the following elements: `Vector`, `32` or `64`, `row` or `column`, `array`, and `unit`:
 
-- Array of column vectors: `vector_32_col_array_unit` and `vector_64_col_array_unit`.
-- Array of row vectors: `vector_32_row_array_unit` and `vector_64_row_array_unit`.
+- Array of column vectors: `Vector_32_col_array_unit` and `Vector_64_col_array_unit`.
+- Array of row vectors: `Vector_32_row_array_unit` and `Vector_64_row_array_unit`.
 
 
 ## Serializing and deserializing objects
