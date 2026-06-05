@@ -46,7 +46,7 @@ public class PrimitiveCodecTest
                 assertEquals(2, buffer.length);
                 assertEquals(0, buffer[0]);
                 assertEquals(b, buffer[1]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Byte db)
                     assertEquals(b, db.byteValue());
                 else
@@ -62,7 +62,7 @@ public class PrimitiveCodecTest
                 assertEquals(2, buffer.length);
                 assertEquals(0, buffer[0]);
                 assertEquals(b, buffer[1]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Byte db)
                     assertEquals(b, db);
                 else
@@ -94,7 +94,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(s, endianness);
                 assertEquals(3, buffer.length);
                 assertEquals(1, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Short ds)
                     assertEquals(s, ds.shortValue());
                 else
@@ -109,7 +109,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(s, endianness);
                 assertEquals(3, buffer.length);
                 assertEquals(1, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Short ds)
                     assertEquals(s, ds);
                 else
@@ -141,7 +141,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(i, endianness);
                 assertEquals(5, buffer.length);
                 assertEquals(2, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Integer di)
                     assertEquals(i, di.intValue());
                 else
@@ -156,7 +156,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(i, endianness);
                 assertEquals(5, buffer.length);
                 assertEquals(2, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Integer di)
                     assertEquals(i, di);
                 else
@@ -188,7 +188,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(l, endianness);
                 assertEquals(9, buffer.length);
                 assertEquals(3, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Long dl)
                     assertEquals(l, dl.longValue());
                 else
@@ -203,7 +203,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(l, endianness);
                 assertEquals(9, buffer.length);
                 assertEquals(3, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Long dl)
                     assertEquals(l, dl);
                 else
@@ -236,7 +236,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(f, endianness);
                 assertEquals(5, buffer.length);
                 assertEquals(4, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Float df)
                     assertEquals(f, df.floatValue());
                 else
@@ -252,7 +252,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(f, endianness);
                 assertEquals(5, buffer.length);
                 assertEquals(4, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Float df)
                     assertEquals(f, df);
                 else
@@ -285,7 +285,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(d, endianness);
                 assertEquals(9, buffer.length);
                 assertEquals(5, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Double dd)
                     assertEquals(d, dd.doubleValue());
                 else
@@ -301,7 +301,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(d, endianness);
                 assertEquals(9, buffer.length);
                 assertEquals(5, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Double dd)
                     assertEquals(d, dd);
                 else
@@ -333,7 +333,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(b, endianness);
                 assertEquals(2, buffer.length);
                 assertEquals(6, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Boolean db)
                     assertEquals(b, db.booleanValue());
                 else
@@ -348,7 +348,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encode(d, endianness);
                 assertEquals(2, buffer.length);
                 assertEquals(6, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Boolean db)
                     assertEquals(d, db);
                 else
@@ -380,7 +380,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encodeUTF8(c, endianness);
                 assertEquals(2, buffer.length);
                 assertEquals(7, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Character dc)
                     assertEquals(c, dc.charValue());
                 else
@@ -395,7 +395,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encodeUTF8(c, endianness);
                 assertEquals(2, buffer.length);
                 assertEquals(7, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Character dc)
                     assertEquals(c, dc);
                 else
@@ -444,7 +444,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encodeUTF16(c, endianness);
                 assertEquals(3, buffer.length);
                 assertEquals(8, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Character dc)
                     assertEquals(c, dc.charValue());
                 else
@@ -459,7 +459,7 @@ public class PrimitiveCodecTest
                 byte[] buffer = Codec.encodeUTF16(c, endianness);
                 assertEquals(3, buffer.length);
                 assertEquals(8, buffer[0]);
-                Object decoded = Codec.decodeToPrimitiveDataTypes(endianness, buffer);
+                Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Character dc)
                     assertEquals(c, dc);
                 else
