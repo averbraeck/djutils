@@ -149,8 +149,9 @@ public class SerialDataDecoder implements Decoder
      */
     private boolean processFieldTypeByte(final byte fieldType)
     {
+        // TODO: See what to do about primitive versus object decoders
         this.currentFieldType = fieldType;
-        this.currentCodec = Codec.getDecoders().get(this.currentFieldType);
+        this.currentCodec = Codec.getPrimitiveDecoders().get(this.currentFieldType);
         if (this.currentCodec == null)
         {
             this.buffer.append(String.format("Error: Bad field type %02x - resynchronizing", this.currentFieldType));
