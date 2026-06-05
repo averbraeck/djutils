@@ -51,6 +51,7 @@ Hello world -> Hello world, equals = true
 
 The actual work to (de)serialize content is done by the so-called `Codec` classes. Codec stands for coder-decoder. Similar 
 codecs are grouped into the same class. The following `Codec` classes exist:
+
 - `PrimitiveCodec` for primitive types `byte`, `short`, `int`, `long`, `float`, `double` and `char`, as well as the object wrappers `Byte`, `Short`, `Integer`, `Long`, `Float`, `Double` and `Character`.
 - `PrimitiveArrayCodec` for arrays of primitive types `byte[]`, `short[]`, `int[]`, `long[]`, `float[]`, `double[]` and `char[]`.
 - `PrimitiveMatrixCodec` for double arrays of primitive types `byte[][]`, `short[][]`, `int[][]`, `long[][]`, `float[][]`, `double[][]` and `char[][]`.
