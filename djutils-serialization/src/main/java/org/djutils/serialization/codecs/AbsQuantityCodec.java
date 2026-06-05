@@ -41,69 +41,85 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
     }
 
     /** Converter for Absolute Quantity with a float value. */
-    public static final BasicCodec<AbsBasic<?, ?, ?>> ABS_QUANTITY_FLOAT =
-            new AbsQuantityCodec(FieldTypes.FLOAT_32_UNIT_ABS, "abs_quantity_32_unit")
-            {
-                @Override
-                public int size(final AbsBasic<?, ?, ?> absQuantity)
-                {
-                    return 2 + 4 + 1 + 4 + absQuantity.getReference().getId().length();
-                }
+    public static final AbsFloatQuantityCodec ABS_QUANTITY_FLOAT = new AbsFloatQuantityCodec();
 
-                @Override
-                public void serialize(final AbsBasic<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    AbsUnitCodec.encodeAbsQuantityUnit(absQuantity, buffer, pointer);
-                    StringCodec.STRING8.serializeWithPrefix(absQuantity.getReference().getId(), buffer, pointer, endianness);
-                    float v = (float) absQuantity.si();
-                    endianness.encodeDouble(v, buffer, pointer.getAndIncrement(4));
-                }
+    /** Converter class for Absolute Quantity with a float value. */
+    public static final class AbsFloatQuantityCodec extends AbsQuantityCodec
+    {
+        /** Construct the AbsFloatQuantityCodec. */
+        public AbsFloatQuantityCodec()
+        {
+            super(FieldTypes.FLOAT_32_UNIT_ABS, "abs_quantity_32_unit");
+        }
 
-                @Override
-                public AbsBasic<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
-                    Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
-                    String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
-                    Quantity<?> quantity = unit.ofSi(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)));
-                    UnitCodec.setDisplayUnit(quantity, unit);
-                    return AbsHelper.instantiateAbsQuantity(quantity, refStr);
-                }
-            };
+        @Override
+        public int size(final AbsBasic<?, ?, ?> absQuantity)
+        {
+            return 2 + 4 + 1 + 4 + absQuantity.getReference().getId().length();
+        }
+
+        @Override
+        public void serialize(final AbsBasic<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            AbsUnitCodec.encodeAbsQuantityUnit(absQuantity, buffer, pointer);
+            StringCodec.STRING8.serializeWithPrefix(absQuantity.getReference().getId(), buffer, pointer, endianness);
+            float v = (float) absQuantity.si();
+            endianness.encodeDouble(v, buffer, pointer.getAndIncrement(4));
+        }
+
+        @Override
+        public AbsBasic<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
+            String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
+            Quantity<?> quantity = unit.ofSi(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)));
+            UnitCodec.setDisplayUnit(quantity, unit);
+            return AbsHelper.instantiateAbsQuantity(quantity, refStr);
+        }
+    }
 
     /** Converter for Quantity with a double value. */
-    public static final BasicCodec<AbsBasic<?, ?, ?>> ABS_QUANTITY_DOUBLE =
-            new AbsQuantityCodec(FieldTypes.DOUBLE_64_UNIT_ABS, "abs_quantity_64_unit")
-            {
-                @Override
-                public int size(final AbsBasic<?, ?, ?> absQuantity)
-                {
-                    return 2 + 8 + 1 + 4 + absQuantity.getReference().getId().length();
-                }
+    public static final AbsDoubleQuantityCodec ABS_QUANTITY_DOUBLE = new AbsDoubleQuantityCodec();
 
-                @Override
-                public void serialize(final AbsBasic<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    AbsUnitCodec.encodeAbsQuantityUnit(absQuantity, buffer, pointer);
-                    StringCodec.STRING8.serializeWithPrefix(absQuantity.getReference().getId(), buffer, pointer, endianness);
-                    double v = absQuantity.si();
-                    endianness.encodeDouble(v, buffer, pointer.getAndIncrement(8));
-                }
+    /** Converter class for Absolute Quantity with a double value. */
+    public static final class AbsDoubleQuantityCodec extends AbsQuantityCodec
+    {
+        /** Construct the AbsDoubleQuantityCodec. */
+        public AbsDoubleQuantityCodec()
+        {
+            super(FieldTypes.DOUBLE_64_UNIT_ABS, "abs_quantity_64_unit");
+        }
 
-                @Override
-                public AbsBasic<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
-                        throws SerializationException
-                {
-                    Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
-                    Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
-                    String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
-                    Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)));
-                    UnitCodec.setDisplayUnit(quantity, unit);
-                    return AbsHelper.instantiateAbsQuantity(quantity, refStr);
-                }
-            };
+        @Override
+        public int size(final AbsBasic<?, ?, ?> absQuantity)
+        {
+            return 2 + 8 + 1 + 4 + absQuantity.getReference().getId().length();
+        }
+
+        @Override
+        public void serialize(final AbsBasic<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            AbsUnitCodec.encodeAbsQuantityUnit(absQuantity, buffer, pointer);
+            StringCodec.STRING8.serializeWithPrefix(absQuantity.getReference().getId(), buffer, pointer, endianness);
+            double v = absQuantity.si();
+            endianness.encodeDouble(v, buffer, pointer.getAndIncrement(8));
+        }
+
+        @Override
+        public AbsBasic<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
+            String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
+            Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)));
+            UnitCodec.setDisplayUnit(quantity, unit);
+            return AbsHelper.instantiateAbsQuantity(quantity, refStr);
+        }
+    }
 
 }
