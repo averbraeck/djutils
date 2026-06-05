@@ -42,221 +42,253 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
     }
 
     /** Converter for Quantity Column Vector Array with float values. */
-    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> COL_VECTOR_ARRAY_FLOAT =
-            new VectorArrayCodec(FieldTypes.FLOAT_32_UNIT_COL_VECTOR_ARRAY, "vector_32_col_array_unit")
+    public static final FloatColVectorArrayCodec COL_VECTOR_ARRAY_FLOAT = new FloatColVectorArrayCodec();
+
+    /** Converter class for Quantity Column Vector Array with float values. */
+    public static final class FloatColVectorArrayCodec extends VectorArrayCodec
+    {
+        /** Construct the FloatColVectorArrayCodec. */
+        public FloatColVectorArrayCodec()
+        {
+            super(FieldTypes.FLOAT_32_UNIT_COL_VECTOR_ARRAY, "Vector_32_col_array_unit");
+        }
+
+        @Override
+        public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+        {
+            return 4 + 4 + 2 * vector.length + 4 * vector.length * vector[0].size();
+        }
+
+        @Override
+        public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
+            for (int v = 0; v < vector.length; v++)
             {
-                @Override
-                public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+                UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
+            }
+            for (int i = 0; i < vector[0].size(); i++)
+            {
+                for (int v = 0; v < vector.length; v++)
                 {
-                    return 4 + 4 + 2 * vector.length + 4 * vector.length * vector[0].size();
+                    endianness.encodeFloat((float) vector[v].get(i).si(), buffer, pointer.getAndIncrement(4));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
+            Unit<?, ?>[] unitArray = new Unit[vecs];
+            for (int v = 0; v < vecs; v++)
+            {
+                unitArray[v] = UnitCodec.getUnit(buffer, pointer);
+            }
+            float[][] dataSi = new float[vecs][rows];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int v = 0; v < vecs; v++)
                 {
-                    endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
-                    for (int v = 0; v < vector.length; v++)
-                    {
-                        UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
-                    }
-                    for (int i = 0; i < vector[0].size(); i++)
-                    {
-                        for (int v = 0; v < vector.length; v++)
-                        {
-                            endianness.encodeFloat((float) vector[v].get(i).si(), buffer, pointer.getAndIncrement(4));
-                        }
-                    }
+                    dataSi[v][i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
                 }
-
-                @Override
-                public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
-                    Unit<?, ?>[] unitArray = new Unit[vecs];
-                    for (int v = 0; v < vecs; v++)
-                    {
-                        unitArray[v] = UnitCodec.getUnit(buffer, pointer);
-                    }
-                    float[][] dataSi = new float[vecs][rows];
-                    for (int i = 0; i < rows; i++)
-                    {
-                        for (int v = 0; v < vecs; v++)
-                        {
-                            dataSi[v][i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
-                        }
-                    }
-                    for (int v = 0; v < vecs; v++)
-                    {
-                        Unit<?, ?> unit = unitArray[v];
-                        VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi[v], rows, 1), unit);
-                        UnitCodec.setDisplayUnit(vector, unit);
-                        vectorArray[v] = vector;
-                    }
-                    return vectorArray;
-                }
-            };
+            }
+            for (int v = 0; v < vecs; v++)
+            {
+                Unit<?, ?> unit = unitArray[v];
+                VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi[v], rows, 1), unit);
+                UnitCodec.setDisplayUnit(vector, unit);
+                vectorArray[v] = vector;
+            }
+            return vectorArray;
+        }
+    }
 
     /** Converter for Quantity Column Vector Array with double values. */
-    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> COL_VECTOR_ARRAY_DOUBLE =
-            new VectorArrayCodec(FieldTypes.DOUBLE_64_UNIT_COL_VECTOR_ARRAY, "vector_64_col_array_unit")
+    public static final DoubleColVectorArrayCodec COL_VECTOR_ARRAY_DOUBLE = new DoubleColVectorArrayCodec();
+
+    /** Converter class for Quantity Column Vector Array with double values. */
+    public static final class DoubleColVectorArrayCodec extends VectorArrayCodec
+    {
+        /** Construct the DoubleColVectorArrayCodec. */
+        public DoubleColVectorArrayCodec()
+        {
+            super(FieldTypes.DOUBLE_64_UNIT_COL_VECTOR_ARRAY, "Vector_64_col_array_unit");
+        }
+
+        @Override
+        public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+        {
+            return 4 + 4 + 2 * vector.length + 8 * vector.length * vector[0].size();
+        }
+
+        @Override
+        public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
+            for (int v = 0; v < vector.length; v++)
             {
-                @Override
-                public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+                UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
+            }
+            for (int i = 0; i < vector[0].size(); i++)
+            {
+                for (int v = 0; v < vector.length; v++)
                 {
-                    return 4 + 4 + 2 * vector.length + 8 * vector.length * vector[0].size();
+                    endianness.encodeDouble(vector[v].get(i).si(), buffer, pointer.getAndIncrement(8));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
+            Unit<?, ?>[] unitArray = new Unit[vecs];
+            for (int v = 0; v < vecs; v++)
+            {
+                unitArray[v] = UnitCodec.getUnit(buffer, pointer);
+            }
+            double[][] dataSi = new double[vecs][rows];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int v = 0; v < vecs; v++)
                 {
-                    endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
-                    for (int v = 0; v < vector.length; v++)
-                    {
-                        UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
-                    }
-                    for (int i = 0; i < vector[0].size(); i++)
-                    {
-                        for (int v = 0; v < vector.length; v++)
-                        {
-                            endianness.encodeDouble(vector[v].get(i).si(), buffer, pointer.getAndIncrement(8));
-                        }
-                    }
+                    dataSi[v][i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
                 }
-
-                @Override
-                public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
-                    Unit<?, ?>[] unitArray = new Unit[vecs];
-                    for (int v = 0; v < vecs; v++)
-                    {
-                        unitArray[v] = UnitCodec.getUnit(buffer, pointer);
-                    }
-                    double[][] dataSi = new double[vecs][rows];
-                    for (int i = 0; i < rows; i++)
-                    {
-                        for (int v = 0; v < vecs; v++)
-                        {
-                            dataSi[v][i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
-                        }
-                    }
-                    for (int v = 0; v < vecs; v++)
-                    {
-                        Unit<?, ?> unit = unitArray[v];
-                        VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi[v], rows, 1), unit);
-                        UnitCodec.setDisplayUnit(vector, unit);
-                        vectorArray[v] = vector;
-                    }
-                    return vectorArray;
-                }
-            };
+            }
+            for (int v = 0; v < vecs; v++)
+            {
+                Unit<?, ?> unit = unitArray[v];
+                VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi[v], rows, 1), unit);
+                UnitCodec.setDisplayUnit(vector, unit);
+                vectorArray[v] = vector;
+            }
+            return vectorArray;
+        }
+    }
 
     /** Converter for Quantity Row Vector Array with float values. */
-    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> ROW_VECTOR_ARRAY_FLOAT =
-            new VectorArrayCodec(FieldTypes.FLOAT_32_UNIT_ROW_VECTOR_ARRAY, "vector_32_row_array_unit")
+    public static final FloatColVectorArrayCodec ROW_VECTOR_ARRAY_FLOAT = new FloatColVectorArrayCodec();
+
+    /** Converter class for Quantity Row Vector Array with float values. */
+    public static final class FloatRowVectorArrayCodec extends VectorArrayCodec
+    {
+        /** Construct the FloatRowVectorArrayCodec. */
+        public FloatRowVectorArrayCodec()
+        {
+            super(FieldTypes.FLOAT_32_UNIT_ROW_VECTOR_ARRAY, "Vector_32_row_array_unit");
+        }
+
+        @Override
+        public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+        {
+            return 4 + 4 + 2 * vector.length + 4 * vector.length * vector[0].size();
+        }
+
+        @Override
+        public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
+            for (int v = 0; v < vector.length; v++)
             {
-                @Override
-                public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+                UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
+                for (int i = 0; i < vector[v].size(); i++)
                 {
-                    return 4 + 4 + 2 * vector.length + 4 * vector.length * vector[0].size();
+                    endianness.encodeFloat((float) vector[v].get(i).si(), buffer, pointer.getAndIncrement(4));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
+            for (int v = 0; v < vecs; v++)
+            {
+                Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                float[] dataSi = new float[cols];
+                for (int i = 0; i < cols; i++)
                 {
-                    endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
-                    for (int v = 0; v < vector.length; v++)
-                    {
-                        UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
-                        for (int i = 0; i < vector[v].size(); i++)
-                        {
-                            endianness.encodeFloat((float) vector[v].get(i).si(), buffer, pointer.getAndIncrement(4));
-                        }
-                    }
+                    dataSi[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
                 }
-
-                @Override
-                public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
-                    for (int v = 0; v < vecs; v++)
-                    {
-                        Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
-                        float[] dataSi = new float[cols];
-                        for (int i = 0; i < cols; i++)
-                        {
-                            dataSi[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
-                        }
-                        VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, 1, cols), unit);
-                        UnitCodec.setDisplayUnit(vector, unit);
-                        vectorArray[v] = vector;
-                    }
-                    return vectorArray;
-                }
-            };
+                VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, 1, cols), unit);
+                UnitCodec.setDisplayUnit(vector, unit);
+                vectorArray[v] = vector;
+            }
+            return vectorArray;
+        }
+    }
 
     /** Converter for Quantity Row Vector Array with double values. */
-    public static final BasicCodec<Vector<?, ?, ?, ?, ?>[]> ROW_VECTOR_ARRAY_DOUBLE =
-            new VectorArrayCodec(FieldTypes.DOUBLE_64_UNIT_ROW_VECTOR_ARRAY, "vector_64_row_array_unit")
+    public static final DoubleColVectorArrayCodec ROW_VECTOR_ARRAY_DOUBLE = new DoubleColVectorArrayCodec();
+
+    /** Converter class for Quantity Row Vector Array with double values. */
+    public static final class DoubleRowVectorArrayCodec extends VectorArrayCodec
+    {
+        /** Construct the DoubleRowVectorArrayCodec. */
+        public DoubleRowVectorArrayCodec()
+        {
+            super(FieldTypes.DOUBLE_64_UNIT_ROW_VECTOR_ARRAY, "Vector_64_row_array_unit");
+        }
+
+        @Override
+        public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+        {
+            return 4 + 4 + 2 * vector.length + 8 * vector.length * vector[0].size();
+        }
+
+        @Override
+        public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
+                final Endianness endianness) throws SerializationException
+        {
+            endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
+            endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
+            for (int v = 0; v < vector.length; v++)
             {
-                @Override
-                public int size(final Vector<?, ?, ?, ?, ?>[] vector)
+                UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
+                for (int i = 0; i < vector[v].size(); i++)
                 {
-                    return 4 + 4 + 2 * vector.length + 8 * vector.length * vector[0].size();
+                    endianness.encodeDouble(vector[v].get(i).si(), buffer, pointer.getAndIncrement(8));
                 }
+            }
+        }
 
-                @Override
-                public void serialize(final Vector<?, ?, ?, ?, ?>[] vector, final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
+        @Override
+        public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+                throws SerializationException
+        {
+            int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
+            for (int v = 0; v < vecs; v++)
+            {
+                Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                double[] dataSi = new double[cols];
+                for (int i = 0; i < cols; i++)
                 {
-                    endianness.encodeInt(vector.length, buffer, pointer.getAndIncrement(4));
-                    endianness.encodeInt(vector[0].size(), buffer, pointer.getAndIncrement(4));
-                    for (int v = 0; v < vector.length; v++)
-                    {
-                        UnitCodec.encodeQuantityUnit(vector[v].get(0), buffer, pointer);
-                        for (int i = 0; i < vector[v].size(); i++)
-                        {
-                            endianness.encodeDouble(vector[v].get(i).si(), buffer, pointer.getAndIncrement(8));
-                        }
-                    }
+                    dataSi[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
                 }
-
-                @Override
-                public Vector<?, ?, ?, ?, ?>[] deserialize(final byte[] buffer, final Pointer pointer,
-                        final Endianness endianness) throws SerializationException
-                {
-                    int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
-                    for (int v = 0; v < vecs; v++)
-                    {
-                        Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
-                        double[] dataSi = new double[cols];
-                        for (int i = 0; i < cols; i++)
-                        {
-                            dataSi[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
-                        }
-                        VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, 1, cols), unit);
-                        UnitCodec.setDisplayUnit(vector, unit);
-                        vectorArray[v] = vector;
-                    }
-                    return vectorArray;
-                }
-            };
+                VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, 1, cols), unit);
+                UnitCodec.setDisplayUnit(vector, unit);
+                vectorArray[v] = vector;
+            }
+            return vectorArray;
+        }
+    }
 
 }
