@@ -47,7 +47,7 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
         /** Construct the FloatQuantityCodec. */
         public FloatQuantityCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT, "quantity_32_unit");
+            super(FieldTypes.FLOAT_32_UNIT, "Quantity_32_unit");
         }
 
         @Override
@@ -85,7 +85,7 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
         /** Construct the DoubleQuantityCodec. */
         public DoubleQuantityCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT, "quantity_64_unit");
+            super(FieldTypes.DOUBLE_64_UNIT, "Quantity_64_unit");
         }
 
         @Override

@@ -50,7 +50,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
         /** Construct the FloatMatrixCodec. */
         public FloatMatrixCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT_MATRIX, "matrix_32_unit");
+            super(FieldTypes.FLOAT_32_UNIT_MATRIX, "Matrix_32_unit");
         }
 
         @Override
@@ -106,7 +106,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
         /** Construct the DoubleMatrixCodec. */
         public DoubleMatrixCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT_MATRIX, "matrix_64_unit");
+            super(FieldTypes.DOUBLE_64_UNIT_MATRIX, "Matrix_64_unit");
         }
 
         @Override

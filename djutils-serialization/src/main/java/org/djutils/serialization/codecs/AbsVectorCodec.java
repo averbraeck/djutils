@@ -51,7 +51,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
         /** Construct the AbsFloatVectorCodec. */
         public AbsFloatVectorCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT_ABS_ARRAY, "abs_vector_32_unit");
+            super(FieldTypes.FLOAT_32_UNIT_ABS_ARRAY, "AbsVector_32_unit");
         }
 
         @Override
@@ -101,7 +101,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
         /** Construct the AbsDoubleVectorCodec. */
         public AbsDoubleVectorCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT_ABS_ARRAY, "abs_vector_64_unit");
+            super(FieldTypes.DOUBLE_64_UNIT_ABS_ARRAY, "AbsVector_64_unit");
         }
 
         @Override

@@ -51,7 +51,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
         /** Construct the AbsFloatMatrixCodec. */
         public AbsFloatMatrixCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT_ABS_MATRIX, "abs_matrix_32_unit");
+            super(FieldTypes.FLOAT_32_UNIT_ABS_MATRIX, "AbsMatrix_32_unit");
         }
 
         @Override
@@ -110,7 +110,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
         /** Construct the AbsDoubleMatrixCodec. */
         public AbsDoubleMatrixCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT_ABS_MATRIX, "abs_matrix_64_unit");
+            super(FieldTypes.DOUBLE_64_UNIT_ABS_MATRIX, "AbsMatrix_64_unit");
         }
 
         @Override

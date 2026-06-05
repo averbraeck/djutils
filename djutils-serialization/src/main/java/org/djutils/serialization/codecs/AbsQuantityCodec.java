@@ -49,7 +49,7 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
         /** Construct the AbsFloatQuantityCodec. */
         public AbsFloatQuantityCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT_ABS, "abs_quantity_32_unit");
+            super(FieldTypes.FLOAT_32_UNIT_ABS, "AbsQuantity_32_unit");
         }
 
         @Override
@@ -90,7 +90,7 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
         /** Construct the AbsDoubleQuantityCodec. */
         public AbsDoubleQuantityCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT_ABS, "abs_quantity_64_unit");
+            super(FieldTypes.DOUBLE_64_UNIT_ABS, "AbsQuantity_64_unit");
         }
 
         @Override

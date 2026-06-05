@@ -50,7 +50,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
         /** Construct the FloatVectorCodec. */
         public FloatVectorCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT_ARRAY, "vector_32_unit");
+            super(FieldTypes.FLOAT_32_UNIT_ARRAY, "Vector_32_unit");
         }
 
         @Override
@@ -97,7 +97,7 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
         /** Construct the DoubleVectorCodec. */
         public DoubleVectorCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT_ARRAY, "vector_64_unit");
+            super(FieldTypes.DOUBLE_64_UNIT_ARRAY, "Vector_64_unit");
         }
 
         @Override
