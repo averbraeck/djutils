@@ -1,6 +1,72 @@
 # Programming
 
+## Introduction
+
+The library offers several methods to make it easy to encode an object into a byte string, according to the djutils-serialization standards.
+The `Codec` class offers methods to encode and decode a single object. As an example:
+
+```java
+Length length = length.of(20.0, 'km');
+byte[] buffer = Codec.encode(length, Endianness.BIG_ENDIAN);
+// ...
+Length decoded = Codec.decodeToObjectDataType(Endianness.BIG_ENDIAN, buffer);
+System.out.println(String.format("%s -> %s, equals = %b", length.toString(), 
+    decoded.toString(), length.equals(decoded)));
+```
+
+which prints:
+
+```
+20 km -> 20 km, equals = true
+```
+
+It is also possible to encode / decode an array of objects into / from one `byte[]` buffer:
+
+```java
+int[] array = new int[] {1, 2, 4, 8, 16, 32};
+VectorN.Col<Area> vector = VectorN.Col.of(new double[] {12.0, 24.0}, Area.Unit.km2);
+String string = "Hello world";
+byte[] buffer = MessageCodec.encode(Endianness.BIG_ENDIAN, array, vector, string);
+Object[] decoded = MessageCodec.decodeToPrimitiveDataTypes(Endianness.BIG_ENDIAN, buffer);
+System.out.println(String.format("%s -> %s, equals = %b", Arrays.toString(array), 
+    Arrays.toString((int[]) decoded[0]), Arrays.equals(array, (int[]) decoded[0])));
+System.out.println(String.format("%s -> %s, equals = %b", 
+    vector.format(VectorFormat.Row.instance()), 
+    ((VectorN.Col<?>) decoded[1]).format(VectorFormat.Row.instance()), 
+    vector.equals(decoded[1])));
+System.out.println(String.format("%s -> %s, equals = %b", string, (String) decoded[2], 
+    string.equals(decoded[2])));
+```
+
+which prints:
+
+```
+[1, 2, 4, 8, 16, 32] -> [1, 2, 4, 8, 16, 32], equals = true
+[12, 24] km2 -> [12, 24] km2, equals = true
+Hello world -> Hello world, equals = true
+```
+
+
 ## Codecs
+
+The actual work to (de)serialize content is done by the so-called `Codec` classes. Codec stands for coder-decoder. Similar 
+codecs are grouped into the same class. The following `Codec` classes exist:
+- `PrimitiveCodec` for primitive types `byte`, `short`, `int`, `long`, `float`, `double` and `char`, as well as the object wrappers `Byte`, `Short`, `Integer`, `Long`, `Float`, `Double` and `Character`.
+- `PrimitiveArrayCodec` for arrays of primitive types `byte[]`, `short[]`, `int[]`, `long[]`, `float[]`, `double[]` and `char[]`.
+- `PrimitiveMatrixCodec` for double arrays of primitive types `byte[][]`, `short[][]`, `int[][]`, `long[][]`, `float[][]`, `double[][]` and `char[][]`.
+- `ObjectArrayCodec` for arrays of object wrappers of primitive types `Byte[]`, `Short[]`, `Integer[]`, `Long[]`, `Float[]`, and `Double[]`.
+- `ObjectMatrixCodec` for double arrays of object wrappers of primitive types `Byte[][]`, `Short[][]`, `Integer[][]`, `Long[][]`, `Float[][]`, and `Ddouble[][]`.
+- `StringCodec` for `String` objects (as UTF-8 or UTF-16).
+- `StringArrayCodec` for `String[]` objects (as UTF-8 or UTF-16).
+- `StringMatrixCodec` for `String[][]` objects (as UTF-8 or UTF-16).
+- `QuantityCodec` for djunits `Quantity` objects (with float or double precision).
+- `VectorCodec` for djunits `Vector` objects (with float or double precision).
+- `MatrixCodec` for djunits `Matrix` objects (with float or double precision).
+- `AbsQuantityCodec` for djunits `AbsQuantity` objects (with float or double precision).
+- `AbsVectorCodec` for djunits `AbsVector` objects (with float or double precision).
+- `AbsMatrixCodec` for djunits `AbsMatrix` objects (with float or double precision).
+- `VectorArrayCodec` for row arrays or column arrays of djunits `Vector` objects (with float or double precision), where each row or column can be of a different quantity and/or unit.
+
 
 ## Short names for codecs
 
