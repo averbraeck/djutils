@@ -109,16 +109,16 @@ public class SimpleSerializationTest
         assertNotEquals(intSerBE, intSerLE);
         assertEquals(intBE, intLE);
 
-        assertEquals(Integer.valueOf(value), Codec.decodeToObjectDataTypes(Endianness.BIG_ENDIAN, intSerBE));
+        assertEquals(Integer.valueOf(value), Codec.decodeToObjectDataType(Endianness.BIG_ENDIAN, intSerBE));
         assertArrayEquals(new Object[] {Integer.valueOf(value)},
                 MessageCodec.decodeToObjectDataTypes(Endianness.BIG_ENDIAN, intSerBE));
-        assertEquals(value, Codec.decodeToPrimitiveDataTypes(Endianness.BIG_ENDIAN, intSerBE));
+        assertEquals(value, Codec.decodeToPrimitiveDataType(Endianness.BIG_ENDIAN, intSerBE));
         assertArrayEquals(new Object[] {value}, MessageCodec.decodeToPrimitiveDataTypes(Endianness.BIG_ENDIAN, intSerBE));
 
-        assertEquals(Integer.valueOf(value), Codec.decodeToObjectDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
+        assertEquals(Integer.valueOf(value), Codec.decodeToObjectDataType(Endianness.LITTLE_ENDIAN, intSerLE));
         assertArrayEquals(new Object[] {Integer.valueOf(value)},
                 MessageCodec.decodeToObjectDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
-        assertEquals(value, Codec.decodeToPrimitiveDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
+        assertEquals(value, Codec.decodeToPrimitiveDataType(Endianness.LITTLE_ENDIAN, intSerLE));
         assertArrayEquals(new Object[] {value}, MessageCodec.decodeToPrimitiveDataTypes(Endianness.LITTLE_ENDIAN, intSerLE));
     }
 
@@ -313,8 +313,8 @@ public class SimpleSerializationTest
         UnitTest.testFail(() -> Codec.decodeCharUtf8(endianness, buffer2), SerializationException.class);
         UnitTest.testFail(() -> Codec.decodeCharUtf16(endianness, buffer2), SerializationException.class);
 
-        UnitTest.testFail(() -> Codec.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
-        UnitTest.testFail(() -> Codec.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeToObjectDataType(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> Codec.decodeToPrimitiveDataType(endianness, buffer), SerializationException.class);
         UnitTest.testFail(() -> MessageCodec.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
         UnitTest.testFail(() -> MessageCodec.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
     }

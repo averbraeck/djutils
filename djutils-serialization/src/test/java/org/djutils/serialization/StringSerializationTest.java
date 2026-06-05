@@ -150,7 +150,7 @@ public class StringSerializationTest extends AbstractSerializationTest
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_array" : "String_16_array"));
-                String[] decodedObjects = (String[]) Codec.decodeToObjectDataTypes(endianness, serialized);
+                String[] decodedObjects = (String[]) Codec.decodeToObjectDataType(endianness, serialized);
                 assertEquals(sa.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < sa.length; i++)
                 {
@@ -186,7 +186,7 @@ public class StringSerializationTest extends AbstractSerializationTest
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_matrix" : "String_16_matrix"));
-                String[][] decodedObjects = (String[][]) Codec.decodeToObjectDataTypes(endianness, serialized);
+                String[][] decodedObjects = (String[][]) Codec.decodeToObjectDataType(endianness, serialized);
                 assertEquals(sm.length, decodedObjects.length, "Row size of decoded matches");
                 for (int i = 0; i < sm.length; i++)
                 {
