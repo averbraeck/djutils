@@ -512,6 +512,10 @@
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>${maven.spotbugs.version}</version>
+        <configuration>
+            <excludeFilterFile>${project.basedir}/config/spotbugs-exclude.xml</excludeFilterFile>
+            <includeTests>false</includeTests>
+        </configuration>
       </plugin>
 
       <plugin>
@@ -680,6 +684,10 @@
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>${maven.spotbugs.version}</version>
+        <configuration>
+            <excludeFilterFile>${project.basedir}/config/spotbugs-exclude.xml</excludeFilterFile>
+            <includeTests>false</includeTests>
+        </configuration>
       </plugin>
 
       <plugin>
