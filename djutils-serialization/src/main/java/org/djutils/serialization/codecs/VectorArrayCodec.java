@@ -50,7 +50,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
         /** Construct the FloatColVectorArrayCodec. */
         public FloatColVectorArrayCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT_COL_VECTOR_ARRAY, "Vector_32_col_array_unit");
+            super(FieldTypes.FLOAT_32_UNIT_COL_VECTOR_ARRAY, "Vector_32_col_unit_array");
         }
 
         @Override
@@ -118,7 +118,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
         /** Construct the DoubleColVectorArrayCodec. */
         public DoubleColVectorArrayCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT_COL_VECTOR_ARRAY, "Vector_64_col_array_unit");
+            super(FieldTypes.DOUBLE_64_UNIT_COL_VECTOR_ARRAY, "Vector_64_col_unit_array");
         }
 
         @Override
@@ -186,7 +186,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
         /** Construct the FloatRowVectorArrayCodec. */
         public FloatRowVectorArrayCodec()
         {
-            super(FieldTypes.FLOAT_32_UNIT_ROW_VECTOR_ARRAY, "Vector_32_row_array_unit");
+            super(FieldTypes.FLOAT_32_UNIT_ROW_VECTOR_ARRAY, "Vector_32_row_unit_array");
         }
 
         @Override
@@ -243,7 +243,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
         /** Construct the DoubleRowVectorArrayCodec. */
         public DoubleRowVectorArrayCodec()
         {
-            super(FieldTypes.DOUBLE_64_UNIT_ROW_VECTOR_ARRAY, "Vector_64_row_array_unit");
+            super(FieldTypes.DOUBLE_64_UNIT_ROW_VECTOR_ARRAY, "Vector_64_row_unit_array");
         }
 
         @Override
