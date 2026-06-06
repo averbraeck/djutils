@@ -102,3 +102,9 @@ nav:
     - Introduction: djutils-test/index.md
     - DJUTILS-TEST documentation: https://djutils.org/docs/latest/djutils-test/index.html
     - DJUTILS-TEST API: https://djutils.org/docs/latest/djutils-test/apidocs/index.html
+  - Technical manual: 
+    - Git: technical/git.md
+    - Maven: technical/maven.md
+    - Eclipse: technical/eclipse.md
+    - Checkstyle: technical/checkstyle.md
+    - SpotBugs: technical/spotbugs.md
