@@ -2,7 +2,8 @@
 
 ## Introduction
 
-The library offers several methods to make it easy to encode an object into a byte string, according to the djutils-serialization standards.
+The library offers several methods to make it easy to encode an object or a series of objects into a byte string, 
+according to the djutils-serialization standards.
 The `Codec` class offers methods to encode and decode a single object. As an example:
 
 ```java
@@ -56,7 +57,7 @@ codecs are grouped into the same class. The following `Codec` classes exist:
 - `PrimitiveArrayCodec` for arrays of primitive types `byte[]`, `short[]`, `int[]`, `long[]`, `float[]`, `double[]` and `char[]`.
 - `PrimitiveMatrixCodec` for double arrays of primitive types `byte[][]`, `short[][]`, `int[][]`, `long[][]`, `float[][]`, `double[][]` and `char[][]`.
 - `ObjectArrayCodec` for arrays of object wrappers of primitive types `Byte[]`, `Short[]`, `Integer[]`, `Long[]`, `Float[]`, and `Double[]`.
-- `ObjectMatrixCodec` for double arrays of object wrappers of primitive types `Byte[][]`, `Short[][]`, `Integer[][]`, `Long[][]`, `Float[][]`, and `Ddouble[][]`.
+- `ObjectMatrixCodec` for double arrays of object wrappers of primitive types `Byte[][]`, `Short[][]`, `Integer[][]`, `Long[][]`, `Float[][]`, and `Double[][]`.
 - `StringCodec` for `String` objects (as UTF-8 or UTF-16).
 - `StringArrayCodec` for `String[]` objects (as UTF-8 or UTF-16).
 - `StringMatrixCodec` for `String[][]` objects (as UTF-8 or UTF-16).
@@ -94,8 +95,8 @@ All djunits quantity, vector and matrix types have a `float` and `double` varian
 
 The vector arrays are special, since they distinguish between arrays of row vectors (with the unit per row), and arrays of column vectors (spreadsheet-like, with the unit per column). Therefore, they carry the following elements: `Vector`, `32` or `64`, `row` or `column`, `array`, and `unit`:
 
-- Array of column vectors: `Vector_32_col_array_unit` and `Vector_64_col_array_unit`.
-- Array of row vectors: `Vector_32_row_array_unit` and `Vector_64_row_array_unit`.
+- Array of column vectors: `Vector_32_col_unit_array` and `Vector_64_col_unit_array`.
+- Array of row vectors: `Vector_32_row_unit_array` and `Vector_64_row_unit_array`.
 
 
 ## Serializing and deserializing objects
