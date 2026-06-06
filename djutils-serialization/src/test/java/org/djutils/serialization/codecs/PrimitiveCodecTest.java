@@ -40,7 +40,7 @@ public class PrimitiveCodecTest
 
         for (byte b : new byte[] {0x00, 0x01, -0x01})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(b, endianness);
                 assertEquals(2, buffer.length);
@@ -56,7 +56,7 @@ public class PrimitiveCodecTest
 
         for (Byte b : new Byte[] {0x00, 0x01, -0x01})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(b, endianness);
                 assertEquals(2, buffer.length);
@@ -89,7 +89,7 @@ public class PrimitiveCodecTest
 
         for (short s : new short[] {0x00, 0x01, -0x01})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(s, endianness);
                 assertEquals(3, buffer.length);
@@ -104,7 +104,7 @@ public class PrimitiveCodecTest
 
         for (Short s : new Short[] {0x00, 0x01, -0x01})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(s, endianness);
                 assertEquals(3, buffer.length);
@@ -136,7 +136,7 @@ public class PrimitiveCodecTest
 
         for (int i : new int[] {0, 1, -1, Integer.MAX_VALUE, Integer.MIN_VALUE})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(i, endianness);
                 assertEquals(5, buffer.length);
@@ -151,7 +151,7 @@ public class PrimitiveCodecTest
 
         for (Integer i : new Integer[] {0, 1, -1, Integer.MAX_VALUE, Integer.MIN_VALUE})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(i, endianness);
                 assertEquals(5, buffer.length);
@@ -183,7 +183,7 @@ public class PrimitiveCodecTest
 
         for (long l : new long[] {0, 1, -1, Long.MAX_VALUE, Long.MIN_VALUE})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(l, endianness);
                 assertEquals(9, buffer.length);
@@ -198,7 +198,7 @@ public class PrimitiveCodecTest
 
         for (Long l : new Long[] {0L, 1L, -1L, Long.MAX_VALUE, Long.MIN_VALUE})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(l, endianness);
                 assertEquals(9, buffer.length);
@@ -231,7 +231,7 @@ public class PrimitiveCodecTest
         for (float f : new float[] {0f, 1f, -1f, 1234.5678f, -0.0f, Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL,
                 Float.MIN_VALUE, Float.NaN, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(f, endianness);
                 assertEquals(5, buffer.length);
@@ -247,7 +247,7 @@ public class PrimitiveCodecTest
         for (Float f : new Float[] {0f, 1f, -1f, 1234.5678f, -0.0f, Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_NORMAL,
                 Float.MIN_VALUE, Float.NaN, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(f, endianness);
                 assertEquals(5, buffer.length);
@@ -280,7 +280,7 @@ public class PrimitiveCodecTest
         for (double d : new double[] {0, 1, -1, 1234.5678, -0.0, Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL,
                 Double.MIN_VALUE, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(d, endianness);
                 assertEquals(9, buffer.length);
@@ -296,7 +296,7 @@ public class PrimitiveCodecTest
         for (Double d : new Double[] {0d, 1d, -1d, 1234.5678d, -0.0d, Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_NORMAL,
                 Double.MIN_VALUE, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(d, endianness);
                 assertEquals(9, buffer.length);
@@ -328,14 +328,14 @@ public class PrimitiveCodecTest
 
         for (boolean b : new boolean[] {true, false})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(b, endianness);
                 assertEquals(2, buffer.length);
                 assertEquals(6, buffer[0]);
                 Object decoded = Codec.decodeToPrimitiveDataType(endianness, buffer);
                 if (decoded instanceof Boolean db)
-                    assertEquals(b, db.booleanValue());
+                    assertEquals(b, db);
                 else
                     fail("wrong type");
             }
@@ -343,7 +343,7 @@ public class PrimitiveCodecTest
 
         for (Boolean d : new Boolean[] {true, false})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encode(d, endianness);
                 assertEquals(2, buffer.length);
@@ -375,7 +375,7 @@ public class PrimitiveCodecTest
 
         for (char c : new char[] {'a', ' ', 'Z', '\t', '\n', '}'})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encodeUTF8(c, endianness);
                 assertEquals(2, buffer.length);
@@ -390,7 +390,7 @@ public class PrimitiveCodecTest
 
         for (Character c : new Character[] {'a', ' ', 'Z', '\t', '\n', '}'})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encodeUTF8(c, endianness);
                 assertEquals(2, buffer.length);
@@ -409,7 +409,7 @@ public class PrimitiveCodecTest
         char smiley = '\u263A';
         for (char c : new char[] {xi, perMille, smiley})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 assertThrows(SerializationException.class, () -> Codec.encodeUTF8(c, endianness));
             }
@@ -439,7 +439,7 @@ public class PrimitiveCodecTest
 
         for (char c : new char[] {'a', ' ', 'Z', '\t', '\n', xi, copyright, perMille, smiley})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encodeUTF16(c, endianness);
                 assertEquals(3, buffer.length);
@@ -454,7 +454,7 @@ public class PrimitiveCodecTest
 
         for (Character c : new Character[] {'a', ' ', 'Z', '\t', '\n', xi, copyright, perMille, smiley})
         {
-            for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+            for (var endianness : Endianness.values())
             {
                 byte[] buffer = Codec.encodeUTF16(c, endianness);
                 assertEquals(3, buffer.length);

@@ -33,7 +33,7 @@ public class SerializationTest extends AbstractSerializationTest
     {
         File file = new File("whatever");
         Object[] objects = new Object[] {file};
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             try
             {
@@ -188,8 +188,6 @@ public class SerializationTest extends AbstractSerializationTest
         assertFalse(Endianness.LITTLE_ENDIAN.isBigEndian(), "Endianness.LITTLE_ENDIAN is not big endian");
         assertEquals(ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN), Endianness.isPlatformBigEndian(),
                 "Platform endianness matches what Endianness says");
-        assertTrue(Endianness.bigEndian().isBigEndian(), "Endianness.BIG_ENDIAN is big endian");
-        assertFalse(Endianness.littleEndian().isBigEndian(), "Endianness.LITTLE_ENDIAN is not big endian");
         assertTrue(Endianness.BIG_ENDIAN.toString().startsWith("Endianness"), "Endianness has descriptive toString method");
     }
 }

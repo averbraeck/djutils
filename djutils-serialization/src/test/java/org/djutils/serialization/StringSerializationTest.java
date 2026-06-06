@@ -68,7 +68,7 @@ public class StringSerializationTest extends AbstractSerializationTest
                 new byte[] {10, 2, 0, 0, 0, (byte) 0x3D, (byte) 0xD8, (byte) 0x00, (byte) 0xDE});
 
         Object[] objects = new Object[] {copyright, xi, permille, smiley, abc, complex};
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
@@ -140,7 +140,7 @@ public class StringSerializationTest extends AbstractSerializationTest
         String complex = "12%c" + smiley + copyright + xi + permille + "[]@";
 
         String[] sa = new String[] {abc, smiley, complex};
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
@@ -176,7 +176,7 @@ public class StringSerializationTest extends AbstractSerializationTest
         String complex = "12%c" + smiley + copyright + xi + permille + "[]@";
 
         String[][] sm = new String[][] {{abc, smiley, complex}, {xi, permille, smiley}};
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
@@ -202,7 +202,7 @@ public class StringSerializationTest extends AbstractSerializationTest
 
         // test jagged matrix
         final String[][] smRagged = new String[][] {{abc, smiley, complex}, {xi, smiley}};
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {

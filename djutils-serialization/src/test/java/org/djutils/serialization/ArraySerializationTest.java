@@ -47,7 +47,7 @@ public class ArraySerializationTest extends AbstractSerializationTest
         Double[] doubleValues2 = new Double[] {-23.45, -34.56, -45.67};
         Object[] objects = new Object[] {integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
                 byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2};
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {

@@ -52,7 +52,7 @@ public class SimpleSerializationTest
         Object[] objects = new Object[] {intValue, integerValue, shortValue, shortValue2, longValue, longValue2, byteValue,
                 byteValue2, floatValue, floatValue2, doubleValue, doubleValue2, boolValue, boolValue2, charValue, charValue2,
                 stringValue};
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {

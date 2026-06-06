@@ -116,7 +116,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
         Object[] floatObjects = new Object[] {length, value, area, resistors, resistorMatrix};
 
         // test double
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             byte[] serialized = MessageCodec.encode(true, false, endianness, doubleObjects);
             HexDumper.hexDumper(serialized);
@@ -142,7 +142,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
         }
 
         // test float
-        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (var endianness : Endianness.values())
         {
             byte[] serialized = MessageCodec.encode(true, true, endianness, floatObjects);
             HexDumper.hexDumper(serialized);
@@ -240,7 +240,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
     // @Test
     // public void testDJunitsErrors() throws SerializationException, ValueRuntimeException
     // {
-    // for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+    // for (var endianness : Endianness.values())
     // {
     // UnitTest.testFail(() -> TypedObject.encode(NonsenseUnit2.SI, endianness));
     // NonsenseScalar ns = new NonsenseScalar(1.0, NonsenseUnit2.SI);
@@ -324,7 +324,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
     // new DoubleVector[] {new LengthVector(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
     // new TimeVector(new double[] {10.1, 20.2, 30.3}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
     // Object[] objects = new Object[] {array};
-    // for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+    // for (var endianness : Endianness.values())
     // {
     // for (boolean encodeUTF8 : new boolean[] {false, true})
     // {
@@ -383,7 +383,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
     // new FloatVector[] {new FloatLengthVector(new float[] {0.1f, 0.2f, 0.3f}, LengthUnit.INCH, StorageType.DENSE),
     // new FloatTimeVector(new float[] {10.1f, 20.2f, 30.3f}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
     // Object[] objects = new Object[] {array};
-    // for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+    // for (var endianness : Endianness.values())
     // {
     // for (boolean encodeUTF8 : new boolean[] {false, true})
     // {
