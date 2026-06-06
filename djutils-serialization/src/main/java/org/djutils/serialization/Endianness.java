@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteOrder;
 
 /**
- * Method to help with Little Endian / Big Endian conversions for the serialization.
+ * Enum to help with Little Endian / Big Endian conversions for the serialization.
  * <p>
  * Copyright (c) 2016-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. <a href="https://djutils.org/docs/license.html" target="_blank">
@@ -12,11 +12,17 @@ import java.nio.ByteOrder;
  * <p>
  * @author Alexander Verbraeck
  */
-public final class Endianness
+public enum Endianness
 {
-    /** Does this Endianness encode and decode messages in bigEndian? */
-    private final boolean bigEndian;
+    /** Directly usable bigEndian Endianness. */
+    BIG_ENDIAN(true),
 
+    /** Directly usable littleEndian Endianness. */
+    LITTLE_ENDIAN(false);
+
+    /** big endian? */
+    private final boolean bigEndian;
+    
     /** Is this platform bigEndian? */
     private static final boolean PLATFORM_BIG_ENDIAN = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
@@ -29,38 +35,14 @@ public final class Endianness
         return PLATFORM_BIG_ENDIAN;
     }
 
-    /** Directly usable bigEndian Endianness. */
-    public static final Endianness BIG_ENDIAN = new Endianness(true);
-
-    /** Directly usable littleEndian Endianness. */
-    public static final Endianness LITTLE_ENDIAN = new Endianness(false);
-
     /**
      * Construct an Endianness object with user specified endianness.
      * @param bigEndian if true encoding and decoding use big endian style; if false; encoding and decoding use little endian
      *            style
      */
-    private Endianness(final boolean bigEndian)
+    Endianness(final boolean bigEndian)
     {
         this.bigEndian = bigEndian;
-    }
-
-    /**
-     * Construct an Endianness object that uses bigEndian encoding.
-     * @return Endianness that uses bigEndian encoding
-     */
-    public static Endianness bigEndian()
-    {
-        return BIG_ENDIAN;
-    }
-
-    /**
-     * Construct an Endianness object that uses littleEndian encoding.
-     * @return Endianness that uses littleEndian encoding
-     */
-    public static Endianness littleEndian()
-    {
-        return LITTLE_ENDIAN;
     }
 
     /**
