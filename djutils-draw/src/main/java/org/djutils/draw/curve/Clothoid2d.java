@@ -5,16 +5,15 @@ import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
-import org.djutils.exceptions.Try;
 import org.djutils.math.AngleUtil;
 
 /**
  * Continuous definition of a clothoid in 2d. The following definitions are available:
  * <ul>
- * <li>A clothoid between two <code>DirectedPoint2d</code>s.</li>
- * <li>A clothoid originating from a <code>DirectedPoint2d</code> with start curvature, end curvature, and <code>length</code>
+ * <li>A clothoid between two {@code DirectedPoint2d}s.</li>
+ * <li>A clothoid originating from a {@code DirectedPoint2d} with start curvature, end curvature, and {@code length}
  * specified.</li>
- * <li>A clothoid originating from a <code>DirectedPoint2d</code> with start curvature, end curvature, and <code>A-value</code>
+ * <li>A clothoid originating from a {@code DirectedPoint2d} with start curvature, end curvature, and {@code A-value}
  * specified.</li>
  * </ul>
  * This class is based on:
@@ -43,6 +42,9 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
 
     /** Stopping tolerance for the Secant method to find optimal theta values. */
     private static final double SECANT_TOLERANCE = 1e-8;
+
+    /** Tolerance to fall back to straight when determining end point based on start point, A-value and edge curvatures. */
+    private static final double CURVATURE_TOLERANCE = 1e-9;
 
     /** Start point with direction. */
     private final DirectedPoint2d startPoint;
@@ -114,10 +116,10 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
      * This procedure guarantees that the resulting line has the minimal angle rotation that is required to connect the points.
      * If the points approximate a straight line or circle, with a tolerance of up 1/10th of a degree, those respective lines
      * are created. The numerical approximation of the underlying Fresnel integral is different from the paper. See
-     * {@code Clothoid.fresnel()}.
+     * {@link Fresnel#fresnel}.
      * @param startPoint start point
      * @param endPoint end point
-     * @throws NullPointerException when <code>startPoint</code>, or <code>endPoint</code> is <code>null</code>
+     * @throws NullPointerException when {@code startPoint}, or {@code endPoint} is {@code null}
      * @see <a href="https://www.sciencedirect.com/science/article/pii/S0377042713006286">Connor and Krivodonova (2014)</a>
      * @see <a href="https://www.sciencedirect.com/science/article/pii/S0377042704000925">Waltona and Meek (2009)</a>
      */
@@ -262,13 +264,14 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
      * @param a A-value
      * @param startCurvature start curvature
      * @param endCurvature end curvature
-     * @throws NullPointerException when <code>startPoint</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>a &le; 0.0</code>
+     * @throws NullPointerException when {@code startPoint} is {@code null}
+     * @throws IllegalArgumentException when {@code a &le; 0.0} or {@code startCurvature == endCurvature}
      */
     public Clothoid2d(final DirectedPoint2d startPoint, final double a, final double startCurvature, final double endCurvature)
     {
         Throw.whenNull(startPoint, "startPoint");
-        Throw.when(a <= 0.0, IllegalArgumentException.class, "A value must be above 0.");
+        Throw.when(a <= 0.0, IllegalArgumentException.class, "A-value must be above 0.");
+        Throw.when(startCurvature == endCurvature, IllegalArgumentException.class, "Curvature should not be equal.");
         this.startPoint = startPoint;
         // Scale 'a', due to parameter conversion between C(alpha)/S(alpha) and C(t)/S(t); t = sqrt(2*alpha/pi).
         this.a = a * Math.sqrt(Math.PI);
@@ -282,12 +285,15 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
         this.alphaMax = Math.abs(l2) * endCurvature / 2.0;
 
         double ang = AngleUtil.normalizeAroundZero(startPoint.dirZ) - Math.abs(this.alphaMin);
-        this.t0 = new double[] {Math.cos(ang), Math.sin(ang)};
-        this.n0 = new double[] {this.t0[1], -this.t0[0]};
-        double endDirection = ang + Math.abs(this.alphaMax);
+        double t00 = Math.cos(ang);
+        double t01 = Math.sin(ang);
+        double n00 = t01;
+        double n01 = -t00;
         if (startCurvature > endCurvature)
         {
-            // In these cases the algorithm works in the negative direction. We need to flip over the line through the start
+            this.reflected = true;
+
+            // In these cases the algorithm works in the reflected direction. We need to flip over the line through the start
             // point that runs perpendicular to the start direction.
             double m = Math.tan(startPoint.dirZ + Math.PI / 2.0);
 
@@ -296,40 +302,104 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
             double oneMinusMm = 1.0 - m * m;
             double mmMinusOne = m * m - 1.0;
             double twoM = 2.0 * m;
-            double t00 = this.t0[0];
-            double t01 = this.t0[1];
-            double n00 = this.n0[0];
-            double n01 = this.n0[1];
-            this.t0[0] = (oneMinusMm * t00 + 2 * m * t01) / onePlusMm;
-            this.t0[1] = (twoM * t00 + mmMinusOne * t01) / onePlusMm;
-            this.n0[0] = (oneMinusMm * n00 + 2 * m * n01) / onePlusMm;
-            this.n0[1] = (twoM * n00 + mmMinusOne * n01) / onePlusMm;
-
-            double ang2 = Math.atan2(this.t0[1], this.t0[0]);
-            endDirection = ang2 - Math.abs(this.alphaMax) + Math.PI;
+            this.t0 = new double[] {(oneMinusMm * t00 + twoM * t01) / onePlusMm, (twoM * t00 + mmMinusOne * t01) / onePlusMm};
+            this.n0 = new double[] {(oneMinusMm * n00 + twoM * n01) / onePlusMm, (twoM * n00 + mmMinusOne * n01) / onePlusMm};
         }
-        PolyLine2d line = toPolyLine(new Flattener2d.NumSegments(1));
-        Point2d end = Try.assign(() -> line.get(line.size() - 1), "Line does not have an end point.");
-        this.endPoint = new DirectedPoint2d(end.x, end.y, endDirection);
+        else
+        {
+            this.reflected = false;
+            this.t0 = new double[] {t00, t01};
+            this.n0 = new double[] {n00, n01};
+        }
+        this.endPoint = getEndPoint(startPoint, a, startCurvature, endCurvature);
 
         // Fields not relevant for definition with curvatures
         this.straight = null;
         this.arc = null;
         this.opposite = false;
-        this.reflected = false;
+    }
+
+    /**
+     * Determine end point using start point, A-value, start curvature and end curvature.
+     * @param startPoint start point
+     * @param a A-value
+     * @param startCurvature start curvature
+     * @param endCurvature end curvature
+     * @return end point
+     */
+    private static DirectedPoint2d getEndPoint(final DirectedPoint2d startPoint, final double a, final double startCurvature,
+            final double endCurvature)
+    {
+        // define variables
+        double x0 = startPoint.x;
+        double y0 = startPoint.y;
+        double phi0 = startPoint.dirZ;
+        double dCurvature = endCurvature - startCurvature;
+        double dCurvatureAbs = Math.abs(dCurvature);
+        double a2 = a * a;
+        double length = a2 * dCurvatureAbs;
+        // change in angle = b + c from integrating curvature along length
+        double b = length * startCurvature;
+        double c = length * .5 * dCurvature;
+
+        // find end point values accounting for edge cases
+        double phi1;
+        double x1;
+        double y1;
+        if (dCurvatureAbs < CURVATURE_TOLERANCE)
+        {
+            if (Math.abs(startCurvature) < CURVATURE_TOLERANCE)
+            {
+                // edge case straight line
+                phi1 = phi0;
+                x1 = x0 + length * Math.cos(phi0);
+                y1 = y0 + length * Math.sin(phi0);
+            }
+            else
+            {
+                // edge case circular arc; move a long arc (startCurvature ~= endCurvature; R = 1/curvature)
+                phi1 = phi0 + b;
+                x1 = x0 + (Math.sin(phi1) - Math.sin(phi0)) / startCurvature;
+                y1 = y0 - (Math.cos(phi1) - Math.cos(phi0)) / startCurvature;
+            }
+        }
+        else
+        {
+            // clothoid
+            // Clothoid phase: phi = phi0 + b.t + c.t^2
+            // Fresnel phase: phi = a' + .5.pi.t^2
+            double sign = dCurvature < 0.0 ? -1.0 : 1.0;
+            double lambda = Math.sqrt(dCurvatureAbs * length / Math.PI); // scale clothoid parabola to match Fresnel parabola
+            double aPrime = phi0 - (b * b) / (4.0 * c); // absorb constant angle introduced by shifting the parabola
+            double aPrimeCos = Math.cos(aPrime);
+            double aPrimeSin = Math.sin(aPrime);
+            double b2c = b / (2.0 * c);
+            double t0 = lambda * b2c;
+            double t1 = lambda * (1 + b2c);
+            double[] cs0 = Fresnel.fresnel(t0);
+            double[] cs1 = Fresnel.fresnel(t1);
+            double dC = cs1[0] - cs0[0];
+            double dS = cs1[1] - cs0[1];
+            double dx = length * (dC * aPrimeCos - sign * dS * aPrimeSin) / lambda;
+            double dy = length * (dC * aPrimeSin + sign * dS * aPrimeCos) / lambda;
+            phi1 = phi0 + b + c;
+            x1 = x0 + dx;
+            y1 = y0 + dy;
+        }
+        return new DirectedPoint2d(x1, y1, AngleUtil.normalizeAroundZero(phi1));
     }
 
     /**
      * Create clothoid from one point based on curvature and length. This method calculates the A-value as
      * <i>sqrt(L/|k2-k1|)</i>, where <i>L</i> is the length of the resulting clothoid, and <i>k2</i> and <i>k1</i> are the end
      * and start curvature.
-     * @param startPoint start point.
-     * @param length Length of the resulting clothoid.
-     * @param startCurvature start curvature.
+     * @param startPoint start point
+     * @param length Length of the resulting clothoid
+     * @param startCurvature start curvature
      * @param endCurvature end curvature
-     * @return clothoid based on curvature and length.
-     * @throws NullPointerException when <code>startPoint</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>length &le; 0.0</code>
+     * @return clothoid based on curvature and length
+     * @throws NullPointerException when {@code startPoint} is {@code null}
+     * @throws IllegalArgumentException when {@code a &le; 0.0} or {@code startCurvature == endCurvature}
      */
     public static Clothoid2d withLength(final DirectedPoint2d startPoint, final double length, final double startCurvature,
             final double endCurvature)
@@ -351,10 +421,10 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
 
     /**
      * Returns theta value given shape to use. If no such value is found, the other shape may be attempted.
-     * @param phi1 phi1.
-     * @param phi2 phi2.
-     * @param cShape C-shaped, or S-shaped otherwise.
-     * @return the number of radians that is moved on to a side of the full clothoid.
+     * @param phi1 phi1
+     * @param phi2 phi2
+     * @param cShape C-shaped, or S-shaped otherwise
+     * @return the number of radians that is moved on to a side of the full clothoid
      */
     private static double getTheta(final double phi1, final double phi2, final boolean cShape)
     {
@@ -406,11 +476,11 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
      * Function who's solution <i>f</i>(<i>theta</i>) = 0 for the given value of <i>phi1</i> and <i>phi2</i> gives the angle
      * that solves fitting a C-shaped clothoid through two points. This assumes that <i>sign</i> = -1. If <i>sign</i> = 1, this
      * changes to <i>g</i>(<i>theta</i>) = 0 being a solution for an S-shaped clothoid.
-     * @param theta angle defining the curvature of the resulting clothoid.
-     * @param phi1 angle between the line through both end points, and the direction of the first point.
-     * @param phi2 angle between the line through both end points, and the direction of the last point.
-     * @param sign 1 for C-shaped, -1 for S-shaped.
-     * @return <i>f</i>(<i>theta</i>) for <i>sign</i> = -1, or <i>g</i>(<i>theta</i>) for <i>sign</i> = 1.
+     * @param theta angle defining the curvature of the resulting clothoid
+     * @param phi1 angle between the line through both end points, and the direction of the first point
+     * @param phi2 angle between the line through both end points, and the direction of the last point
+     * @param sign 1 for C-shaped, -1 for S-shaped
+     * @return <i>f</i>(<i>theta</i>) for <i>sign</i> = -1, or <i>g</i>(<i>theta</i>) for <i>sign</i> = 1
      */
     private static double fTheta(final double theta, final double phi1, final double phi2, final double sign)
     {
@@ -470,7 +540,7 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
 
     /**
      * Return A, the clothoid scaling parameter.
-     * @return a, the clothoid scaling parameter.
+     * @return a, the clothoid scaling parameter
      */
     public double getA()
     {
@@ -531,7 +601,9 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
         double x = this.shiftX + this.a * (cs[0] * this.t0[0] - cs[1] * this.n0[0]) + f * this.dShiftX;
         double y = this.shiftY + this.a * (cs[0] * this.t0[1] - cs[1] * this.n0[1]) + f * this.dShiftY;
         double d = getDirectionForAlpha(alpha) + Math.PI / 2;
-        return new Point2d(x + Math.cos(d) * offset, y + Math.sin(d) * offset);
+        // For a clothoid defined by curvatures, their corresponding alpha's may be in the opposite direction
+        double off = this.alphaMin < this.alphaMax ? offset : -offset;
+        return new Point2d(x + Math.cos(d) * off, y + Math.sin(d) * off);
     }
 
     @Override
