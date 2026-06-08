@@ -49,7 +49,7 @@ public class ClothoidTest
      * Tests whether clothoid between two directed points are correct.
      */
     @Test
-    public void testPoints()
+    void testPoints()
     {
         Random r = new Random(3);
         for (int i = 0; i < RUNS; i++)
@@ -83,7 +83,7 @@ public class ClothoidTest
      * Test remaining aspects of the Clothoid constructors.
      */
     @Test
-    public void testClothoidConstructors()
+    void testClothoidConstructors()
     {
         try
         {
@@ -126,7 +126,7 @@ public class ClothoidTest
      * from {@code TestPoints()} because the random procedure generates very few straight situations.
      */
     @Test
-    public void testStraight()
+    void testStraight()
     {
         Random r = new Random(3);
         double tolerance = 2.0 * Math.PI / 3600.0; // see ContinuousClothoid.ANGLE_TOLERANCE
@@ -160,7 +160,7 @@ public class ClothoidTest
      * Test clothoids created with curvatures and a length.
      */
     @Test
-    public void testLength()
+    void testLength()
     {
         Random r = new Random(3);
         for (int i = 0; i < RUNS; i++)
@@ -183,7 +183,7 @@ public class ClothoidTest
      * Test clothoids created with curvatures and an A-value.
      */
     @Test
-    public void testA()
+    void testA()
     {
         Random r = new Random(3);
         for (int i = 0; i < RUNS; i++)
@@ -252,7 +252,7 @@ public class ClothoidTest
      * and clothoids that are opposite or not.
      */
     @Test
-    public void testOffset()
+    void testOffset()
     {
         Flattener2d flattener = new Flattener2d.NumSegments(32);
         OffsetFlattener2d offsetFlattener = new OffsetFlattener2d.NumSegments(32);
@@ -285,6 +285,43 @@ public class ClothoidTest
                     assertEquals(0.0, end.y, 0.00001); // offset on x-axis
                 }
             }
+        }
+    }
+    
+    /**
+     * Tests offset equivalence for clothoid defined with length, and one using the first's end point. Note: not always equal.
+     */
+    @Test
+    void testOffsetEqualEndPoint()
+    {
+        DirectedPoint2d startPoint = new DirectedPoint2d(381.539799, 980.384953, 1.576572);
+        double length = 5.4;
+        double startCurvature = -0.0;
+        double endCurvature = -0.06666666666666667;
+        OffsetCurve2d curve1 = Clothoid2d.withLength(startPoint, length, startCurvature, endCurvature);
+        OffsetCurve2d curve2 = new Clothoid2d(startPoint, curve1.getEndPoint());
+        // Note: the constructor used for curve2 always finds the shortest curve between two points. This may not be equal to a
+        // curve defined with length (or A-value) who's end point is taken. In this case it however is, and we can test offset.
+        
+        Flattener2d flattener = new Flattener2d.MaxDeviation(0.01);
+        PolyLine2d line1 = curve1.toPolyLine(flattener);
+        PolyLine2d line2 = curve2.toPolyLine(flattener);
+        assertEquals(line1.size(), line2.size(), "Differently defined but equal clothoids have different flat length.");
+        for (int i = 0; i < line1.size(); i++)
+        {
+            assertEquals(line1.get(i).x, line2.get(i).x, 1e-9, "Points not equal on equal but differently defined lines.");
+            assertEquals(line1.get(i).y, line2.get(i).y, 1e-9, "Points not equal on equal but differently defined lines.");
+        }
+        
+        OffsetFlattener2d offsetFlattener = new OffsetFlattener2d.MaxDeviation(0.01);
+        ContinuousPiecewiseLinearFunction offset = ContinuousPiecewiseLinearFunction.of(0.0, 1.0, 1.0, 2.0);
+        PolyLine2d line3 = curve1.toPolyLine(offsetFlattener, offset);
+        PolyLine2d line4 = curve2.toPolyLine(offsetFlattener, offset);
+        assertEquals(line3.size(), line4.size(), "Differently defined but equal clothoids have different offset length.");
+        for (int i = 0; i < line3.size(); i++)
+        {
+            assertEquals(line3.get(i).x, line4.get(i).x, 1e-9, "Offset not equal on equal but differently defined lines.");
+            assertEquals(line3.get(i).y, line4.get(i).y, 1e-9, "Offset not equal on equal but differently defined lines.");
         }
     }
 
