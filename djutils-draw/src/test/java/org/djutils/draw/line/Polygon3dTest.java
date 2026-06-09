@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
  * <p>
  * @author Alexander Verbraeck
  * @author Peter Knoppers
+ * @author Wouter Schakel
  */
 public class Polygon3dTest
 {
@@ -292,6 +293,11 @@ public class Polygon3dTest
         }
 
         assertEquals(2, new Polygon3d(0.0, list).size(), "After filtering; there are two points left");
+
+        // test multiple closing points that should be removed
+        Polygon3d pol = new Polygon3d(new double[] {0.0, 1.0, 1.0, 0.0, 0.0, 0.0}, new double[] {0.0, 0.0, 1.0, 1.0, 0.0, 0.0},
+                new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
+        assertEquals(4, pol.size());
     }
 
     /**

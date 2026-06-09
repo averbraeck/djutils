@@ -44,23 +44,43 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final double epsilon, final double[] x, final double[] y, final double[] z)
     {
-        super(epsilon, fixClosingPoint(Throw.whenNull(x, "x"), Throw.whenNull(y, "y"), Throw.whenNull(z, "z")),
-                fixClosingPoint(y, x, z), fixClosingPoint(z, x, y));
+        super(epsilon, fixClosingPoint(epsilon, Throw.whenNull(x, "x"), Throw.whenNull(y, "y"), Throw.whenNull(z, "z")),
+                fixClosingPoint(epsilon, y, x, z), fixClosingPoint(epsilon, z, x, y));
     }
 
     /**
      * Ensure that the last elements in three arrays are is not equal to the first. Remove the last element if necessary.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
      * @param a the a array
      * @param b the b array
      * @param c the c array
-     * @return the <code>a</code> array (possibly a copy with the last element removed)
+     * @return the {@code a} array (possibly a copy with the last element removed)
      */
-    static double[] fixClosingPoint(final double[] a, final double[] b, final double[] c)
+    static double[] fixClosingPoint(final double epsilon, final double[] a, final double[] b, final double[] c)
     {
-        if (a.length > 1 && b.length == a.length && c.length == a.length && a[0] == a[a.length - 1] && b[0] == b[a.length - 1]
-                && c[0] == c[c.length - 1])
+        // Need to check although super checks because if b is shorter than a, b[size - 1] gives an out of bounds exception
+        Throw.when(a.length != b.length || a.length != c.length, IllegalArgumentException.class,
+                "x, y  and z arrays must have same length");
+        int size = a.length;
+        if (epsilon == NO_FILTER)
         {
-            return Arrays.copyOf(a, a.length - 1);
+            // no filtering, but this method is about fixing the closing point
+            while (size > 1 && a[0] == a[size - 1] && b[0] == b[size - 1] && c[0] == c[size - 1])
+            {
+                size--;
+            }
+        }
+        else
+        {
+            while (size > 1 && Math.abs(a[0] - a[size - 1]) < epsilon && Math.abs(b[0] - b[size - 1]) < epsilon
+                    && Math.abs(c[0] - c[size - 1]) < epsilon)
+            {
+                size--;
+            }
+        }
+        if (size < a.length)
+        {
+            return Arrays.copyOf(a, size);
         }
         return a;
     }
@@ -68,8 +88,8 @@ public class Polygon3d extends PolyLine3d
     /**
      * Construct a new Polygon3d.
      * @param points array of Point3d objects.
-     * @throws NullPointerException when <code>points</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>points</code> is too short, or contains successive duplicate points
+     * @throws NullPointerException when {@code points} is {@code null}
+     * @throws IllegalArgumentException when {@code points} is too short, or contains successive duplicate points
      */
     public Polygon3d(final Point3d[] points)
     {
@@ -80,8 +100,8 @@ public class Polygon3d extends PolyLine3d
      * Construct a new Polygon3d.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
      * @param points array of Point3d objects.
-     * @throws NullPointerException when <code>points</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>points</code> is too short, or contains successive duplicate points
+     * @throws NullPointerException when {@code points} is {@code null}
+     * @throws IllegalArgumentException when {@code points} is too short, or contains successive duplicate points
      */
     public Polygon3d(final double epsilon, final Point3d[] points)
     {
@@ -94,10 +114,9 @@ public class Polygon3d extends PolyLine3d
      * @param point1 the first point of the new Polygon3d
      * @param point2 the second point of the new Polygon3d
      * @param otherPoints all remaining points of the new Polygon3d (may be null)
-     * @throws NullPointerException when <code>point1</code> or <code>point2</code> is <code>null</code>, or contains a
-     *             <code>null</code> value
-     * @throws IllegalArgumentException when <code>point1</code> is equal to the last point of <code>otherPoints</code>, or any
-     *             two successive points are equal
+     * @throws NullPointerException when {@code point1} or {@code point2} is {@code null}, or contains a {@code null} value
+     * @throws IllegalArgumentException when {@code point1} is equal to the last point of {@code otherPoints}, or any two
+     *             successive points are equal
      */
     public Polygon3d(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
     {
@@ -110,10 +129,9 @@ public class Polygon3d extends PolyLine3d
      * @param point1 the first point of the new Polygon3d
      * @param point2 the second point of the new Polygon3d
      * @param otherPoints all remaining points of the new Polygon3d (may be null)
-     * @throws NullPointerException when <code>point1</code> or <code>point2</code> is <code>null</code>, or contains a
-     *             <code>null</code> value
-     * @throws IllegalArgumentException when <code>point1</code> is equal to the last point of <code>otherPoints</code>, or any
-     *             two successive points are equal
+     * @throws NullPointerException when {@code point1} or {@code point2} is {@code null}, or contains a {@code null} value
+     * @throws IllegalArgumentException when {@code point1} is equal to the last point of {@code otherPoints}, or any two
+     *             successive points are equal
      */
     public Polygon3d(final double epsilon, final Point3d point1, final Point3d point2, final Point3d... otherPoints)
     {
@@ -125,7 +143,7 @@ public class Polygon3d extends PolyLine3d
      * Ensure that the last point of otherPoints is not equal to point1. Remove the last point if necessary.
      * @param point1 the first point of a new Polygon3d
      * @param otherPoints the remaining points of a new Polygon3d (may be null)
-     * @return <code>otherPoints</code> (possibly a copy thereof with the last entry removed)
+     * @return {@code otherPoints} (possibly a copy thereof with the last entry removed)
      */
     private static Point3d[] fixClosingPoint(final Point3d point1, final Point3d[] otherPoints)
     {
@@ -148,8 +166,8 @@ public class Polygon3d extends PolyLine3d
     /**
      * Construct a new Polygon3d from a list of Point3d objects.
      * @param points the list of points
-     * @throws NullPointerException when <code>points</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>points</code> is too short, or the last two points are at the same location
+     * @throws NullPointerException when {@code points} is {@code null}
+     * @throws IllegalArgumentException when {@code points} is too short, or the last two points are at the same location
      */
     public Polygon3d(final List<Point3d> points)
     {
@@ -160,8 +178,8 @@ public class Polygon3d extends PolyLine3d
      * Construct a new Polygon3d from a list of Point3d objects.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
      * @param points the list of points
-     * @throws NullPointerException when <code>points</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>points</code> is too short, or the last two points are at the same location
+     * @throws NullPointerException when {@code points} is {@code null}
+     * @throws IllegalArgumentException when {@code points} is too short, or the last two points are at the same location
      */
     public Polygon3d(final double epsilon, final List<Point3d> points)
     {
@@ -170,11 +188,11 @@ public class Polygon3d extends PolyLine3d
 
     /**
      * Ensure that the last point in the list is different from the first point by possibly removing the last point.
-     * @param doNotModifyList if<code>true</code>; the list of points will not be modified (if the last point is to be removed;
-     *            the entire list up to the last point is duplicated)
+     * @param doNotModifyList if{@code true}; the list of points will not be modified (if the last point is to be removed; the
+     *            entire list up to the last point is duplicated)
      * @param points the list of points
      * @return the fixed list
-     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws NullPointerException when {@code points} is {@code null}
      * @throws IllegalArgumentException when the (resulting) list is too short, or the before last and last point of points have
      *             the same coordinates
      */
@@ -227,7 +245,7 @@ public class Polygon3d extends PolyLine3d
     /**
      * Construct a new Polygon3d from an existing one. This constructor is primarily intended for use in extending classes.
      * @param polygon the existing Polygon3d
-     * @throws NullPointerException when <code>polygon</code> is <code>null</code>
+     * @throws NullPointerException when {@code polygon} is {@code null}
      */
     public Polygon3d(final Polygon3d polygon)
     {

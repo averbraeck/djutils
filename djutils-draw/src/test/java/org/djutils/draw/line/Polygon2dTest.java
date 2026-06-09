@@ -265,6 +265,10 @@ public class Polygon2dTest
         }
 
         assertEquals(2, new Polygon2d(0.0, list).size(), "After filtering; there are two points left");
+
+        // test multiple closing points that should be removed
+        Polygon2d pol = new Polygon2d(new double[] {0.0, 1.0, 1.0, 0.0, 0.0, 0.0}, new double[] {0.0, 0.0, 1.0, 1.0, 0.0, 0.0});
+        assertEquals(4, pol.size());
     }
 
     /**
