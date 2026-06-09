@@ -31,7 +31,7 @@ public class ContinuousPiecewiseLinearFunction implements Iterable<TupleSt>, Fun
     /**
      * Create ContinuousPiecewiseLinearFunction from an array of double values.
      * @param data fractional length - value pairs. Fractional lengths do not need to be in order
-     * @throws NullPointerException when <code>data</code> is <code>null</code>
+     * @throws NullPointerException when {@code data} is {@code null}
      * @throws IllegalArgumentException when the number of input values is not even or 0, or a fractional value is not in the
      *             range [0, 1], or an offset value is not finite, or multiple values are provided for the same fraction
      */
@@ -139,6 +139,24 @@ public class ContinuousPiecewiseLinearFunction implements Iterable<TupleSt>, Fun
             return 0.0;
         }
         return (ceiling.getValue() - floor.getValue()) / (ceiling.getKey() - floor.getKey());
+    }
+
+    /**
+     * Returns a function of a sub-domain of this function. Fractions in the new sub-domain are normalized to the sub-domain.
+     * @param from from fraction (inclusive)
+     * @param to to fraction (inclusive)
+     * @return function of a sub-domain of this function
+     * @throws IllegalArgumentException if {@code 0 <= from < to <= 1} does not hold
+     */
+    public ContinuousPiecewiseLinearFunction normalizedSubdomain(final double from, final double to)
+    {
+        Throw.when(from < 0.0 || from >= to || to > 1.0, IllegalArgumentException.class, "0 <= from < to <= 1 does not hold");
+        Map<Double, Double> newData = new TreeMap<>();
+        double range = to - from;
+        this.data.subMap(from, false, to, false).forEach((k, v) -> newData.put((k - from) / range, v));
+        newData.put(0.0, get(from));
+        newData.put(1.0, get(to));
+        return new ContinuousPiecewiseLinearFunction(newData);
     }
 
     /**

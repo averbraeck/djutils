@@ -2,6 +2,7 @@ package org.djutils.draw.function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -31,7 +32,7 @@ public class ContinuousPiecewiseLinearTest
      * Test the ContinuousPiecewiseLinearFunction class.
      */
     @Test
-    public void testContinuousPiecewiseLinearFunction()
+    void testContinuousPiecewiseLinearFunction()
     {
         testContinuousPiecewiseLinearFunctionConstructors("Zero values should have thrown an IllegalArgumentException");
         testContinuousPiecewiseLinearFunctionConstructors("Odd number of values should have thrown an IllegalArgumentException",
@@ -183,6 +184,50 @@ public class ContinuousPiecewiseLinearTest
         {
             // Ignore expected exception
         }
+    }
+
+    /**
+     * Tests correctness of sub-domain.
+     */
+    @Test
+    void testSub()
+    {
+        double d1 = 0.25; // plateau range
+        double d2 = 0.75;
+        double p = 0.5; // plateau value
+        ContinuousPiecewiseLinearFunction func = ContinuousPiecewiseLinearFunction.of(0.0, 0.0, d1, p, d2, p, 1.0, 1.0);
+        for (double from = 0.0; from < 0.85; from += 0.1)
+        {
+            for (double to = from + 0.1; to <= 1.0; to += 0.1)
+            {
+                ContinuousPiecewiseLinearFunction fSub = func.normalizedSubdomain(from, to);
+                for (double f = 0.0; f <= 1.0; f += 1.0)
+                {
+                    double fFunc = from + f * (to - from);
+                    double vFunc;
+                    if (fFunc < d1)
+                    {
+                        vFunc = p * fFunc / d1;
+                    }
+                    else if (fFunc < d2)
+                    {
+                        vFunc = p;
+                    }
+                    else
+                    {
+                        vFunc = p + (1.0 - p) * (fFunc - d2) / (1.0 - d2);
+                    }
+                    assertEquals(vFunc, fSub.get(f), 1e-9, "Sub function does not return the right value.");
+                }
+            }
+        }
+
+        assertThrows(IllegalArgumentException.class, () -> func.normalizedSubdomain(0.5, 0.4),
+                "Sub-domain fractions in wrong order should throw IllegalArgumentException");
+        assertThrows(IllegalArgumentException.class, () -> func.normalizedSubdomain(-0.1, 0.5),
+                "Negative from value should throw IllegalArgumentException");
+        assertThrows(IllegalArgumentException.class, () -> func.normalizedSubdomain(0.5, 1.1),
+                "To value beyond 1 should throw IllegalArgumentException");
     }
 
 }
