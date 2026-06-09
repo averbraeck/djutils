@@ -91,9 +91,6 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
     /** Simplification to arc when valid. */
     private final Arc2d arc;
 
-    /** Whether the shift was determined. */
-    private boolean shiftDetermined;
-
     /** Shift in x-coordinate of start point. */
     private double shiftX;
 
@@ -256,6 +253,8 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
         this.startCurvature = sign * (this.opposite ? -curveMax : curveMin);
         this.endCurvature = sign * (this.opposite ? -curveMin : curveMax);
         this.length = this.a * (alphaToT(v1) - alphaToT(this.alphaMin));
+        
+        assureShift();
     }
 
     /**
@@ -317,6 +316,8 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
         this.straight = null;
         this.arc = null;
         this.opposite = false;
+        
+        assureShift();
     }
 
     /**
@@ -554,11 +555,6 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
      */
     private void assureShift()
     {
-        if (this.shiftDetermined)
-        {
-            return;
-        }
-
         DirectedPoint2d p1 = this.opposite ? this.endPoint : this.startPoint;
         DirectedPoint2d p2 = this.opposite ? this.startPoint : this.endPoint;
 
@@ -583,8 +579,6 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
             this.dShiftX = 0.0;
             this.dShiftY = 0.0;
         }
-
-        this.shiftDetermined = true;
     }
 
     /**
@@ -683,7 +677,6 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
         {
             return this.arc.toPolyLine(flattener);
         }
-        assureShift();
         return flattener.flatten(this);
     }
 
@@ -699,7 +692,6 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
         {
             return this.arc.toPolyLine(flattener, offsets);
         }
-        assureShift();
         return flattener.flatten(this, offsets);
     }
 
