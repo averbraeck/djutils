@@ -74,7 +74,7 @@ public class Polygon2d extends PolyLine2d
         }
         else
         {
-            while (size > 1 && Math.abs(a[0] - a[size - 1]) <= epsilon && Math.abs(b[0] - b[size - 1]) <= epsilon)
+            while (size > 1 && Math.abs(a[0] - a[size - 1]) < epsilon && Math.abs(b[0] - b[size - 1]) < epsilon)
             {
                 size--;
             }
