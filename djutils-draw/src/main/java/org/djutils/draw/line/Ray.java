@@ -27,8 +27,8 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed, P extends Point
 
     /**
      * Flip the direction of the Ray (creates and returns a new Ray instance).
-     * @return Ray at the same location, but with <code>dirZ</code> (in case of a Ray3d) incremented by &pi; and
-     *         <code>dirY</code> subtracted from &pi;
+     * @return Ray at the same location, but with {@code dirZ} (in case of a Ray3d) incremented by &pi; and {@code dirY}
+     *         subtracted from &pi;
      */
     R flip();
 
@@ -36,8 +36,8 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed, P extends Point
      * Get the location at a position on the line, with its direction. Position must be a positive, finite value
      * @param position the position on the line for which to calculate the point on the line
      * @return a ray with the same direction as this ray (even if the direction of this ray is not normalized)
-     * @throws ArithmeticException when <code>position</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>position</code> &lt; <code>0.0</code>, or infinite
+     * @throws ArithmeticException when {@code position} is {@code NaN}
+     * @throws IllegalArgumentException when {@code position} &lt; {@code 0.0}, or infinite
      */
     default R getLocation(final double position)
     {
@@ -51,8 +51,8 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed, P extends Point
      * Get the location at a position on the line, with its direction. Position must be a finite value
      * @param position the position on the line for which to calculate the point on the line
      * @return a ray with the same direction as this ray
-     * @throws ArithmeticException when <code>position</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>position</code> infinite
+     * @throws ArithmeticException when {@code position} is {@code NaN}
+     * @throws IllegalArgumentException when {@code position} infinite
      */
     R getLocationExtended(double position);
 
@@ -63,8 +63,14 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed, P extends Point
      * Bourke</a>.
      * @param point the point to project onto the segment
      * @return either the start point, or DirectedPoint that lies somewhere on this Ray
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws NullPointerException when {@code point} is {@code null}
      */
     P closestPointOnRay(P point);
+
+    @Override
+    R translate(double dR);
+    
+    @Override
+    R rotate(double rotateZ);
 
 }

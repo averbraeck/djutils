@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -33,7 +34,7 @@ public class Ray3dTest
      * Test the various constructors of a Ray3d.
      */
     @Test
-    public void testConstructors()
+    void testConstructors()
     {
         // Verify dirY and dirZ for the six basic directions.
         verifyRay("positive x", new Ray3d(0, 0, 0, 1, 0, 0), 0, 0, 0, Math.PI / 2, 0);
@@ -259,7 +260,7 @@ public class Ray3dTest
      * Test the result of the getBounds method.
      */
     @Test
-    public void boundsTest()
+    void boundsTest()
     {
         // X direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X and Z directions
@@ -395,7 +396,7 @@ public class Ray3dTest
      * Test the getLocation and getLocationExtended methods.
      */
     @Test
-    public void testLocation()
+    void testLocation()
     {
         try
         {
@@ -500,7 +501,7 @@ public class Ray3dTest
      * Test the closestPointOnRay and the projectOrthogonal methods.
      */
     @Test
-    public void testClosestPointAndProjectOrthogonal()
+    void testClosestPointAndProjectOrthogonal()
     {
         Ray3d ray = new Ray3d(1, 2, 3, 0.4, 0.5);
         try
@@ -558,7 +559,7 @@ public class Ray3dTest
      * Test the project methods.
      */
     @Test
-    public void testProject()
+    void testProject()
     {
         Ray3d ray = new Ray3d(1, 2, 3, 20, 10, 5);
         assertTrue(Double.isNaN(ray.projectOrthogonalFractional(new Point3d(1, 1, 1))), "projects outside");
@@ -599,7 +600,7 @@ public class Ray3dTest
      * Test the epsilonEquals method.
      */
     @Test
-    public void epsilonEqualsTest()
+    void epsilonEqualsTest()
     {
         Ray3d ray = new Ray3d(1, 2, 3, 0.5, -0.5);
         try
@@ -702,7 +703,7 @@ public class Ray3dTest
      * Test the equals and hasCode methods.
      */
     @Test
-    public void equalsAndHashCodeTest()
+    void equalsAndHashCodeTest()
     {
         Ray3d ray = new Ray3d(1, 2, 3, 11, 12, 13);
         assertEquals(ray, ray, "equal to itself");
@@ -720,6 +721,62 @@ public class Ray3dTest
         assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 4, 11, 12, 14), "hashCode depends on y");
         assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 12, 10), "hashCode depends on dirY");
         assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 10, 13), "hashCode depends on dirZ");
+    }
+
+    /**
+     * Test operations.
+     */
+    @Test
+    void testOperations()
+    {
+        Ray3d p = new Ray3d(-0.1, -0.2, -0.3, Math.PI / 2, -Math.PI / 4);
+
+        Ray3d p2 = p.translate(5.0);
+        assertEquals(p.x + 5.0 * Math.sin(p.dirY) * Math.cos(p.dirZ), p2.x, 1E-6, "translated x");
+        assertEquals(p.y + 5.0 * Math.sin(p.dirY) * Math.sin(p.dirZ), p2.y, 1E-6, "translated y");
+        assertEquals(p.z + 5.0 * Math.cos(p.dirY), p2.z, 1E-6, "translated z");
+        assertEquals(p.getDirY(), p2.getDirY(), 1E-6, "translated dirY");
+        assertEquals(p.getDirZ(), p2.getDirZ(), 1E-6, "translated dirZ");
+
+        p2 = p.translate(5.0, -1.0);
+        assertEquals(p.x + 5.0, p2.x, 1E-6, "translated x");
+        assertEquals(p.y - 1.0, p2.y, 1E-6, "translated y");
+        assertEquals(p.z, p2.z, 1E-6, "not translated z");
+        assertEquals(p.getDirY(), p2.getDirY(), 1E-6, "translated dirY");
+        assertEquals(p.getDirZ(), p2.getDirZ(), 1E-6, "translated dirZ");
+
+        p2 = p.translate(5.0, -1.0, 2.0);
+        assertEquals(p.x + 5.0, p2.x, 1E-6, "translated x");
+        assertEquals(p.y - 1.0, p2.y, 1E-6, "translated y");
+        assertEquals(p.z + 2.0, p2.z, 1E-6, "translated z");
+        assertEquals(p.getDirY(), p2.getDirY(), 1E-6, "translated dirY");
+        assertEquals(p.getDirZ(), p2.getDirZ(), 1E-6, "translated dirZ");
+
+        p2 = p.rotate(-Math.PI / 4, Math.PI);
+        assertEquals(p.x, p2.x, 1E-6, "rotated x");
+        assertEquals(p.y, p2.y, 1E-6, "rotated y");
+        assertEquals(p.z, p2.z, 1E-6, "rotated z");
+        assertEquals(AngleUtil.normalizeAroundZero(p.getDirY() - Math.PI / 4), p2.getDirY(), 1E-6, "rotated dirY");
+        assertEquals(AngleUtil.normalizeAroundZero(p.getDirZ() + Math.PI), p2.getDirZ(), 1E-6, "rotated dirZ");
+
+        p2 = p.rotate(17 * Math.PI / 4);
+        assertEquals(p.x, p2.x, 1E-6, "rotated x");
+        assertEquals(p.y, p2.y, 1E-6, "rotated y");
+        assertEquals(p.z, p2.z, 1E-6, "rotated z");
+        assertEquals(p.getDirY(), p2.getDirY(), 1E-6, "not rotated dirY");
+        assertEquals(AngleUtil.normalizeAroundZero(p.getDirZ() + 17 * Math.PI / 4), p2.getDirZ(), 1E-6, "rotated dirZ");
+
+        assertThrows(ArithmeticException.class, () -> p.translate(Double.NaN), "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.translate(Double.NaN, 1.0), "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.translate(1.0, Double.NaN), "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.translate(Double.NaN, 1.0, 1.0),
+                "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.translate(1.0, Double.NaN, 1.0),
+                "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.translate(1.0, 1.0, Double.NaN),
+                "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.rotate(Double.NaN, 1.0), "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.rotate(1.0, Double.NaN), "Should thrown ArithmeticException on NaN");
     }
 
 }

@@ -31,7 +31,7 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param z the z coordinate of the finite end point of the ray
      * @param dirY the angle from the positive Z axis direction in radians (the complement of the slope)
      * @param dirZ the angle from the positive X axis direction in radians
-     * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code> (should be impossible)
+     * @throws IllegalArgumentException when {@code dirY}, or {@code dirZ} is {@code NaN} (should be impossible)
      */
     public Ray3d(final double x, final double y, final double z, final double dirY, final double dirZ)
     {
@@ -47,9 +47,9 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param directionVector the two direction angles in a double array containing dirY and dirZ in that order. DirY is the
      *            rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to the
      *            projection of the direction in the x-y-plane.
-     * @throws NullPointerException when <code>direction</code> is <code>null</code>
-     * @throws ArithmeticException when the <code>directionVector</code> array contains a <code>NaN</code> value
-     * @throws IllegalArgumentException when the length of the <code>directionVector</code> array is not 2
+     * @throws NullPointerException when {@code direction} is {@code null}
+     * @throws ArithmeticException when the {@code directionVector} array contains a {@code NaN} value
+     * @throws IllegalArgumentException when the length of the {@code directionVector} array is not 2
      */
     public Ray3d(final double x, final double y, final double z, final double[] directionVector)
     {
@@ -62,7 +62,7 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param y the y coordinate of the finite end point of the ray
      * @param z the z coordinate of the finite end point of the ray
      * @param dir the direction
-     * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code> (should be impossible)
+     * @throws IllegalArgumentException when {@code dirY}, or {@code dirZ} is {@code NaN} (should be impossible)
      */
     public Ray3d(final double x, final double y, final double z, final Direction3d dir)
     {
@@ -77,10 +77,8 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param throughX the x coordinate of another point on the ray
      * @param throughY the y coordinate of another point on the ray
      * @param throughZ the z coordinate of another point on the ray
-     * @throws ArithmeticException when <code>throughX</code>, or <code>throughY</code>, or <code>throughZ</code> is
-     *             <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughX> == x</code> and <code>throughY == y</code> and
-     *             <code>throughZ == z</code>
+     * @throws ArithmeticException when {@code throughX}, or {@code throughY}, or {@code throughZ} is {@code NaN}
+     * @throws IllegalArgumentException when {@code throughX> == x} and {@code throughY == y} and {@code throughZ == z}
      */
     public Ray3d(final double x, final double y, final double z, final double throughX, final double throughY,
             final double throughZ)
@@ -94,9 +92,9 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param y the y coordinate of the finite end point of the ray
      * @param z the z coordinate of the finite end point of the ray
      * @param throughPoint another point on the ray
-     * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x, y)</code>
+     * @throws NullPointerException when {@code throughPoint} is {@code null}
+     * @throws ArithmeticException when {@code x}, {@code y}, or {@code z} is {@code NaN}
+     * @throws IllegalArgumentException when {@code throughPoint} is exactly at {@code (x, y)}
      */
     public Ray3d(final double x, final double y, final double z, final Point3d throughPoint)
     {
@@ -105,12 +103,12 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
 
     /**
      * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction dirY,dirZ.
-     * @param xyz the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
+     * @param xyz the {@code x}, {@code y} and {@code z} coordinates in that order
      * @param dirY the angle from the positive Z axis direction in radians (the complement of the slope)
      * @param dirZ the angle from the positive X axis direction in radians
-     * @throws NullPointerException when <code>xyx</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
-     *             value, or <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * @throws NullPointerException when {@code xyx} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code xyz} array is not 3, or contains a {@code NaN} value, or
+     *             {@code dirY}, or {@code dirZ} is {@code NaN}
      */
     public Ray3d(final double[] xyz, final double dirY, final double dirZ)
     {
@@ -119,12 +117,12 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
 
     /**
      * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction dirY,dirZ.
-     * @param xyz the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
-     * @param directionVector the two direction angles <code>dirY</code> and <code>dirZ</code> in that order
-     * @throws NullPointerException when <code>xyz</code>, or <code>directionVector</code> is <code>null</code>
-     * @throws ArithmeticException when <code>xyz</code>, or <code>directionVector</code> contains a <code>NaN</code> value
-     * @throws IllegalArgumentException when the length of the <code>xyx</code> is not 3 or the length of the
-     *             <code>directionVector</code> is not 2
+     * @param xyz the {@code x}, {@code y} and {@code z} coordinates in that order
+     * @param directionVector the two direction angles {@code dirY} and {@code dirZ} in that order
+     * @throws NullPointerException when {@code xyz}, or {@code directionVector} is {@code null}
+     * @throws ArithmeticException when {@code xyz}, or {@code directionVector} contains a {@code NaN} value
+     * @throws IllegalArgumentException when the length of the {@code xyx} is not 3 or the length of the {@code directionVector}
+     *             is not 2
      */
     public Ray3d(final double[] xyz, final double[] directionVector)
     {
@@ -134,11 +132,11 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     /**
      * Create a new Rayt3d from x, y, and z coordinates packed in a double array of three elements and a direction specified
      * using a double array of two elements.
-     * @param xyz the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
+     * @param xyz the {@code x}, {@code y} and {@code z} coordinates in that order
      * @param dir the direction
-     * @throws NullPointerException when <code>xyx</code> array or <code>dir</code> is <code>null</code>
-     * @throws ArithmeticException when the <code>xyz</code> arraycontains a <code>NaN</code> value
-     * @throws IllegalArgumentException when the length of the <code>xyx</code> array is not 3
+     * @throws NullPointerException when {@code xyx} array or {@code dir} is {@code null}
+     * @throws ArithmeticException when the {@code xyz} arraycontains a {@code NaN} value
+     * @throws IllegalArgumentException when the length of the {@code xyx} array is not 3
      */
     public Ray3d(final double[] xyz, final Direction3d dir)
     {
@@ -150,8 +148,8 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param point the finite end point of the ray
      * @param dirY the angle from the positive Z axis direction in radians (the complement of the slope)
      * @param dirZ the angle from the positive X axis direction in radians
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * @throws NullPointerException when {@code point} is {@code null}
+     * @throws IllegalArgumentException when {@code dirY}, or {@code dirZ} is {@code NaN}
      */
     public Ray3d(final Point3d point, final double dirY, final double dirZ)
     {
@@ -162,7 +160,7 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * Construct a new Ray3d.
      * @param point the finite end point of the ray
      * @param dir the direction
-     * @throws NullPointerException when <code>point</code> is <code>null</code>, or <code>dir</code> is <code>null</code>
+     * @throws NullPointerException when {@code point} is {@code null}, or {@code dir} is {@code null}
      */
     public Ray3d(final Point3d point, final Direction3d dir)
     {
@@ -175,11 +173,9 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param throughX the x coordinate of another point on the ray
      * @param throughY the y coordinate of another point on the ray
      * @param throughZ the z coordinate of another point on the ray
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws ArithmeticException when <code>throughX</code>, or <code>throughY</code>, or <code>throughZ</code> is
-     *             <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughX == x</code> and <code>throughY == y</code> and
-     *             <code>throughZ == z</code>
+     * @throws NullPointerException when {@code point} is {@code null}
+     * @throws ArithmeticException when {@code throughX}, or {@code throughY}, or {@code throughZ} is {@code NaN}
+     * @throws IllegalArgumentException when {@code throughX == x} and {@code throughY == y} and {@code throughZ == z}
      */
     public Ray3d(final Point3d point, final double throughX, final double throughY, final double throughZ)
     {
@@ -190,9 +186,8 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * Construct a new Ray3d.
      * @param point the finite end point of the ray
      * @param throughPoint another point on the ray
-     * @throws NullPointerException when <code>point</code> is <code>null</code> or <code>throughPoint</code> is
-     *             <code>null</code>
-     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>point</code>
+     * @throws NullPointerException when {@code point} is {@code null} or {@code throughPoint} is {@code null}
+     * @throws IllegalArgumentException when {@code throughPoint} is exactly at {@code point}
      */
     public Ray3d(final Point3d point, final Point3d throughPoint) throws NullPointerException, IllegalArgumentException
     {
@@ -202,11 +197,54 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     /**
      * Construct a new Ray3d.
      * @param directedPoint point and direction of the new Ray3d
-     * @throws NullPointerException when <code>directedPoint</code> is <code>null</code>
+     * @throws NullPointerException when {@code directedPoint} is {@code null}
      */
     public Ray3d(final DirectedPoint3d directedPoint)
     {
         this(directedPoint, directedPoint.dirY, directedPoint.dirZ);
+    }
+
+    @Override
+    public Ray3d translate(final double dR)
+    {
+        Throw.whenNaN(dR, "dR");
+        double dx = Math.sin(this.dirY) * Math.cos(this.dirZ);
+        double dy = Math.sin(this.dirY) * Math.sin(this.dirZ);
+        double dz = Math.cos(this.dirY);
+        return new Ray3d(this.x + dx * dR, this.y + dy * dR, this.z + dz * dR, this.dirY, this.dirZ);
+    }
+
+    @Override
+    public Ray3d translate(final double dX, final double dY)
+    {
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        return new Ray3d(this.x + dX, this.y + dY, this.z, this.dirY, this.dirZ);
+    }
+    
+    @Override
+    public Ray3d translate(final double dX, final double dY, final double dZ)
+    {
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        Throw.whenNaN(dZ, "dZ");
+        return new Ray3d(this.x + dX, this.y + dY, this.z + dZ, this.dirY, this.dirZ);
+    }
+
+    @Override
+    public Ray3d rotate(final double rotateZ)
+    {
+        Throw.whenNaN(rotateZ, "rotateZ");
+        return new Ray3d(this.x, this.y, this.z, this.dirY, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
+    }
+
+    @Override
+    public Ray3d rotate(final double rotateY, final double rotateZ)
+    {
+        Throw.whenNaN(rotateY, "rotateY");
+        Throw.whenNaN(rotateZ, "rotateZ");
+        return new Ray3d(this.x, this.y, this.z, AngleUtil.normalizeAroundZero(this.dirY + rotateY),
+                AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.djutils.draw;
 
+import org.djutils.draw.point.OrientedPoint3d;
+
 /**
  * Oriented3d is an interface to indicate an object has a direction in three dimensions.
  * <p>
@@ -17,5 +19,22 @@ public interface Oriented3d extends Directed3d
      * @return the rotation around the x-axis in radians
      */
     double getDirX();
+
+    @Override
+    OrientedPoint3d translate(double dR);
+    
+    @Override
+    OrientedPoint3d rotate(double rotateZ);
+
+    /**
+     * Return a new point with an in-place rotation by the provided rotateX, rotateY, and rotateZ. The resulting rotations will
+     * be normalized between -&pi; and &pi;.
+     * @param rotateX the rotation around the x-axis
+     * @param rotateY the rotation around the y-axis
+     * @param rotateZ the rotation around the z-axis
+     * @return a new point with the same coordinates and applied rotations
+     * @throws ArithmeticException when any of the rotations is {@code NaN}
+     */
+    Oriented3d rotate(double rotateX, double rotateY, double rotateZ);
 
 }

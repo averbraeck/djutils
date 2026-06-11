@@ -40,8 +40,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param z the z coordinate
      * @param dirY the complement of the slope
      * @param dirZ the counter-clockwise rotation around the point in radians
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, <code>dirY</code>, or <code>dirZ</code>
-     *             is <code>NaN</code>
+     * @throws ArithmeticException when {@code x}, {@code y}, {@code z}, {@code dirY}, or {@code dirZ} is {@code NaN}
      */
     public DirectedPoint3d(final double x, final double y, final double z, final double dirY, final double dirZ)
     {
@@ -61,11 +60,11 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param directionVector the two direction angles (dirY and dirZ) in a double array containing dirY and dirZ in that order.
      *            DirY is the rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to
      *            the projection of the direction in the x-y-plane.
-     * @throws NullPointerException when <code>directionVector</code> is <code>null</code>
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code> is <code>NaN</code>, or
-     *             <code>directionVector</code> contains a <code>NaN</code> value
-     * @throws IllegalArgumentException when the length of the <code>directionVector</code> array is not 2, or contains a
-     *             <code>NaN</code> value
+     * @throws NullPointerException when {@code directionVector} is {@code null}
+     * @throws ArithmeticException when {@code x}, {@code y}, {@code z} is {@code NaN}, or {@code directionVector} contains a
+     *             {@code NaN} value
+     * @throws IllegalArgumentException when the length of the {@code directionVector} array is not 2, or contains a {@code NaN}
+     *             value
      */
     public DirectedPoint3d(final double x, final double y, final double z, final double[] directionVector)
     {
@@ -78,9 +77,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param y the y coordinate
      * @param z the z coordinate
      * @param dir the direction
-     * @throws NullPointerException when <code>dir></code> is <code>null</code>
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, <code>dirY</code>, or <code>dirZ</code>
-     *             is <code>NaN</code>
+     * @throws NullPointerException when {@code dir>} is {@code null}
+     * @throws ArithmeticException when {@code x}, {@code y}, {@code z}, {@code dirY}, or {@code dirZ} is {@code NaN}
      */
     public DirectedPoint3d(final double x, final double y, final double z, final Direction3d dir)
     {
@@ -98,10 +96,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param throughX the x-coordinate of a point that the direction goes through
      * @param throughY the y-coordinate of a point that the direction goes through
      * @param throughZ the z-coordinate of a point that the direction goes through
-     * @throws ArithmeticException when <code>z</code>, <code>y</code>, <code>z</code>, <code>throughX</code>,
-     *             <code>throughY</code>, or <code>throughZ</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughX</code> == <code>x</code> and <code>throughY</code> == <code>y</code>
-     *             and <code>throughZ</code> == <code>z</code>
+     * @throws ArithmeticException when {@code z}, {@code y}, {@code z}, {@code throughX}, {@code throughY}, or {@code throughZ}
+     *             is {@code NaN}
+     * @throws IllegalArgumentException when {@code throughX} == {@code x} and {@code throughY} == {@code y} and
+     *             {@code throughZ} == {@code z}
      */
     public DirectedPoint3d(final double x, final double y, final double z, final double throughX, final double throughY,
             final double throughZ)
@@ -115,9 +113,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param y the y coordinate of the new DirectedPoint3d
      * @param z the z coordinate of the new DirectedPoint3d
      * @param throughPoint a point that the direction goes through
-     * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x y,z)</code>
+     * @throws NullPointerException when {@code throughPoint} is {@code null}
+     * @throws ArithmeticException when {@code x}, {@code y}, or {@code z} is {@code NaN}
+     * @throws IllegalArgumentException when {@code throughPoint} is exactly at {@code (x y,z)}
      */
     public DirectedPoint3d(final double x, final double y, final double z, final Point3d throughPoint)
     {
@@ -129,9 +127,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param xyz the x, y and z coordinates
      * @param dirY the complement of the slope
      * @param dirZ the counter-clockwise rotation around the point in radians
-     * @throws NullPointerException when <code>xyx</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
-     *             value, or <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * @throws NullPointerException when {@code xyx} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code xyz} array is not 3, or contains a {@code NaN} value, or
+     *             {@code dirY}, or {@code dirZ} is {@code NaN}
      */
     public DirectedPoint3d(final double[] xyz, final double dirY, final double dirZ)
     {
@@ -145,12 +143,12 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     /**
      * Create a new OrientedPoint3d from x, y and z coordinates packed in a double array of three elements and a direction
      * specified using a double array of two elements.
-     * @param xyz the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
-     * @param directionVector the two direction angles <code>dirY</code> and <code>dirZ</code> in that order
-     * @throws NullPointerException when <code>xyz</code>, or <code>directionVector</code> is <code>null</code>
-     * @throws ArithmeticException when <code>xyz</code>, or <code>directionVector</code> contains a <code>NaN</code> value
-     * @throws IllegalArgumentException when the length of the <code>xyx</code> is not 3 or the length of the
-     *             <code>directionVector</code> is not 2
+     * @param xyz the {@code x}, {@code y} and {@code z} coordinates in that order
+     * @param directionVector the two direction angles {@code dirY} and {@code dirZ} in that order
+     * @throws NullPointerException when {@code xyz}, or {@code directionVector} is {@code null}
+     * @throws ArithmeticException when {@code xyz}, or {@code directionVector} contains a {@code NaN} value
+     * @throws IllegalArgumentException when the length of the {@code xyx} is not 3 or the length of the {@code directionVector}
+     *             is not 2
      */
     public DirectedPoint3d(final double[] xyz, final double[] directionVector)
     {
@@ -161,9 +159,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * Create a new DirectedPoint3d with x, y, and z coordinates in a double[] and a Direction3d.
      * @param xyz the x, y and z coordinates
      * @param dir the direction
-     * @throws NullPointerException when <code>xyx</code> is <code>null</code>, or <code>dir</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
-     *             value
+     * @throws NullPointerException when {@code xyx} is {@code null}, or {@code dir} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code xyz} array is not 3, or contains a {@code NaN} value
      */
     public DirectedPoint3d(final double[] xyz, final Direction3d dir)
     {
@@ -178,7 +175,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param point the point from which this OrientedPoint3d will be instantiated
      * @param dirY the complement of the slope
      * @param dirZ the counter-clockwise rotation around the point in radians
-     * @throws ArithmeticException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * @throws ArithmeticException when {@code dirY}, or {@code dirZ} is {@code NaN}
      */
     public DirectedPoint3d(final Point3d point, final double dirY, final double dirZ)
     {
@@ -189,7 +186,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * Create a new DirectedPoint3d from another Point3d and a Direction3d.
      * @param point the point from which this OrientedPoint3d will be instantiated
      * @param direction the direction
-     * @throws NullPointerException when <code>point</code>, or <code>direction</code> is <code>null</code>
+     * @throws NullPointerException when {@code point}, or {@code direction} is {@code null}
      */
     public DirectedPoint3d(final Point3d point, final Direction3d direction)
     {
@@ -202,11 +199,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param throughX the x coordinate of a point that the direction goes through
      * @param throughY the y coordinate of a point that the direction goes through
      * @param throughZ the z coordinate of a point that the direction goes through
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws ArithmeticException when <code>throughX</code>, or <code>throughY</code>, or <code>throughZ</code> is
-     *             <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughX</code> == <code>point.x</code> and <code>throughY</code> ==
-     *             <code>point.y</code> and <code>throughZ</code> == <code>point.z</code>
+     * @throws NullPointerException when {@code point} is {@code null}
+     * @throws ArithmeticException when {@code throughX}, or {@code throughY}, or {@code throughZ} is {@code NaN}
+     * @throws IllegalArgumentException when {@code throughX} == {@code point.x} and {@code throughY} == {@code point.y} and
+     *             {@code throughZ} == {@code point.z}
      */
     public DirectedPoint3d(final Point3d point, final double throughX, final double throughY, final double throughZ)
     {
@@ -217,9 +213,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * Construct a new DirectedPoint3d.
      * @param point the location of the new DirectedPoint3d
      * @param throughPoint another point that the direction goes through
-     * @throws NullPointerException when <code>point</code> is <code>null</code> or <code>throughPoint</code> is
-     *             <code>null</code>
-     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>point</code>
+     * @throws NullPointerException when {@code point} is {@code null} or {@code throughPoint} is {@code null}
+     * @throws IllegalArgumentException when {@code throughPoint} is exactly at {@code point}
      */
     public DirectedPoint3d(final Point3d point, final Point3d throughPoint)
     {
@@ -233,8 +228,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param dY y difference
      * @param dZ z difference
      * @return a two-element array containing dirY and dirZ
-     * @throws IllegalArgumentException when <code>dX</code> == <code>0.0</code> and <code>dY</code> == <code>0.0</code> and
-     *             <code>dZ</code> == <code>0.0</code>
+     * @throws IllegalArgumentException when {@code dX} == {@code 0.0} and {@code dY} == {@code 0.0} and {@code dZ} ==
+     *             {@code 0.0}
      */
     private static double[] buildDirectionVector(final double dX, final double dY, final double dZ)
     {
@@ -246,13 +241,23 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * Verify that a double array is not null, has two elements.
      * @param direction the array to check
      * @return the first element of the argument
-     * @throws NullPointerException when <code>direction</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2
+     * @throws NullPointerException when {@code direction} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code direction} array is not 2
      */
     private static double checkDirectionVector(final double[] direction)
     {
         Throw.when(direction.length != 2, IllegalArgumentException.class, "length of direction array must be 2");
         return direction[0];
+    }
+
+    @Override
+    public DirectedPoint3d translate(final double dR)
+    {
+        Throw.whenNaN(dR, "dR");
+        double dx = Math.sin(this.dirY) * Math.cos(this.dirZ);
+        double dy = Math.sin(this.dirY) * Math.sin(this.dirZ);
+        double dz = Math.cos(this.dirY);
+        return new DirectedPoint3d(this.x + dx * dR, this.y + dy * dR, this.z + dz * dR, this.dirY, this.dirZ);
     }
 
     @Override
@@ -275,6 +280,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     @Override
     public DirectedPoint3d scale(final double factor)
     {
+        Throw.whenNaN(factor, "factor");
         return new DirectedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirY, this.dirZ);
     }
 
@@ -305,11 +311,11 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * interpolateShortest method.
      * @param otherPoint the other point
      * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is between 0
-     *            and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code>
-     *            Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
-     * @return a new <code>DirectedPoint3d</code> at the requested <code>fraction</code>
-     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
-     * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
+     *            and 1, it is an interpolation, otherwise an extrapolation. If {@code fraction} is 0; {@code this} Point is
+     *            returned; if {@code fraction} is 1, the {@code otherPoint} is returned
+     * @return a new {@code DirectedPoint3d} at the requested {@code fraction}
+     * @throws NullPointerException when {@code otherPoint} is {@code null}
+     * @throws ArithmeticException when {@code fraction} is {@code NaN}
      */
     public DirectedPoint3d interpolate(final DirectedPoint3d otherPoint, final double fraction)
     {
@@ -329,27 +335,14 @@ public class DirectedPoint3d extends Point3d implements Directed3d
                 AngleUtil.interpolateShortest(this.dirZ, otherPoint.dirZ, fraction));
     }
 
-    /**
-     * Return a new DirectedPoint3d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
-     * will be normalized between -&pi; and &pi;.
-     * @param rotateZ the rotation around the z-axis
-     * @return a new point with the same coordinates, <code>dirY</code> and modified <code>dirZ</code>
-     * @throws ArithmeticException when <code>rotateZ</code> is <code>NaN</code>
-     */
+    @Override
     public DirectedPoint3d rotate(final double rotateZ)
     {
         Throw.whenNaN(rotateZ, "rotateZ");
         return new DirectedPoint3d(this.x, this.y, this.z, this.dirY, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
-    /**
-     * Return a new DirectedPoint3d point with an in-place rotation by the provided rotateY, and rotateZ. The resulting
-     * rotations will be normalized between -&pi; and &pi;.
-     * @param rotateY the rotation around the y-axis
-     * @param rotateZ the rotation around the z-axis
-     * @return a new point with the same coordinates and applied rotations
-     * @throws ArithmeticException when <code>rotateY</code>, or <code>rotateZ</code> is <code>NaN</code>
-     */
+    @Override
     public DirectedPoint3d rotate(final double rotateY, final double rotateZ)
     {
         Throw.whenNaN(rotateY, "rotateY");
@@ -397,12 +390,12 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      *            not want to check the coordinates
      * @param epsilonDirection the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you do not
      *            want to check the angles
-     * @return boolean;<code>true</code> if <code>x</code>, <code>y</code>, and possibly <code>z</code> are less than
-     *         <code>epsilonCoordinate</code> apart, and <code>rotZ</code> and possibly <code>rotX</code>, and possibly
-     *         <code>rotY</code>are less than <code>epsilonDirection</code> apart, otherwise <code>false</code>
-     * @throws NullPointerException when <code>other</code> is <code>null</code>
-     * @throws ArithmeticException when <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>NaN</code>
-     * @throws IllegalArgumentException <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>negative</code>
+     * @return boolean;{@code true} if {@code x}, {@code y}, and possibly {@code z} are less than {@code epsilonCoordinate}
+     *         apart, and {@code rotZ} and possibly {@code rotX}, and possibly {@code rotY}are less than
+     *         {@code epsilonDirection} apart, otherwise {@code false}
+     * @throws NullPointerException when {@code other} is {@code null}
+     * @throws ArithmeticException when {@code epsilonCoordinate} or {@code epsilonDirection} is {@code NaN}
+     * @throws IllegalArgumentException {@code epsilonCoordinate} or {@code epsilonDirection} is {@code negative}
      */
     public boolean epsilonEquals(final DirectedPoint3d other, final double epsilonCoordinate, final double epsilonDirection)
             throws NullPointerException, IllegalArgumentException

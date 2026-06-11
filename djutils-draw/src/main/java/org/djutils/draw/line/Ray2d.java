@@ -29,7 +29,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
      * @param x the x coordinate of the finite end point of the ray
      * @param y the y coordinate of the finite end point of the ray
      * @param dirZ the angle from the positive X axis direction in radians.
-     * @throws ArithmeticException when <code>dirZ</code> is <code>NaN</code>
+     * @throws ArithmeticException when {@code dirZ} is {@code NaN}
      */
     public Ray2d(final double x, final double y, final double dirZ)
     {
@@ -38,11 +38,11 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d from x and y coordinates in a double[] and a direction.
-     * @param xy the <code>x</code> and <code>y</code> coordinates of the finite end point in that order
+     * @param xy the {@code x} and {@code y} coordinates of the finite end point in that order
      * @param dirZ the counter-clockwise rotation around the point in radians
-     * @throws NullPointerException when <code>xy</code> is <code>null</code>
-     * @throws ArithmeticException when <code>xy</code> contains <code>NaN</code>, or rotZ is <code>NaN</code>
-     * @throws IllegalArgumentException when the length of <code>xy</code> is not 2, or <code>dirZ</code> is infinite
+     * @throws NullPointerException when {@code xy} is {@code null}
+     * @throws ArithmeticException when {@code xy} contains {@code NaN}, or rotZ is {@code NaN}
+     * @throws IllegalArgumentException when the length of {@code xy} is not 2, or {@code dirZ} is infinite
      */
     public Ray2d(final double[] xy, final double dirZ)
     {
@@ -53,9 +53,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
      * Construct a new Ray2d from an AWT Point2D and a direction.
      * @param point an AWT Point2D
      * @param dirZ the counter-clockwise rotation around the point in radians
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws ArithmeticException when any coordinate in <code>point</code> is <code>NaN</code>, or <code>rotZ</code> is
-     *             <code>NaN</code>
+     * @throws NullPointerException when {@code point} is {@code null}
+     * @throws ArithmeticException when any coordinate in {@code point} is {@code NaN}, or {@code rotZ} is {@code NaN}
      */
     public Ray2d(final Point2D point, final double dirZ)
     {
@@ -66,8 +65,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
      * Construct a new Ray2d from a Point2d and a direction.
      * @param point the finite end point of the ray
      * @param dirZ the angle from the positive X axis direction in radians.
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws ArithmeticException when <code>dirZ</code> is <code>NaN</code>
+     * @throws NullPointerException when {@code point} is {@code null}
+     * @throws ArithmeticException when {@code dirZ} is {@code NaN}
      */
     public Ray2d(final Point2d point, final double dirZ)
     {
@@ -80,9 +79,9 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
      * @param y the y coordinate of the finite end point of the ray
      * @param throughX the x coordinate of another point on the ray
      * @param throughY the y coordinate of another point on the ray
-     * @throws IllegalArgumentException when <code>throughX == x</code> and <code>throughY ==
-     *             y</code>
-     * @throws ArithmeticException when any <code>throughX</code> or <code>throughY</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when {@code throughX == x} and {@code throughY ==
+     *             y}
+     * @throws ArithmeticException when any {@code throughX} or {@code throughY} is {@code NaN}
      */
     public Ray2d(final double x, final double y, final double throughX, final double throughY)
     {
@@ -94,10 +93,10 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
      * @param point the finite end point of the ray
      * @param throughX the x coordinate of another point on the ray
      * @param throughY the y coordinate of another point on the ray
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws ArithmeticException when any <code>throughX</code>, or <code>throughY</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughX == x</code> and <code>throughY ==
-     *             y</code>
+     * @throws NullPointerException when {@code point} is {@code null}
+     * @throws ArithmeticException when any {@code throughX}, or {@code throughY} is {@code NaN}
+     * @throws IllegalArgumentException when {@code throughX == x} and {@code throughY ==
+     *             y}
      */
     public Ray2d(final Point2d point, final double throughX, final double throughY)
     {
@@ -109,8 +108,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
      * @param x the x coordinate of the finite end point of the ray
      * @param y the y coordinate of the finite end point of the ray
      * @param throughPoint another point on the ray
-     * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at (x, y)
+     * @throws NullPointerException when {@code throughPoint} is {@code null}
+     * @throws IllegalArgumentException when {@code throughPoint} is exactly at (x, y)
      */
     public Ray2d(final double x, final double y, final Point2d throughPoint)
     {
@@ -121,8 +120,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
      * Construct a new Ray2d.
      * @param point the finite end point of the ray
      * @param throughPoint another point on the ray
-     * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x,y)</code>
+     * @throws NullPointerException when {@code throughPoint} is {@code null}
+     * @throws IllegalArgumentException when {@code throughPoint} is exactly at {@code (x,y)}
      */
     public Ray2d(final Point2d point, final Point2d throughPoint)
     {
@@ -136,6 +135,28 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     public Ray2d(final DirectedPoint2d directedPoint)
     {
         this(directedPoint, directedPoint.dirZ);
+    }
+
+    @Override
+    public Ray2d translate(final double dR)
+    {
+        Throw.whenNaN(dR, "dR");
+        return new Ray2d(this.x + Math.cos(this.dirZ) * Throw.whenNaN(dR, "dR"), this.y + Math.sin(this.dirZ) * dR, this.dirZ);
+    }
+
+    @Override
+    public Ray2d translate(final double dX, final double dY)
+    {
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        return new Ray2d(this.x + dX, this.y + dY, this.dirZ);
+    }
+
+    @Override
+    public Ray2d rotate(final double rotateZ)
+    {
+        Throw.whenNaN(rotateZ, "rotateZ");
+        return new Ray2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     @Override

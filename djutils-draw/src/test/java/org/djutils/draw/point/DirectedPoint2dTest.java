@@ -3,6 +3,7 @@ package org.djutils.draw.point;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -33,7 +34,7 @@ public class DirectedPoint2dTest
      */
     @SuppressWarnings({"unlikely-arg-type"})
     @Test
-    public void testMethods()
+    void testMethods()
     {
         DirectedPoint2d dp = new DirectedPoint2d(1, 2, 3);
         assertEquals(1, dp.getX(), 0.0, "x can be retrieved");
@@ -71,7 +72,7 @@ public class DirectedPoint2dTest
      */
     @SuppressWarnings("unlikely-arg-type")
     @Test
-    public void testDirectedPoint2dConstruction()
+    void testDirectedPoint2dConstruction()
     {
         DirectedPoint2d p = new DirectedPoint2d(10.0, -20.0, Math.PI);
         assertEquals(10.0, p.x, 0, "x");
@@ -126,6 +127,9 @@ public class DirectedPoint2dTest
         assertEquals(-0.2, p.y, 1E-6);
         assertEquals(p2DD, p.toPoint2D());
         assertEquals(3.1415926 / 4.0, p.getDirZ(), 1E-6);
+
+        DirectedPoint2d pf = p;
+        assertThrows(ArithmeticException.class, () -> pf.translate(Double.NaN), "Should thrown ArithmeticException on NaN");
 
         UnitTest.testFail(new UnitTest.Execution()
         {
@@ -228,7 +232,7 @@ public class DirectedPoint2dTest
      * Test the DirectedPoint2d operators.
      */
     @Test
-    public void testDirectedPoint2dOperators()
+    void testDirectedPoint2dOperators()
     {
         DirectedPoint2d p = new DirectedPoint2d(-0.1, -0.2, -Math.PI / 7);
         DirectedPoint2d out = new DirectedPoint2d(p.abs(), p.dirZ);
@@ -254,6 +258,11 @@ public class DirectedPoint2dTest
         out = p.scale(10.0);
         assertEquals(-1.0, out.x, 1E-6, "10 x");
         assertEquals(-2.0, out.y, 1E-6, "10 y");
+        assertEquals(-Math.PI / 7, out.getDirZ(), 1E-6, "dirZ");
+
+        out = p.translate(5.0);
+        assertEquals(p.x + 5.0 * Math.cos(p.dirZ), out.x, 1E-6, "x");
+        assertEquals(p.y + 5.0 * Math.sin(p.dirZ), out.y, 1E-6, "y");
         assertEquals(-Math.PI / 7, out.getDirZ(), 1E-6, "dirZ");
 
         out = p.translate(5.0, -1.0);
@@ -307,6 +316,8 @@ public class DirectedPoint2dTest
             }
         }, "Should throw exception", IllegalArgumentException.class);
 
+        assertThrows(ArithmeticException.class, () -> p1.translate(Double.NaN), "Should throw ArithmeticException");
+
         UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
@@ -358,7 +369,7 @@ public class DirectedPoint2dTest
      * Test the DirectedPoint2d operators for NPE.
      */
     @Test
-    public void testDirectedPoint2dOperatorsNPE()
+    void testDirectedPoint2dOperatorsNPE()
     {
         final DirectedPoint2d p1 = new DirectedPoint2d(1.0, 1.0, Math.PI / 4.0);
 

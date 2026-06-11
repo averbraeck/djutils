@@ -33,7 +33,7 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * @param x the x coordinate
      * @param y the y coordinate
      * @param z the z coordinate
-     * @throws IllegalArgumentException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when {@code x}, {@code y}, or {@code z} is {@code NaN}
      */
     public OrientedPoint3d(final double x, final double y, final double z)
     {
@@ -48,8 +48,8 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * @param dirX the direction as rotation around the x-axis with the point as the center
      * @param dirY the direction as rotation around the y-axis with the point as the center
      * @param dirZ the direction as rotation around the z-axis with the point as the center
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, <code>dirX</code>, <code>dirY</code>, or
-     *             <code>dirZ</code> is <code>NaN</code>
+     * @throws ArithmeticException when {@code x}, {@code y}, {@code z}, {@code dirX}, {@code dirY}, or {@code dirZ} is
+     *             {@code NaN}
      */
     public OrientedPoint3d(final double x, final double y, final double z, final double dirX, final double dirY,
             final double dirZ)
@@ -62,9 +62,9 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates and direction 0,0,0.
      * @param xyz the x, y and z coordinates
-     * @throws NullPointerException when <code>xyz</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>xyx</code> array is not 3
-     * @throws IllegalArgumentException when the <code>xyx</code> array contains a <code>NaN</code> value
+     * @throws NullPointerException when {@code xyz} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code xyx} array is not 3
+     * @throws IllegalArgumentException when the {@code xyx} array contains a {@code NaN} value
      */
     public OrientedPoint3d(final double[] xyz)
     {
@@ -78,10 +78,10 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * @param dirX the direction as rotation around the x-axis with the point as the center
      * @param dirY the direction as rotation around the y-axis with the point as the center
      * @param dirZ the direction as rotation around the z-axis with the point as the center
-     * @throws NullPointerException when <code>xyx</code> is <code>null</code>
+     * @throws NullPointerException when {@code xyx} is {@code null}
      * @throws IllegalArgumentException when the length of the xyz array is not 3
-     * @throws ArithmeticException when <code>xyz</code> contains a <code>NaN</code> value, or <code>dirX</code>,
-     *             <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * @throws ArithmeticException when {@code xyz} contains a {@code NaN} value, or {@code dirX}, {@code dirY}, or {@code dirZ}
+     *             is {@code NaN}
      */
     public OrientedPoint3d(final double[] xyz, final double dirX, final double dirY, final double dirZ)
             throws NullPointerException, IllegalArgumentException
@@ -97,8 +97,8 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * @param dirX the direction as rotation around the x-axis with the point as the center
      * @param dirY the direction as rotation around the y-axis with the point as the center
      * @param dirZ the direction as rotation around the z-axis with the point as the center
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws ArithmeticException when <code>dirX</code>, <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * @throws NullPointerException when {@code point} is {@code null}
+     * @throws ArithmeticException when {@code dirX}, {@code dirY}, or {@code dirZ} is {@code NaN}
      */
     public OrientedPoint3d(final Point3d point, final double dirX, final double dirY, final double dirZ)
     {
@@ -109,8 +109,8 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * Verify that a double array is not null, has three elements.
      * @param orientation the array to check
      * @return the first element of the argument
-     * @throws NullPointerException when <code>orientation</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>orientation</code> array is not 3
+     * @throws NullPointerException when {@code orientation} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code orientation} array is not 3
      */
     private static double checkOrientationVector(final double[] orientation)
     {
@@ -126,8 +126,8 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * @param z the z coordinate
      * @param orientation the three orientation values as rotations around the x,y,z-axes in a double array containing
      *            dirX,dirY,dirZ in that order
-     * @throws NullPointerException when <code>rotation</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 3
+     * @throws NullPointerException when {@code rotation} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code direction} array is not 3
      */
     public OrientedPoint3d(final double x, final double y, final double z, final double[] orientation)
     {
@@ -140,13 +140,23 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * @param xyz the x, y and z coordinates in that order
      * @param orientation the three orientation values as rotations around the x,y,z-axes in a double array containing
      *            dirX,dirY,dirZ in that order
-     * @throws NullPointerException when <code>xyx</code> or <code>direction</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>xyx</code> array or the length of the
-     *             <code>orientation</code> array is not 3
+     * @throws NullPointerException when {@code xyx} or {@code direction} is {@code null}
+     * @throws IllegalArgumentException when the length of the {@code xyx} array or the length of the {@code orientation} array
+     *             is not 3
      */
     public OrientedPoint3d(final double[] xyz, final double[] orientation)
     {
         this(xyz, checkOrientationVector(orientation), orientation[1], orientation[2]);
+    }
+
+    @Override
+    public OrientedPoint3d translate(final double dR)
+    {
+        Throw.whenNaN(dR, "dR");
+        double dx = Math.sin(this.dirY) * Math.cos(this.dirZ);
+        double dy = Math.sin(this.dirY) * Math.sin(this.dirZ);
+        double dz = Math.cos(this.dirY);
+        return new OrientedPoint3d(this.x + dx * dR, this.y + dy * dR, this.z + dz * dR, this.dirX, this.dirY, this.dirZ);
     }
 
     @Override
@@ -169,6 +179,7 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
     @Override
     public OrientedPoint3d scale(final double factor)
     {
+        Throw.whenNaN(factor, "factor");
         return new OrientedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirX, this.dirY, this.dirZ);
     }
 
@@ -199,11 +210,11 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      * using the interpolateShortest method.
      * @param otherPoint the other point
      * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is between 0
-     *            and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code>
-     *            Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
-     * @return a new <code>OrientedPoint3d</code> at the requested <code>fraction</code>
-     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
-     * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
+     *            and 1, it is an interpolation, otherwise an extrapolation. If {@code fraction} is 0; {@code this} Point is
+     *            returned; if {@code fraction} is 1, the {@code otherPoint} is returned
+     * @return a new {@code OrientedPoint3d} at the requested {@code fraction}
+     * @throws NullPointerException when {@code otherPoint} is {@code null}
+     * @throws ArithmeticException when {@code fraction} is {@code NaN}
      */
     public OrientedPoint3d interpolate(final OrientedPoint3d otherPoint, final double fraction)
     {
@@ -224,13 +235,6 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
                 AngleUtil.interpolateShortest(this.dirZ, otherPoint.dirZ, fraction));
     }
 
-    /**
-     * Return a new OrientedPoint3d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
-     * will be normalized between -&pi; and &pi;.
-     * @param rotateZ the rotation around the z-axis
-     * @return a new point with the same coordinates, <code>dirX</code> and <code>dirY</code> and modified <code>dirZ</code>
-     * @throws ArithmeticException when <code>rotateZ</code> is <code>NaN</code>
-     */
     @Override
     public OrientedPoint3d rotate(final double rotateZ)
     {
@@ -239,15 +243,16 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
                 AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
-    /**
-     * Return a new OrientedPoint3d point with an in-place rotation by the provided rotateX, rotateY, and rotateZ. The resulting
-     * rotations will be normalized between -&pi; and &pi;.
-     * @param rotateX the rotation around the x-axis
-     * @param rotateY the rotation around the y-axis
-     * @param rotateZ the rotation around the z-axis
-     * @return a new point with the same coordinates and applied rotations
-     * @throws ArithmeticException when any of the rotations is <code>NaN</code>
-     */
+    @Override
+    public OrientedPoint3d rotate(final double rotateY, final double rotateZ)
+    {
+        Throw.whenNaN(rotateY, "rotateY");
+        Throw.whenNaN(rotateZ, "rotateZ");
+        return new OrientedPoint3d(this.x, this.y, this.z, this.dirX, AngleUtil.normalizeAroundZero(this.dirY + rotateY),
+                AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
+    }
+
+    @Override
     public OrientedPoint3d rotate(final double rotateX, final double rotateY, final double rotateZ)
     {
         Throw.whenNaN(rotateX, "rotateX");
@@ -302,12 +307,12 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
      *            not want to check the coordinates
      * @param epsilonRotation the upper bound of difference for the rotation(s); use Double.POSITIVE_INFINITY if you do not want
      *            to check the angles
-     * @return boolean;<code>true</code> if <code>x</code>, <code>y</code>, and possibly <code>z</code> are less than
-     *         <code>epsilonCoordinate</code> apart, and <code>rotZ</code> and possibly <code>rotX</code>, and possibly
-     *         <code>rotY</code>are less than <code>epsilonDirection</code> apart, otherwise <code>false</code>
-     * @throws NullPointerException when <code>other</code> is <code>null</code>
-     * @throws ArithmeticException when <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>NaN</code>
-     * @throws IllegalArgumentException <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>negative</code>
+     * @return boolean;{@code true} if {@code x}, {@code y}, and possibly {@code z} are less than {@code epsilonCoordinate}
+     *         apart, and {@code rotZ} and possibly {@code rotX}, and possibly {@code rotY}are less than
+     *         {@code epsilonDirection} apart, otherwise {@code false}
+     * @throws NullPointerException when {@code other} is {@code null}
+     * @throws ArithmeticException when {@code epsilonCoordinate} or {@code epsilonDirection} is {@code NaN}
+     * @throws IllegalArgumentException {@code epsilonCoordinate} or {@code epsilonDirection} is {@code negative}
      */
     public boolean epsilonEquals(final OrientedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException

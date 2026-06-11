@@ -19,4 +19,21 @@ public interface Directed
      */
     double getDirZ();
 
+    /**
+     * Return a new point with a translation by the provided dR.
+     * @param dR the translation along the direction
+     * @return a new point with translated coordinates
+     * @throws IllegalArgumentException when {@code dR} is {@code NaN}
+     */
+    Directed translate(double dR);
+    
+    /**
+     * Return a new point with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation will be
+     * normalized between -&pi; and &pi;.
+     * @param rotateZ the rotation around the z-axis
+     * @return a new point with the same coordinates and modified {@code dirZ}
+     * @throws ArithmeticException when {@code rotateZ} is {@code NaN}
+     */
+    Directed rotate(double rotateZ);
+
 }

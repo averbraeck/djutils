@@ -2,6 +2,7 @@ package org.djutils.draw.point;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -31,7 +32,7 @@ public class DirectedPoint3dTest
      */
     @SuppressWarnings({"unlikely-arg-type"})
     @Test
-    public void testMethods()
+    void testMethods()
     {
         DirectedPoint3d dp = new DirectedPoint3d(1, 2, 3, 4, 5);
         assertEquals(1, dp.getX(), 0.0, "x can be retrieved");
@@ -73,7 +74,7 @@ public class DirectedPoint3dTest
      * Test the DirectedPoint3d operators.
      */
     @Test
-    public void testDirectedPoint3dOperators()
+    void testDirectedPoint3dOperators()
     {
         DirectedPoint3d p = new DirectedPoint3d(-0.1, -0.2, -0.3, Math.PI / 2, -Math.PI / 4);
         assertEquals(0.1, p.abs().x, 1E-6);
@@ -107,6 +108,8 @@ public class DirectedPoint3dTest
         assertEquals(10 * p.z, p2.z, 1E-6, "10 scaled z");
         assertEquals(p.getDirY(), p2.getDirY(), 0, "10 scaled dirY");
         assertEquals(p.getDirZ(), p2.getDirZ(), 0, "10 scaled dirZ");
+
+        assertThrows(ArithmeticException.class, () -> p.translate(Double.NaN), "Should thrown ArithmeticException on NaN");
 
         try
         {
@@ -158,10 +161,10 @@ public class DirectedPoint3dTest
             // Ignore expected exception
         }
 
-        p2 = p.translate(5.0, -1.0, 2.0);
-        assertEquals(p.x + 5.0, p2.x, 1E-6, "translated x");
-        assertEquals(p.y - 1.0, p2.y, 1E-6, "translated y");
-        assertEquals(p.z + 2.0, p2.z, 1E-6, "translated z");
+        p2 = p.translate(5.0);
+        assertEquals(p.x + 5.0 * Math.sin(p.dirY) * Math.cos(p.dirZ), p2.x, 1E-6, "translated x");
+        assertEquals(p.y + 5.0 * Math.sin(p.dirY) * Math.sin(p.dirZ), p2.y, 1E-6, "translated y");
+        assertEquals(p.z + 5.0 * Math.cos(p.dirY), p2.z, 1E-6, "translated z");
         assertEquals(p.getDirY(), p2.getDirY(), 1E-6, "translated dirY");
         assertEquals(p.getDirZ(), p2.getDirZ(), 1E-6, "translated dirZ");
 
@@ -169,6 +172,13 @@ public class DirectedPoint3dTest
         assertEquals(p.x + 5.0, p2.x, 1E-6, "translated x");
         assertEquals(p.y - 1.0, p2.y, 1E-6, "translated y");
         assertEquals(p.z, p2.z, 1E-6, "not translated z");
+        assertEquals(p.getDirY(), p2.getDirY(), 1E-6, "translated dirY");
+        assertEquals(p.getDirZ(), p2.getDirZ(), 1E-6, "translated dirZ");
+
+        p2 = p.translate(5.0, -1.0, 2.0);
+        assertEquals(p.x + 5.0, p2.x, 1E-6, "translated x");
+        assertEquals(p.y - 1.0, p2.y, 1E-6, "translated y");
+        assertEquals(p.z + 2.0, p2.z, 1E-6, "translated z");
         assertEquals(p.getDirY(), p2.getDirY(), 1E-6, "translated dirY");
         assertEquals(p.getDirZ(), p2.getDirZ(), 1E-6, "translated dirZ");
 

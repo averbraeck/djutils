@@ -3,6 +3,7 @@ package org.djutils.draw.point;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -29,7 +30,7 @@ public class OrientedPoint3dTest
      */
     @Test
     @SuppressWarnings("checkstyle:methodlength")
-    public void testOrientedPoint3dConstruction()
+    void testOrientedPoint3dConstruction()
     {
         OrientedPoint3d p = new OrientedPoint3d(10.0, -20.0, 5.2);
         assertEquals(10.0, p.x, 1E-6, "x");
@@ -185,6 +186,9 @@ public class OrientedPoint3dTest
         assertEquals(-0.2, p.getDirY(), 1E-6, "dirY");
         assertEquals(0.3, p.getDirZ(), 1E-6, "dirZ");
 
+        OrientedPoint3d pf = p;
+        assertThrows(ArithmeticException.class, () -> pf.translate(Double.NaN), "Should thrown ArithmeticException on NaN");
+
         UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
@@ -264,7 +268,7 @@ public class OrientedPoint3dTest
      */
     @SuppressWarnings("unlikely-arg-type")
     @Test
-    public void testOrientedPointEquals()
+    void testOrientedPointEquals()
     {
         // equals and hashCode
         OrientedPoint3d p = new OrientedPoint3d(10.0, 20.0, 30.0, 0.1, 0.2, 0.3);
@@ -294,36 +298,57 @@ public class OrientedPoint3dTest
         assertTrue(p.epsilonEquals(p, 0.1, 999));
         assertTrue(p.epsilonEquals(p, 0.001, 999));
         assertTrue(p.epsilonEquals(p, 0.0, 999));
-        OrientedPoint3d p3 = p.translate(0.001, 0.0, 0.0);
+
+        OrientedPoint3d p3 = p.translate(5.0);
+        assertEquals(p.x + 5.0 * Math.sin(p.dirY) * Math.cos(p.dirZ), p3.x, 1E-6, "translated x");
+        assertEquals(p.y + 5.0 * Math.sin(p.dirY) * Math.sin(p.dirZ), p3.y, 1E-6, "translated y");
+        assertEquals(p.z + 5.0 * Math.cos(p.dirY), p3.z, 1E-6, "translated z");
+        assertEquals(p.getDirY(), p3.getDirY(), 1E-6, "translated dirY");
+        assertEquals(p.getDirZ(), p3.getDirZ(), 1E-6, "translated dirZ");
+
+        p3 = p.translate(5.0, -1.0);
+        assertEquals(p.x + 5.0, p3.x, 1E-6, "translated x");
+        assertEquals(p.y - 1.0, p3.y, 1E-6, "translated y");
+        assertEquals(p.z, p3.z, 1E-6, "not translated z");
+        assertEquals(p.getDirY(), p3.getDirY(), 1E-6, "translated dirY");
+        assertEquals(p.getDirZ(), p3.getDirZ(), 1E-6, "translated dirZ");
+
+        p3 = p.translate(0.001, 0.0, 0.0);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.001));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.001));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.001));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.001));
+
         p3 = p.translate(0.0, 0.001, 0.0);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.001));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.001));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.001));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.001));
+
         p3 = p.translate(0.0, 0.0, 0.001);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.001));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.001));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.001));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.001));
+
         p3 = p.rotate(0.001);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.009));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.009));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.0009));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.0009));
+
         p3 = p.rotate(0.001, 0, 0);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.009));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.009));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.0009));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.0009));
+
         p3 = p.rotate(0, 0.001, 0);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.009));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.009));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.0009));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.0009));
+
         p3 = p.rotate(0, 0, 0.001);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.009));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.009));
@@ -335,7 +360,7 @@ public class OrientedPoint3dTest
      * Test the OrientedPoint3d operators.
      */
     @Test
-    public void testOrientedPoint3dOperators()
+    void testOrientedPoint3dOperators()
     {
         OrientedPoint3d p = new OrientedPoint3d(-0.1, -0.2, -0.3, Math.PI / 4, -Math.PI / 4, Math.PI / 2);
         assertEquals(0.1, p.abs().x, 1E-6);
@@ -578,7 +603,7 @@ public class OrientedPoint3dTest
      * Test the OrientedPoint3d operators for NPE.
      */
     @Test
-    public void testOrientedPoint3dOperatorsNPE()
+    void testOrientedPoint3dOperatorsNPE()
     {
         final OrientedPoint3d p1 = new OrientedPoint3d(1.0, 1.0, Math.PI / 4.0);
 

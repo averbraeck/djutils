@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -33,7 +34,7 @@ public class Ray2dTest
      * Test the various constructors of a Ray2d.
      */
     @Test
-    public void testConstructors()
+    void testConstructors()
     {
         verifyRay("Constructor from x, y, dirZ", new Ray2d(1, 2, 3), 1, 2, 3);
         verifyRay("Constructor from [x, y], dirZ", new Ray2d(new double[] {1, 2}, 3), 1, 2, 3);
@@ -197,7 +198,7 @@ public class Ray2dTest
      * Test the result of the getBounds method.
      */
     @Test
-    public void boundsTest()
+    void boundsTest()
     {
         // X direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
@@ -249,7 +250,7 @@ public class Ray2dTest
      * Test the getLocation and getLocationExtended methods.
      */
     @Test
-    public void testLocation()
+    void testLocation()
     {
         try
         {
@@ -350,7 +351,7 @@ public class Ray2dTest
      * Test the closestPointOnRay and the projectOrthogonal methods.
      */
     @Test
-    public void testClosestPointAndProjectOrthogonal()
+    void testClosestPointAndProjectOrthogonal()
     {
         Ray2d ray = new Ray2d(1, 2, 1);
         try
@@ -398,7 +399,7 @@ public class Ray2dTest
      * Test the project methods.
      */
     @Test
-    public void testProject()
+    void testProject()
     {
         Ray2d ray = new Ray2d(1, 2, 20, 10);
         assertTrue(Double.isNaN(ray.projectOrthogonalFractional(new Point2d(1, 1))), "projects outside");
@@ -434,7 +435,7 @@ public class Ray2dTest
      * Test the epsilonEquals method.
      */
     @Test
-    public void epsilonEqualsTest()
+    void epsilonEqualsTest()
     {
         Ray2d ray = new Ray2d(1, 2, -1);
         try
@@ -521,7 +522,7 @@ public class Ray2dTest
      * Test the equals and hasCode methods.
      */
     @Test
-    public void equalsAndHashCodeTest()
+    void equalsAndHashCodeTest()
     {
         Ray2d ray = new Ray2d(1, 2, 11, 12);
         assertEquals(ray, ray, "equal to itself");
@@ -535,6 +536,40 @@ public class Ray2dTest
         assertNotEquals(ray.hashCode(), new Ray2d(2, 2, 12, 12), "hashCode depends on x");
         assertNotEquals(ray.hashCode(), new Ray2d(1, 3, 11, 13), "hashCode depends on y");
         assertNotEquals(ray.hashCode(), new Ray2d(1, 2, 11, 10), "hashCode depends on dirZ");
+    }
+
+    /**
+     * Test operations.
+     */
+    @Test
+    void testOperations()
+    {
+        Ray2d p = new Ray2d(-0.1, -0.2, -Math.PI / 7);
+
+        Ray2d out = p.translate(5.0);
+        assertEquals(p.x + 5.0 * Math.cos(p.dirZ), out.x, 1E-6, "x");
+        assertEquals(p.y + 5.0 * Math.sin(p.dirZ), out.y, 1E-6, "y");
+        assertEquals(-Math.PI / 7, out.getDirZ(), 1E-6, "dirZ");
+
+        out = p.translate(5.0, -1.0);
+        assertEquals(4.9, out.x, 1E-6, "x");
+        assertEquals(-1.2, out.y, 1E-6, "y");
+        assertEquals(-Math.PI / 7, out.getDirZ(), 1E-6, "dirZ");
+
+        out = p.translate(1.0, 3.0);
+        assertEquals(0.9, out.x, 1E-6, "x");
+        assertEquals(2.8, out.y, 1E-6, "y");
+        assertEquals(-Math.PI / 7, out.getDirZ(), 1E-6, "dirZ");
+
+        out = p.rotate(-Math.PI / 4);
+        assertEquals(-0.1, out.x, 1E-6, "x");
+        assertEquals(-0.2, out.y, 1E-6, "y");
+        assertEquals(-Math.PI / 7 - Math.PI / 4, out.getDirZ(), 1E-6, "dirZ");
+        
+        assertThrows(ArithmeticException.class, () -> p.translate(Double.NaN), "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.translate(Double.NaN, 1.0), "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.translate(1.0, Double.NaN), "Should thrown ArithmeticException on NaN");
+        assertThrows(ArithmeticException.class, () -> p.rotate(Double.NaN), "Should thrown ArithmeticException on NaN");
     }
 
 }

@@ -10,8 +10,8 @@ package org.djutils.draw;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
  * There are two naming conventions for phi and theta. Djutils draw uses neither to stay clear of this confusion. The angle from
- * the positive z-axis to the projection of the direction on the x-y-plane is named <code>dirY</code>. The angle from the
- * positive x-axis to the projection of the direction in the x-y-plane is named <code>dirZ</code>.
+ * the positive z-axis to the projection of the direction on the x-y-plane is named {@code dirY}. The angle from the positive
+ * x-axis to the projection of the direction in the x-y-plane is named {@code dirZ}.
  * <p>
  * @author Alexander Verbraeck
  * @author Peter Knoppers
@@ -34,5 +34,21 @@ public interface Directed3d extends Directed
     {
         return new Direction3d(getDirY(), getDirZ());
     }
+    
+    @Override
+    Directed3d translate(double dR);
+
+    @Override
+    Directed3d rotate(double rotateZ);
+
+    /**
+     * Return a new point with an in-place rotation by the provided rotateY, and rotateZ. The resulting rotations will be
+     * normalized between -&pi; and &pi;.
+     * @param rotateY the rotation around the y-axis
+     * @param rotateZ the rotation around the z-axis
+     * @return a new point with the same coordinates and applied rotations
+     * @throws ArithmeticException when {@code rotateY}, or {@code rotateZ} is {@code NaN}
+     */
+    Directed3d rotate(double rotateY, double rotateZ);
 
 }
