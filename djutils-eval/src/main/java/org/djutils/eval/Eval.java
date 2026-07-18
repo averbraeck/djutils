@@ -12,7 +12,7 @@ import org.djunits.quantity.SIQuantity;
 import org.djunits.quantity.Time;
 import org.djunits.quantity.def.AbsQuantity;
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.unit.Unitless;
 import org.djunits.unit.si.SIUnit;
 import org.djunits.util.Constants;
@@ -1259,7 +1259,7 @@ public class Eval
      * @param unit the unit
      * @return the SIUnit unit
      */
-    private static SIUnit getSiUnit(final Unit<?, ?> unit)
+    private static SIUnit getSiUnit(final UnitInterface<?> unit)
     {
         return unit.siUnit();
     }
