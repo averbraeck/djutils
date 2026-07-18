@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.djunits.formatter.QuantityFormat;
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 
 /**
  * QuantitySerializer (de)serializes DJUNITS quantities.
@@ -21,7 +21,7 @@ import org.djunits.unit.Unit;
  * @param <Q> the quantity type
  * @param <U> the unit type
  */
-public class QuantitySerializer<Q extends Quantity<Q>, U extends Unit<U, Q>> implements TextSerializer<Q>
+public class QuantitySerializer<Q extends Quantity<Q>, U extends UnitInterface<Q>> implements TextSerializer<Q>
 {
     /** cache of the retrieved valueOf(String) methods for quantities based on the stored string. */
     private static Map<Class<? extends Quantity<?>>, Method> valueOfMethodCache = new LinkedHashMap<>();
