@@ -37,7 +37,7 @@
     <djutils-base.version>2.4.2</djutils-base.version>
     <djutils-test.version>2.4.2</djutils-test.version>
     <picocli.version>4.7.7</picocli.version>
-    <djunits.version>6.0.1</djunits.version>
+    <djunits.version>6.1.0</djunits.version>
     <junit.version>5.14.4</junit.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
     <fastcsv.version>2.2.2</fastcsv.version>
