@@ -43,9 +43,10 @@ import org.djunits.quantity.Speed;
 import org.djunits.quantity.Temperature;
 import org.djunits.quantity.Torque;
 import org.djunits.quantity.Volume;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.unit.Unitless;
 import org.djunits.unit.Units;
+import org.djunits.unit.si.SIPrefixes;
 import org.djunits.unit.system.UnitSystem;
 import org.djutils.exceptions.Throw;
 
@@ -64,7 +65,7 @@ public class UnitType
     private static Map<QuantityType, Map<Integer, UnitType>> codeUnitMap = new HashMap<>();
 
     /** map of unit to unit type. */
-    private static Map<Unit<?, ?>, UnitType> unitTypeMap = new HashMap<>();
+    private static Map<UnitInterface<?>, UnitType> unitTypeMap = new HashMap<>();
 
     /** the code of the unit as a byte. */
     private final int code;
@@ -73,7 +74,7 @@ public class UnitType
     private final QuantityType quantityType;
 
     /** the unit. */
-    private final Unit<?, ?> unit;
+    private final UnitInterface<?> unit;
 
     /** the unit name. */
     private final String name;
@@ -727,9 +728,9 @@ public class UnitType
             Frequency.Unit.Hz.deriveUnit("/ns", "per nanosecond", 1E9, UnitSystem.SI_DERIVED), "PER_NANOSECOND", "1/ns");
 
     /** Frequency.PER_MICROSECOND unit type with code 10. */
-    public static final UnitType FREQUENCY_PER_MICROSECOND = new UnitType(QuantityType.FREQUENCY, 10,
-            Frequency.Unit.Hz.deriveUnit("/mus", "/μs", "per microsecond", 1E6, UnitSystem.SI_DERIVED), "PER_MICROSECOND",
-            "1/μs");
+    public static final UnitType FREQUENCY_PER_MICROSECOND =
+            new UnitType(QuantityType.FREQUENCY, 10, Frequency.Unit.Hz.deriveUnit("/mus", "/μs", "per microsecond", 1E6,
+                    UnitSystem.SI_DERIVED, SIPrefixes.getSiPrefix("mu")), "PER_MICROSECOND", "1/μs");
 
     /** Frequency.PER_MILLISECOND unit type with code 11. */
     public static final UnitType FREQUENCY_PER_MILLISECOND = new UnitType(QuantityType.FREQUENCY, 11,
@@ -1215,8 +1216,9 @@ public class UnitType
             Volume.Unit.m3.deriveUnit("nm3", "cubic nanometer", 1E-27, UnitSystem.SI_BASE), "CUBIC_NANOMETER", "nm3");
 
     /** Volume.CUBIC_MICROMETER unit type with code 5. */
-    public static final UnitType VOLUME_CUBIC_MICROMETER = new UnitType(QuantityType.VOLUME, 5,
-            Volume.Unit.m3.deriveUnit("mum3", "μm3", "cubic micrometer", 1E-18, UnitSystem.SI_BASE), "CUBIC_MICROMETER", "μm3");
+    public static final UnitType VOLUME_CUBIC_MICROMETER =
+            new UnitType(QuantityType.VOLUME, 5, Volume.Unit.m3.deriveUnit("mum3", "μm3", "cubic micrometer", 1E-18,
+                    UnitSystem.SI_BASE, SIPrefixes.getSiPrefix("mu")), "CUBIC_MICROMETER", "μm3");
 
     /** Volume.CUBIC_MILLIMETER unit type with code 6. */
     public static final UnitType VOLUME_CUBIC_MILLIMETER =
@@ -1643,7 +1645,7 @@ public class UnitType
      * @param name the unit name
      * @param abbreviation the unit abbreviation
      */
-    public UnitType(final QuantityType quantityType, final int code, final Unit<?, ?> unit, final String name,
+    public UnitType(final QuantityType quantityType, final int code, final UnitInterface<?> unit, final String name,
             final String abbreviation)
     {
         Throw.whenNull(quantityType, "quantityType should not be null");
@@ -1699,7 +1701,7 @@ public class UnitType
      * @param unitCode the unit code to search for.
      * @return the unit type, or null if not found.
      */
-    public static Unit<?, ?> getUnit(final byte quantityTypeCode, final int unitCode)
+    public static UnitInterface<?> getUnit(final byte quantityTypeCode, final int unitCode)
     {
         QuantityType unitType = QuantityType.getQuantityType(quantityTypeCode);
         Map<Integer, UnitType> codeMap = codeUnitMap.get(unitType);
@@ -1712,7 +1714,7 @@ public class UnitType
      * @param code the code to search for.
      * @return the unit type, or null if not found.
      */
-    public static Unit<?, ?> getUnit(final QuantityType quantityType, final int code)
+    public static UnitInterface<?> getUnit(final QuantityType quantityType, final int code)
     {
         Map<Integer, UnitType> codeMap = codeUnitMap.get(quantityType);
         return codeMap == null ? null : codeMap.get(code) == null ? null : codeMap.get(code).unit;
@@ -1731,7 +1733,7 @@ public class UnitType
      * @param unit the unit to search for.
      * @return the unit type, or null if not found.
      */
-    public static UnitType getUnitType(final Unit<?, ?> unit)
+    public static UnitType getUnitType(final UnitInterface<?> unit)
     {
         return unitTypeMap.get(unit);
     }
@@ -1741,7 +1743,7 @@ public class UnitType
      * @param unit the unit to search for.
      * @return the unit type, or null if not found.
      */
-    public static int getIntCode(final Unit<?, ?> unit)
+    public static int getIntCode(final UnitInterface<?> unit)
     {
         QuantityType type = QuantityType.getQuantityType(unit);
         UnitType displayType = type == null ? null : getUnitType(unit);
@@ -1753,7 +1755,7 @@ public class UnitType
      * @param unit the unit to search for.
      * @return the unit type, or null if not found.
      */
-    public static byte getByteCode(final Unit<?, ?> unit)
+    public static byte getByteCode(final UnitInterface<?> unit)
     {
         QuantityType type = QuantityType.getQuantityType(unit);
         UnitType displayType = type == null ? null : getUnitType(unit);
@@ -1779,7 +1781,7 @@ public class UnitType
     /**
      * @return unit
      */
-    public final Unit<?, ?> getUnit()
+    public final UnitInterface<?> getUnit()
     {
         return this.unit;
     }

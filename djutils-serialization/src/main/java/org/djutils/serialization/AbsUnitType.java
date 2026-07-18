@@ -7,7 +7,7 @@ import org.djunits.quantity.Angle;
 import org.djunits.quantity.Duration;
 import org.djunits.quantity.Length;
 import org.djunits.quantity.Temperature;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.unit.Units;
 import org.djutils.exceptions.Throw;
 
@@ -26,7 +26,7 @@ public class AbsUnitType
     private static Map<AbsQuantityType, Map<Integer, AbsUnitType>> codeUnitMap = new HashMap<>();
 
     /** map of unit to unit type. */
-    private static Map<Unit<?, ?>, AbsUnitType> unitTypeMap = new HashMap<>();
+    private static Map<UnitInterface<?>, AbsUnitType> unitTypeMap = new HashMap<>();
 
     /** the code of the unit as a byte. */
     private final int code;
@@ -35,7 +35,7 @@ public class AbsUnitType
     private final AbsQuantityType absQuantityType;
 
     /** the unit. */
-    private final Unit<?, ?> unit;
+    private final UnitInterface<?> unit;
 
     /** the unit name. */
     private final String name;
@@ -235,7 +235,7 @@ public class AbsUnitType
      * @param name the unit name
      * @param abbreviation the unit abbreviation
      */
-    public AbsUnitType(final AbsQuantityType absQuantityType, final int code, final Unit<?, ?> unit, final String name,
+    public AbsUnitType(final AbsQuantityType absQuantityType, final int code, final UnitInterface<?> unit, final String name,
             final String abbreviation)
     {
         Throw.whenNull(absQuantityType, "absQuantityType should not be null");
@@ -291,7 +291,7 @@ public class AbsUnitType
      * @param unitCode the unit code to search for.
      * @return the unit type, or null if not found.
      */
-    public static Unit<?, ?> getUnit(final byte quantityTypeCode, final int unitCode)
+    public static UnitInterface<?> getUnit(final byte quantityTypeCode, final int unitCode)
     {
         AbsQuantityType unitType = AbsQuantityType.getAbsQuantityType(quantityTypeCode);
         Map<Integer, AbsUnitType> codeMap = codeUnitMap.get(unitType);
@@ -304,7 +304,7 @@ public class AbsUnitType
      * @param code the code to search for.
      * @return the unit, or null if not found.
      */
-    public static Unit<?, ?> getUnit(final AbsQuantityType absQuantityType, final int code)
+    public static UnitInterface<?> getUnit(final AbsQuantityType absQuantityType, final int code)
     {
         Map<Integer, AbsUnitType> codeMap = codeUnitMap.get(absQuantityType);
         return codeMap == null ? null : codeMap.get(code) == null ? null : codeMap.get(code).unit;
@@ -323,7 +323,7 @@ public class AbsUnitType
      * @param unit the unit to search for.
      * @return the unit type, or null if not found.
      */
-    public static AbsUnitType getAbsUnitType(final Unit<?, ?> unit)
+    public static AbsUnitType getAbsUnitType(final UnitInterface<?> unit)
     {
         return unitTypeMap.get(unit);
     }
@@ -333,7 +333,7 @@ public class AbsUnitType
      * @param unit the unit to search for.
      * @return the unit type, or null if not found.
      */
-    public static int getIntCode(final Unit<?, ?> unit)
+    public static int getIntCode(final UnitInterface<?> unit)
     {
         AbsQuantityType type = AbsQuantityType.getAbsQuantityType(unit);
         AbsUnitType displayType = type == null ? null : getAbsUnitType(unit);
@@ -345,7 +345,7 @@ public class AbsUnitType
      * @param unit the unit to search for.
      * @return the unit type, or null if not found.
      */
-    public static byte getByteCode(final Unit<?, ?> unit)
+    public static byte getByteCode(final UnitInterface<?> unit)
     {
         AbsQuantityType type = AbsQuantityType.getAbsQuantityType(unit);
         AbsUnitType displayType = type == null ? null : getAbsUnitType(unit);
@@ -371,7 +371,7 @@ public class AbsUnitType
     /**
      * @return unit
      */
-    public final Unit<?, ?> getUnit()
+    public final UnitInterface<?> getUnit()
     {
         return this.unit;
     }

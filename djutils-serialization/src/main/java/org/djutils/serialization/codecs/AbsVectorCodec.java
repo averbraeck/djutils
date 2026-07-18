@@ -1,6 +1,6 @@
 package org.djutils.serialization.codecs;
 
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.vecmat.def.AbsVector;
 import org.djunits.vecmat.dn.VectorN;
 import org.djunits.vecmat.storage.DenseDoubleDataSi;
@@ -78,7 +78,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                 throws SerializationException
         {
             int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = AbsUnitCodec.getUnit(buffer, pointer);
             Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
             String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
             float[] dataSi = new float[size];
@@ -87,7 +87,6 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                 dataSi[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
             }
             VectorN.Col<?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, 1, size), unit);
-            UnitCodec.setDisplayUnit(vector, unit);
             return AbsHelper.instantiateAbsVector(vector, refStr);
         }
     }
@@ -128,7 +127,7 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                 throws SerializationException
         {
             int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = AbsUnitCodec.getUnit(buffer, pointer);
             Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
             String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
             double[] dataSi = new double[size];
@@ -137,7 +136,6 @@ public abstract class AbsVectorCodec extends BasicCodec<AbsVector<?, ?, ?, ?, ?>
                 dataSi[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
             }
             VectorN.Col<?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, 1, size), unit);
-            UnitCodec.setDisplayUnit(vector, unit);
             return AbsHelper.instantiateAbsVector(vector, refStr);
         }
     }

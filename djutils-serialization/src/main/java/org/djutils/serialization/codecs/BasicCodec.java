@@ -21,7 +21,7 @@ public abstract class BasicCodec<T>
 
     /** The short name of the codec. */
     private final String shortName;
-    
+
     /**
      * Construct the BasicCodec.
      * @param type the field type as defined by the {@link FieldTypes} class

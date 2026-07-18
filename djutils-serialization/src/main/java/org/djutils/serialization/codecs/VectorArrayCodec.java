@@ -1,6 +1,6 @@
 package org.djutils.serialization.codecs;
 
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.vecmat.def.Vector;
 import org.djunits.vecmat.dn.VectorN;
 import org.djunits.vecmat.storage.DenseDoubleDataSi;
@@ -85,7 +85,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
-            Unit<?, ?>[] unitArray = new Unit[vecs];
+            UnitInterface<?>[] unitArray = new UnitInterface[vecs];
             for (int v = 0; v < vecs; v++)
             {
                 unitArray[v] = UnitCodec.getUnit(buffer, pointer);
@@ -100,9 +100,8 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             }
             for (int v = 0; v < vecs; v++)
             {
-                Unit<?, ?> unit = unitArray[v];
+                UnitInterface<?> unit = unitArray[v];
                 VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi[v], rows, 1), unit);
-                UnitCodec.setDisplayUnit(vector, unit);
                 vectorArray[v] = vector;
             }
             return vectorArray;
@@ -153,7 +152,7 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             int vecs = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
-            Unit<?, ?>[] unitArray = new Unit[vecs];
+            UnitInterface<?>[] unitArray = new UnitInterface[vecs];
             for (int v = 0; v < vecs; v++)
             {
                 unitArray[v] = UnitCodec.getUnit(buffer, pointer);
@@ -168,9 +167,8 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             }
             for (int v = 0; v < vecs; v++)
             {
-                Unit<?, ?> unit = unitArray[v];
+                UnitInterface<?> unit = unitArray[v];
                 VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi[v], rows, 1), unit);
-                UnitCodec.setDisplayUnit(vector, unit);
                 vectorArray[v] = vector;
             }
             return vectorArray;
@@ -220,14 +218,13 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
             for (int v = 0; v < vecs; v++)
             {
-                Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                UnitInterface<?> unit = UnitCodec.getUnit(buffer, pointer);
                 float[] dataSi = new float[cols];
                 for (int i = 0; i < cols; i++)
                 {
                     dataSi[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
                 }
                 VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, 1, cols), unit);
-                UnitCodec.setDisplayUnit(vector, unit);
                 vectorArray[v] = vector;
             }
             return vectorArray;
@@ -277,14 +274,13 @@ public abstract class VectorArrayCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>[
             Vector<?, ?, ?, ?, ?>[] vectorArray = new Vector[vecs];
             for (int v = 0; v < vecs; v++)
             {
-                Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+                UnitInterface<?> unit = UnitCodec.getUnit(buffer, pointer);
                 double[] dataSi = new double[cols];
                 for (int i = 0; i < cols; i++)
                 {
                     dataSi[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
                 }
                 VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, 1, cols), unit);
-                UnitCodec.setDisplayUnit(vector, unit);
                 vectorArray[v] = vector;
             }
             return vectorArray;

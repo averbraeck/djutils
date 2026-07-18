@@ -49,7 +49,7 @@ import org.djunits.quantity.Torque;
 import org.djunits.quantity.Volume;
 import org.djunits.quantity.VolumetricObjectDensity;
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 
 /**
  * The quantity types with their code, including static methods to quickly find a quantity type.
@@ -303,7 +303,7 @@ public class QuantityType
      * @param unit the unit to search for
      * @return the quantity type, or null if not found
      */
-    public static QuantityType getQuantityType(final Unit<?, ?> unit)
+    public static QuantityType getQuantityType(final UnitInterface<?> unit)
     {
         return quantityTypeMap.get(unit.ofSi(0.0).getClass());
     }

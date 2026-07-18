@@ -49,8 +49,7 @@ public class StringSerializationTest extends AbstractSerializationTest
 
         compare(Codec.encodeUTF8(permille, Endianness.BIG_ENDIAN),
                 new byte[] {9, 0, 0, 0, 3, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
-        compare(Codec.encodeUTF16(permille, Endianness.BIG_ENDIAN),
-                new byte[] {10, 0, 0, 0, 1, (byte) 0x20, (byte) 0x30});
+        compare(Codec.encodeUTF16(permille, Endianness.BIG_ENDIAN), new byte[] {10, 0, 0, 0, 1, (byte) 0x20, (byte) 0x30});
 
         compare(Codec.encodeUTF8(smiley, Endianness.BIG_ENDIAN),
                 new byte[] {9, 0, 0, 0, 4, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
@@ -59,8 +58,7 @@ public class StringSerializationTest extends AbstractSerializationTest
 
         compare(Codec.encodeUTF8(permille, Endianness.LITTLE_ENDIAN),
                 new byte[] {9, 3, 0, 0, 0, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
-        compare(Codec.encodeUTF16(permille, Endianness.LITTLE_ENDIAN),
-                new byte[] {10, 1, 0, 0, 0, (byte) 0x30, (byte) 0x20});
+        compare(Codec.encodeUTF16(permille, Endianness.LITTLE_ENDIAN), new byte[] {10, 1, 0, 0, 0, (byte) 0x30, (byte) 0x20});
 
         compare(Codec.encodeUTF8(smiley, Endianness.LITTLE_ENDIAN),
                 new byte[] {9, 4, 0, 0, 0, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
@@ -144,8 +142,7 @@ public class StringSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized =
-                        encodeUTF8 ? Codec.encodeUTF8(sa, endianness) : Codec.encodeUTF16(sa, endianness);
+                byte[] serialized = encodeUTF8 ? Codec.encodeUTF8(sa, endianness) : Codec.encodeUTF16(sa, endianness);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -180,8 +177,7 @@ public class StringSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized =
-                        encodeUTF8 ? Codec.encodeUTF8(sm, endianness) : Codec.encodeUTF16(sm, endianness);
+                byte[] serialized = encodeUTF8 ? Codec.encodeUTF8(sm, endianness) : Codec.encodeUTF16(sm, endianness);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -206,8 +202,8 @@ public class StringSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                UnitTest.testFail(() -> encodeUTF8 ? Codec.encodeUTF8(smRagged, endianness)
-                        : Codec.encodeUTF16(smRagged, endianness));
+                UnitTest.testFail(
+                        () -> encodeUTF8 ? Codec.encodeUTF8(smRagged, endianness) : Codec.encodeUTF16(smRagged, endianness));
             }
         }
     }

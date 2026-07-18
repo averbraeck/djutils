@@ -8,10 +8,10 @@ import org.djunits.quantity.Position;
 import org.djunits.quantity.Temperature;
 import org.djunits.quantity.TemperatureDifference;
 import org.djunits.quantity.Time;
-import org.djunits.quantity.def.AbsBasic;
+import org.djunits.quantity.def.AbsQuantity;
 import org.djunits.quantity.def.Quantity;
 import org.djunits.quantity.def.Reference;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.vecmat.dn.AbsVectorN;
 import org.djunits.vecmat.dn.VectorN;
 import org.djunits.vecmat.dnxm.AbsMatrixNxM;
@@ -44,7 +44,8 @@ public final class AbsHelper
      * @return the reference
      * @throws SerializationException when the reference or absolute class could not be found
      */
-    static Reference<?, ?, ?> instantiateReference(final String refStr, final Unit<?, ?> unit) throws SerializationException
+    static Reference<?, ?, ?> instantiateReference(final String refStr, final UnitInterface<?> unit)
+            throws SerializationException
     {
         Quantity<?> quantity = unit.ofSi(0.0);
         if (quantity instanceof Angle)
@@ -84,7 +85,7 @@ public final class AbsHelper
      * @param <Q> the quantity type
      */
     @SuppressWarnings("unchecked")
-    static <Q extends Quantity<Q>> AbsBasic<?, Q, ?> instantiateAbsQuantity(final Quantity<?> quantity, final String refStr)
+    static <Q extends Quantity<Q>> AbsQuantity<?, Q, ?> instantiateAbsQuantity(final Quantity<?> quantity, final String refStr)
             throws SerializationException
     {
         Reference<?, ?, Q> ref = (Reference<?, ?, Q>) instantiateReference(refStr, quantity.getDisplayUnit());
