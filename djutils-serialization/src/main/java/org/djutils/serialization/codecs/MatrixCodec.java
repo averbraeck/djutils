@@ -1,6 +1,6 @@
 package org.djutils.serialization.codecs;
 
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.vecmat.def.Matrix;
 import org.djunits.vecmat.dnxm.MatrixNxM;
 import org.djunits.vecmat.storage.DenseDoubleDataSi;
@@ -81,7 +81,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
         {
             int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = UnitCodec.getUnit(buffer, pointer);
             float[][] dataSi = new float[rows][cols];
             for (int i = 0; i < rows; i++)
             {
@@ -92,7 +92,6 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
             }
             @SuppressWarnings({"unchecked", "rawtypes"})
             MatrixNxM<?> matrix = new MatrixNxM(DenseFloatDataSi.ofSi(dataSi), unit);
-            UnitCodec.setDisplayUnit(matrix, unit);
             return matrix;
         }
     }
@@ -137,7 +136,7 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
         {
             int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = UnitCodec.getUnit(buffer, pointer);
             double[][] dataSi = new double[rows][cols];
             for (int i = 0; i < rows; i++)
             {
@@ -148,7 +147,6 @@ public abstract class MatrixCodec extends BasicCodec<Matrix<?, ?, ?, ?, ?>>
             }
             @SuppressWarnings({"unchecked", "rawtypes"})
             MatrixNxM<?> matrix = new MatrixNxM(DenseDoubleDataSi.ofSi(dataSi), unit);
-            UnitCodec.setDisplayUnit(matrix, unit);
             return matrix;
         }
     }

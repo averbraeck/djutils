@@ -10,9 +10,8 @@ import java.util.Map;
 import org.djunits.quantity.Dimensionless;
 import org.djunits.quantity.SIQuantity;
 import org.djunits.quantity.Time;
-import org.djunits.quantity.def.AbsQuantity;
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.unit.Unitless;
 import org.djunits.unit.si.SIUnit;
 import org.djunits.util.Constants;
@@ -294,7 +293,7 @@ public class Eval
      */
     public Eval setUserDefinedFunctions(final Map<String, Function> userDefinedFunctionMap)
     {
-        this.userDefinedFunctions = userDefinedFunctionMap;
+        this.userDefinedFunctions = new HashMap<>(userDefinedFunctionMap);
         return this;
     }
 
@@ -377,6 +376,7 @@ public class Eval
                     break;
                 }
                 throwException("Cannot apply unary minus on " + value);
+                break;
             }
 
             case '!':
@@ -926,22 +926,16 @@ public class Eval
             // System.out.println("right: " + getDimensions((Quantity<?>) right));
             throwException("Cannot add " + left + " to " + right + " because the types are incompatible");
         }
+
         // Operands are of compatible unit
-        if ((left instanceof Quantity) && (right instanceof Quantity))
-        {
-            // Rel + Rel -> Rel
-            var dsl = (Quantity) left;
-            var dsr = (Quantity) right;
-            var sum = dsl.add(dsr);
-            // System.out.println(left + " + " + right + " = " + sum);
-            // Set display unit???
-            push(sum);
-            return;
-        }
-        if (right instanceof AbsQuantity)
-        {
-            throwException("Cannot add an absolute value to some other value");
-        }
+        // Rel + Rel -> Rel
+        var dsl = (Quantity) left;
+        var dsr = (Quantity) right;
+        var sum = dsl.add(dsr);
+        // System.out.println(left + " + " + right + " = " + sum);
+        // Set display unit???
+        push(sum);
+        return;
     }
 
     /**
@@ -1259,7 +1253,7 @@ public class Eval
      * @param unit the unit
      * @return the SIUnit unit
      */
-    private static SIUnit getSiUnit(final Unit<?, ?> unit)
+    private static SIUnit getSiUnit(final UnitInterface<?> unit)
     {
         return unit.siUnit();
     }

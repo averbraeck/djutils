@@ -22,7 +22,7 @@ public enum Endianness
 
     /** big endian? */
     private final boolean bigEndian;
-    
+
     /** Is this platform bigEndian? */
     private static final boolean PLATFORM_BIG_ENDIAN = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 

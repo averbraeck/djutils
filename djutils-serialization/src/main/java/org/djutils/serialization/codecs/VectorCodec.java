@@ -1,6 +1,6 @@
 package org.djutils.serialization.codecs;
 
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.vecmat.def.Vector;
 import org.djunits.vecmat.dn.VectorN;
 import org.djunits.vecmat.storage.DenseDoubleDataSi;
@@ -76,14 +76,13 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
                 throws SerializationException
         {
             int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = UnitCodec.getUnit(buffer, pointer);
             float[] dataSi = new float[size];
             for (int i = 0; i < size; i++)
             {
                 dataSi[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
             }
             VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseFloatDataSi(dataSi, size, 1), unit);
-            UnitCodec.setDisplayUnit(vector, unit);
             return vector;
         }
     }
@@ -123,14 +122,13 @@ public abstract class VectorCodec extends BasicCodec<Vector<?, ?, ?, ?, ?>>
                 throws SerializationException
         {
             int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = UnitCodec.getUnit(buffer, pointer);
             double[] dataSi = new double[size];
             for (int i = 0; i < size; i++)
             {
                 dataSi[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
             }
             VectorN<?, ?, ?, ?, ?> vector = VectorN.Col.ofSi(new DenseDoubleDataSi(dataSi, size, 1), unit);
-            UnitCodec.setDisplayUnit(vector, unit);
             return vector;
         }
     }

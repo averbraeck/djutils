@@ -1,8 +1,7 @@
 package org.djutils.serialization.codecs;
 
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
-import org.djunits.value.Value;
+import org.djunits.unit.UnitInterface;
 import org.djutils.serialization.QuantityType;
 import org.djutils.serialization.UnitType;
 
@@ -28,7 +27,7 @@ public final class UnitCodec
      * @param message the byte array
      * @param pointer the start pointer in the byte array
      */
-    protected static void encodeQuantityUnit(final Unit<?, ?> unit, final byte[] message, final Pointer pointer)
+    protected static void encodeQuantityUnit(final UnitInterface<?> unit, final byte[] message, final Pointer pointer)
     {
         QuantityType quantityType = QuantityType.getQuantityType(unit);
         message[pointer.getAndIncrement(1)] = quantityType.getCode();
@@ -56,26 +55,11 @@ public final class UnitCodec
      * @param pointer position in the encoded data where the unit is to be decoded from
      * @return the Unit
      */
-    protected static Unit<?, ?> getUnit(final byte[] buffer, final Pointer pointer)
+    protected static UnitInterface<?> getUnit(final byte[] buffer, final Pointer pointer)
     {
         byte quantityCode = buffer[pointer.getAndIncrement(1)];
         byte unitCode = buffer[pointer.getAndIncrement(1)];
         return UnitType.getUnit(quantityCode, unitCode);
-    }
-
-    /**
-     * Set anonymous display unit for anonymous value.
-     * @param <V> the value type
-     * @param <Q> the quantity type
-     * @param <U> the corresponding unit type
-     * @param value the value to set the display unit for
-     * @param unit the display unit
-     */
-    @SuppressWarnings("unchecked")
-    public static <V extends Value<V, Q>, Q extends Quantity<Q>,
-            U extends Unit<U, Q>> void setDisplayUnit(final Value<?, ?> value, final Unit<?, ?> unit)
-    {
-        ((V) value).setDisplayUnit((U) unit);
     }
 
 }

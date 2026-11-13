@@ -8,8 +8,8 @@ import org.djunits.quantity.Direction;
 import org.djunits.quantity.Position;
 import org.djunits.quantity.Temperature;
 import org.djunits.quantity.Time;
-import org.djunits.quantity.def.AbsBasic;
-import org.djunits.unit.Unit;
+import org.djunits.quantity.def.AbsQuantity;
+import org.djunits.unit.UnitInterface;
 
 /**
  * The absolute quantity types with their code, including static methods to quickly find an absolute quantity type.
@@ -26,7 +26,7 @@ public class AbsQuantityType
     private static Map<Byte, AbsQuantityType> byteTypeMap = new HashMap<>();
 
     /** the absolute quantity types from class to type. */
-    private static Map<Class<? extends AbsBasic<?, ?, ?>>, AbsQuantityType> quantityTypeMap = new HashMap<>();
+    private static Map<Class<? extends AbsQuantity<?, ?, ?>>, AbsQuantityType> quantityTypeMap = new HashMap<>();
 
     /** {@link Direction} quantity type with code 4. */
     public static final AbsQuantityType DIRECTION =
@@ -47,7 +47,7 @@ public class AbsQuantityType
     private final byte code;
 
     /** The quantity class. */
-    private final Class<? extends AbsBasic<?, ?, ?>> absQuantityClass;
+    private final Class<? extends AbsQuantity<?, ?, ?>> absQuantityClass;
 
     /** The quantity name. */
     private final String name;
@@ -66,7 +66,7 @@ public class AbsQuantityType
      * @param description the absolute quantity description
      * @param siUnit the SI or BASE unit as a String
      */
-    public AbsQuantityType(final int code, final Class<? extends AbsBasic<?, ?, ?>> absQuantityClass, final String name,
+    public AbsQuantityType(final int code, final Class<? extends AbsQuantity<?, ?, ?>> absQuantityClass, final String name,
             final String description, final String siUnit)
     {
         this.code = (byte) code;
@@ -94,7 +94,7 @@ public class AbsQuantityType
      * @param code the code to search for
      * @return the absolute quantity class, or null if not found
      */
-    public static Class<? extends AbsBasic<?, ?, ?>> getAbsQuantityClass(final byte code)
+    public static Class<? extends AbsQuantity<?, ?, ?>> getAbsQuantityClass(final byte code)
     {
         AbsQuantityType type = byteTypeMap.get(code);
         return type == null ? null : type.getAbsQuantityClass();
@@ -105,7 +105,7 @@ public class AbsQuantityType
      * @param absQuantity the absolute quantity to search for
      * @return the absolute quantity type, or null if not found
      */
-    public static AbsQuantityType getAbsQuantityType(final AbsBasic<?, ?, ?> absQuantity)
+    public static AbsQuantityType getAbsQuantityType(final AbsQuantity<?, ?, ?> absQuantity)
     {
         return quantityTypeMap.get(absQuantity.getClass());
     }
@@ -115,7 +115,7 @@ public class AbsQuantityType
      * @param unit the unit to search for
      * @return the absolute quantity type, or null if not found
      */
-    public static AbsQuantityType getAbsQuantityType(final Unit<?, ?> unit)
+    public static AbsQuantityType getAbsQuantityType(final UnitInterface<?> unit)
     {
         return quantityTypeMap.get(unit.ofSi(0.0).getClass());
     }
@@ -126,7 +126,7 @@ public class AbsQuantityType
      * @return the absolute quantity type code
      * @throws IllegalArgumentException when quantity type could not be found
      */
-    public static byte getAbsQuantityCode(final AbsBasic<?, ?, ?> absQuantity)
+    public static byte getAbsQuantityCode(final AbsQuantity<?, ?, ?> absQuantity)
     {
         AbsQuantityType type = quantityTypeMap.get(absQuantity.getClass());
         if (type == null)
@@ -150,7 +150,7 @@ public class AbsQuantityType
      * Return the Quantity class of this AbsQuantityType.
      * @return the Quantity class of this AbsQuantityType
      */
-    public final Class<? extends AbsBasic<?, ?, ?>> getAbsQuantityClass()
+    public final Class<? extends AbsQuantity<?, ?, ?>> getAbsQuantityClass()
     {
         return this.absQuantityClass;
     }

@@ -1,7 +1,7 @@
 package org.djutils.serialization.codecs;
 
-import org.djunits.quantity.def.AbsBasic;
-import org.djunits.unit.Unit;
+import org.djunits.quantity.def.AbsQuantity;
+import org.djunits.unit.UnitInterface;
 import org.djutils.serialization.AbsQuantityType;
 import org.djutils.serialization.AbsUnitType;
 
@@ -27,7 +27,7 @@ public final class AbsUnitCodec
      * @param message the byte array
      * @param pointer the start pointer in the byte array
      */
-    protected static void encodeAbsQuantityUnit(final Unit<?, ?> unit, final byte[] message, final Pointer pointer)
+    protected static void encodeAbsQuantityUnit(final UnitInterface<?> unit, final byte[] message, final Pointer pointer)
     {
         AbsQuantityType absQuantityType = AbsQuantityType.getAbsQuantityType(unit);
         message[pointer.getAndIncrement(1)] = absQuantityType.getCode();
@@ -41,7 +41,7 @@ public final class AbsUnitCodec
      * @param message the byte array
      * @param pointer the start pointer in the byte array
      */
-    protected static void encodeAbsQuantityUnit(final AbsBasic<?, ?, ?> absQuantity, final byte[] message,
+    protected static void encodeAbsQuantityUnit(final AbsQuantity<?, ?, ?> absQuantity, final byte[] message,
             final Pointer pointer)
     {
         AbsQuantityType absQuantityType = AbsQuantityType.getAbsQuantityType(absQuantity);
@@ -56,7 +56,7 @@ public final class AbsUnitCodec
      * @param pointer position in the encoded data where the unit is to be decoded from
      * @return the Unit
      */
-    protected static Unit<?, ?> getUnit(final byte[] buffer, final Pointer pointer)
+    protected static UnitInterface<?> getUnit(final byte[] buffer, final Pointer pointer)
     {
         byte quantityCode = buffer[pointer.getAndIncrement(1)];
         byte unitCode = buffer[pointer.getAndIncrement(1)];

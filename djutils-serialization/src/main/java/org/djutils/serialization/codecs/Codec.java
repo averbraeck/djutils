@@ -3,9 +3,9 @@ package org.djutils.serialization.codecs;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.djunits.quantity.def.AbsBasic;
+import org.djunits.quantity.def.AbsQuantity;
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.vecmat.def.AbsMatrix;
 import org.djunits.vecmat.def.AbsVector;
 import org.djunits.vecmat.def.Matrix;
@@ -249,7 +249,7 @@ public final class Codec
             return utf8 ? StringMatrixCodec.STRING8_MATRIX : StringMatrixCodec.STRING16_MATRIX;
         if (object instanceof Quantity)
             return floatQuantity ? QuantityCodec.QUANTITY_FLOAT : QuantityCodec.QUANTITY_DOUBLE;
-        if (object instanceof AbsBasic)
+        if (object instanceof AbsQuantity)
             return floatQuantity ? AbsQuantityCodec.ABS_QUANTITY_FLOAT : AbsQuantityCodec.ABS_QUANTITY_DOUBLE;
         if (object instanceof Vector)
             return floatQuantity ? VectorCodec.VECTOR_FLOAT : VectorCodec.VECTOR_DOUBLE;
@@ -512,7 +512,8 @@ public final class Codec
      * @param <U> the unit type
      */
     @SuppressWarnings("unchecked")
-    public static <U extends Unit<U, ?>> U getUnit(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+    public static <U extends UnitInterface<?>> U getUnit(final byte[] buffer, final Pointer pointer,
+            final Endianness endianness)
     {
         QuantityType quantityType = QuantityType.getQuantityType(buffer[pointer.getAndIncrement(1)]);
         UnitType unitType = UnitType.getUnitType(quantityType, 0 + buffer[pointer.getAndIncrement(1)]);

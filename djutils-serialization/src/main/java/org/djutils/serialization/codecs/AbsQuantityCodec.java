@@ -1,8 +1,8 @@
 package org.djutils.serialization.codecs;
 
-import org.djunits.quantity.def.AbsBasic;
+import org.djunits.quantity.def.AbsQuantity;
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djutils.exceptions.Throw;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
@@ -16,7 +16,7 @@ import org.djutils.serialization.SerializationException;
  * <p>
  * @author Alexander Verbraeck
  */
-public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
+public abstract class AbsQuantityCodec extends BasicCodec<AbsQuantity<?, ?, ?>>
 {
     /**
      * Construct the QuantityCodec.
@@ -53,13 +53,13 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
         }
 
         @Override
-        public int size(final AbsBasic<?, ?, ?> absQuantity)
+        public int size(final AbsQuantity<?, ?, ?> absQuantity)
         {
             return 2 + 4 + 1 + 4 + absQuantity.getReference().getId().length();
         }
 
         @Override
-        public void serialize(final AbsBasic<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
+        public void serialize(final AbsQuantity<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
                 final Endianness endianness) throws SerializationException
         {
             AbsUnitCodec.encodeAbsQuantityUnit(absQuantity, buffer, pointer);
@@ -68,15 +68,15 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
             endianness.encodeDouble(v, buffer, pointer.getAndIncrement(4));
         }
 
+        @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
-        public AbsBasic<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        public AbsQuantity<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                 throws SerializationException
         {
-            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            UnitInterface unit = AbsUnitCodec.getUnit(buffer, pointer);
             Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
             String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
-            Quantity<?> quantity = unit.ofSi(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)));
-            UnitCodec.setDisplayUnit(quantity, unit);
+            Quantity<?> quantity = unit.ofSi(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)), unit);
             return AbsHelper.instantiateAbsQuantity(quantity, refStr);
         }
     }
@@ -94,13 +94,13 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
         }
 
         @Override
-        public int size(final AbsBasic<?, ?, ?> absQuantity)
+        public int size(final AbsQuantity<?, ?, ?> absQuantity)
         {
             return 2 + 8 + 1 + 4 + absQuantity.getReference().getId().length();
         }
 
         @Override
-        public void serialize(final AbsBasic<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
+        public void serialize(final AbsQuantity<?, ?, ?> absQuantity, final byte[] buffer, final Pointer pointer,
                 final Endianness endianness) throws SerializationException
         {
             AbsUnitCodec.encodeAbsQuantityUnit(absQuantity, buffer, pointer);
@@ -109,15 +109,15 @@ public abstract class AbsQuantityCodec extends BasicCodec<AbsBasic<?, ?, ?>>
             endianness.encodeDouble(v, buffer, pointer.getAndIncrement(8));
         }
 
+        @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
-        public AbsBasic<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
+        public AbsQuantity<?, ?, ?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                 throws SerializationException
         {
-            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            UnitInterface unit = AbsUnitCodec.getUnit(buffer, pointer);
             Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
             String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
-            Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)));
-            UnitCodec.setDisplayUnit(quantity, unit);
+            Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)), unit);
             return AbsHelper.instantiateAbsQuantity(quantity, refStr);
         }
     }

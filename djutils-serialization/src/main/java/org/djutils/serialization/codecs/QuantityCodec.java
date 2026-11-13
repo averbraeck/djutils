@@ -1,7 +1,7 @@
 package org.djutils.serialization.codecs;
 
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
@@ -42,7 +42,7 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
     public static final FloatQuantityCodec QUANTITY_FLOAT = new FloatQuantityCodec();
 
     /** Converter class for Quantity with a float value. */
-    public static final class FloatQuantityCodec extends QuantityCodec
+    protected static final class FloatQuantityCodec extends QuantityCodec
     {
         /** Construct the FloatQuantityCodec. */
         public FloatQuantityCodec()
@@ -65,13 +65,13 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
             endianness.encodeFloat(v, buffer, pointer.getAndIncrement(4));
         }
 
+        @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public Quantity<?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                 throws SerializationException
         {
-            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
-            Quantity<?> quantity = unit.ofSi(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)));
-            UnitCodec.setDisplayUnit(quantity, unit);
+            UnitInterface unit = UnitCodec.getUnit(buffer, pointer);
+            Quantity<?> quantity = unit.ofSi(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)), unit);
             return quantity;
         }
     }
@@ -103,13 +103,13 @@ public abstract class QuantityCodec extends BasicCodec<Quantity<?>>
             endianness.encodeDouble(v, buffer, pointer.getAndIncrement(8));
         }
 
+        @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public Quantity<?> deserialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                 throws SerializationException
         {
-            Unit<?, ?> unit = UnitCodec.getUnit(buffer, pointer);
-            Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)));
-            UnitCodec.setDisplayUnit(quantity, unit);
+            UnitInterface unit = UnitCodec.getUnit(buffer, pointer);
+            Quantity<?> quantity = unit.ofSi(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)), unit);
             return quantity;
         }
     }

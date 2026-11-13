@@ -1,6 +1,6 @@
 package org.djutils.serialization.codecs;
 
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djunits.vecmat.def.AbsMatrix;
 import org.djunits.vecmat.dnxm.MatrixNxM;
 import org.djunits.vecmat.storage.DenseDoubleDataSi;
@@ -83,7 +83,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
         {
             int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = AbsUnitCodec.getUnit(buffer, pointer);
             Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
             String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
             float[][] dataSi = new float[rows][cols];
@@ -96,7 +96,6 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
             }
             @SuppressWarnings({"unchecked", "rawtypes"})
             MatrixNxM<?> matrix = new MatrixNxM(DenseFloatDataSi.of(dataSi, unit), unit);
-            UnitCodec.setDisplayUnit(matrix, unit);
             return AbsHelper.instantiateAbsMatrix(matrix, refStr);
         }
     }
@@ -142,7 +141,7 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
         {
             int rows = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             int cols = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<?, ?> unit = AbsUnitCodec.getUnit(buffer, pointer);
+            UnitInterface<?> unit = AbsUnitCodec.getUnit(buffer, pointer);
             Throw.when(pointer.getAndIncrement(1) != 9, SerializationException.class, "No String prefix at position 7");
             String refStr = StringCodec.STRING8.deserialize(buffer, pointer, endianness);
             double[][] dataSi = new double[rows][cols];
@@ -155,7 +154,6 @@ public abstract class AbsMatrixCodec extends BasicCodec<AbsMatrix<?, ?, ?, ?, ?>
             }
             @SuppressWarnings({"unchecked", "rawtypes"})
             MatrixNxM<?> matrix = new MatrixNxM(DenseDoubleDataSi.of(dataSi, unit), unit);
-            UnitCodec.setDisplayUnit(matrix, unit);
             return AbsHelper.instantiateAbsMatrix(matrix, refStr);
         }
     }

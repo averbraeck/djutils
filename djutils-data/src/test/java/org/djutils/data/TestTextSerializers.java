@@ -359,16 +359,16 @@ public class TestTextSerializers
         length = new Length(123.456, Length.Unit.mi);
         assertEquals(length, lengthSerializer.deserialize(Length.class, lengthSerializer.serialize(length)));
 
-        Time time = new Time(10.0, Duration.Unit.day, Time.Reference.UNIX);
+        Time time = new Time(10.0, Duration.Unit.day, Time.Reference.UNIX, false);
         AbsQuantitySerializer<Time, Duration, Time.Reference> timeSerializer = new AbsQuantitySerializer<>();
         assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time)));
 
         // repeat to test caching
-        time = new Time(12.0, Duration.Unit.s, Time.Reference.UNIX);
+        time = new Time(12.0, Duration.Unit.s, Time.Reference.UNIX, false);
         assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time)));
 
         // check other reference
-        time = new Time(100.0, Duration.Unit.wk, Time.Reference.GREGORIAN);
+        time = new Time(100.0, Duration.Unit.wk, Time.Reference.GREGORIAN, false);
         assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time)));
 
         // test null and empty string

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.djunits.formatter.QuantityFormat;
 import org.djunits.quantity.def.Quantity;
-import org.djunits.unit.Unit;
+import org.djunits.unit.UnitInterface;
 import org.djutils.decoderdumper.Decoder;
 import org.djutils.logger.CategoryLogger;
 import org.djutils.serialization.Endianness;
@@ -70,10 +70,10 @@ public class SerialDataDecoder implements Decoder
     private int currentChar;
 
     /** Djunits display unit. */
-    private Unit<?, ?> displayUnit;
+    private UnitInterface<?> displayUnit;
 
     /** Array of units for array of column vectors. */
-    private Unit<?, ?>[] columnUnits = null;
+    private UnitInterface<?>[] columnUnits = null;
 
     /** String builder for current output line. */
     private StringBuilder buffer = new StringBuilder();
@@ -446,7 +446,7 @@ public class SerialDataDecoder implements Decoder
     private boolean fillDjunitsVectorArrayColumnUnits()
     {
         boolean result = false;
-        this.columnUnits = new Unit<?, ?>[this.columnCount];
+        this.columnUnits = new UnitInterface<?>[this.columnCount];
         for (int i = 0; i < this.columnCount; i++)
         {
             byte unitTypeCode = this.dataElementBytes[2 * i];
@@ -470,7 +470,7 @@ public class SerialDataDecoder implements Decoder
      * @param <Q> the quantity type
      */
     @SuppressWarnings("unchecked")
-    private <U extends Unit<U, Q>, Q extends Quantity<Q>> boolean appendDjunitsVectorArrayElement()
+    private <U extends UnitInterface<Q>, Q extends Quantity<Q>> boolean appendDjunitsVectorArrayElement()
     {
         boolean result = false;
         try
@@ -479,15 +479,13 @@ public class SerialDataDecoder implements Decoder
             if (this.currentFieldType == 31)
             {
                 float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
-                Quantity<Q> quantity = unit.ofSi(f);
-                quantity.setDisplayUnit(unit);
+                Quantity<Q> quantity = unit.ofSi(f, unit);
                 this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
-                Quantity<Q> quantity = unit.ofSi(d);
-                quantity.setDisplayUnit(unit);
+                Quantity<Q> quantity = unit.ofSi(d, unit);
                 this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
         }
@@ -525,8 +523,8 @@ public class SerialDataDecoder implements Decoder
      * @param <U> the unit type
      * @param <Q> the quantity type
      */
-    @SuppressWarnings("unchecked")
-    private <U extends Unit<U, Q>, Q extends Quantity<Q>> boolean appendDjunitsElement()
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private <U extends UnitInterface<Q>, Q extends Quantity<Q>> boolean appendDjunitsElement()
     {
         boolean result = false;
         try
@@ -534,15 +532,13 @@ public class SerialDataDecoder implements Decoder
             if (this.dataElementBytes.length == 4)
             {
                 float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
-                Q quantity = (Q) this.displayUnit.ofSi(f);
-                quantity.setDisplayUnit((U) this.displayUnit);
+                Q quantity = (Q) this.displayUnit.ofSi(f, (UnitInterface) this.displayUnit);
                 this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
-                Q quantity = (Q) this.displayUnit.ofSi(d);
-                quantity.setDisplayUnit((U) this.displayUnit);
+                Q quantity = (Q) this.displayUnit.ofSi(d, (UnitInterface) this.displayUnit);
                 this.buffer.append(quantity.format(QuantityFormat.instance().setVariableLength()).replace(" ", "") + " ");
             }
         }
