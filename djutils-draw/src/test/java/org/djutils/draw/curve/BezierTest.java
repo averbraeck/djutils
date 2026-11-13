@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.djutils.draw.Export;
+import org.djutils.draw.curve.OffsetFlattener2d.NumSegments;
+import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.line.PolyLine3d;
 import org.djutils.draw.line.Ray2d;
@@ -791,6 +793,27 @@ public class BezierTest
             // System.out.println(result);
             assertEquals(expected, result, expected / 1e10, "factorial");
         }
+    }
+
+    /**
+     * This Bezier caused a short offset line. When determining the segments to produce the offset line with, t-values where to
+     * cut the segments are first calculated along the whole Bezier. Then, when looping over these, a t-value to cut in the
+     * remainder has to be recomputed. This is because the t-value does not scale with segment lengths. It could happen that for
+     * example a root (where the Bezier is horizontal or vertical) was found right at the start of the remainder with t &lt;
+     * 1e-10. There is a check for t &lt; 1e-10 to skip numerically difficult tiny Beziers when the original t-values were very
+     * close. That is however not the case here; it just found the same point where the previous segment wanted to end due to
+     * numerical errors.
+     */
+    @Test
+    public void buggySectionsTest()
+    {
+        BezierCubic2d bezier = new BezierCubic2d(new Point2d(-18.8, 0.0), new Point2d(-7.975952697812154, 0.0),
+                new Point2d(5.702042209658105, 4.171277376903539), new Point2d(2.0, -6.0));
+        ContinuousPiecewiseLinearFunction of = ContinuousPiecewiseLinearFunction.of(0.0, -2.75, 1.0, -2.75);
+        OffsetFlattener2d flattener = new NumSegments(64);
+        PolyLine2d poly = flattener.flatten(bezier, of);
+        double lengthFraction = poly.getLength() / bezier.getLength();
+        assertEquals(lengthFraction, 0.81, 0.01, "Offset curve has different length and likely omitted a segment.");
     }
 
 }

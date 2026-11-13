@@ -414,7 +414,6 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     public SplitBeziers split(final double t)
     {
         Throw.when(t < 0.0 || t > 1.0, IllegalArgumentException.class, "t value should be in the range [0.0 ... 1.0].");
-        // System.out.println("Splitting at " + t + ": " + this);
         List<Point2d> p1 = new ArrayList<>();
         List<Point2d> p2 = new ArrayList<>();
         List<Point2d> all = new ArrayList<>();
@@ -545,32 +544,28 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         while (typeIterator.hasNext())
         {
             double tInFull = typeIterator.next();
-            Boundary type = splits.get(tInFull);
-            double t;
-            // Note: as we split the B&eacute;zier curve and work with the remainder in each loop, the resulting t value is not
-            // the same as on the full B&eacute;zier curve. Therefore we need to refind the roots, or inflections, or at least
-            // one cross-section.
-            if (type == Boundary.ROOT)
-            {
-                t = currentBezier.getRoots().first();
-            }
-            else if (type == Boundary.INFLECTION)
-            {
-                t = currentBezier.getInflections().first();
-            }
-            else
-            {
-                NavigableSet<Double> fCrossSection = new TreeSet<>();
-                double fSoFar = lengthSoFar / lengthTotal;
-                double fFirst = fCrossSectionRemain.pollFirst(); // fraction in total B&eacute;zier curve
-                fCrossSection.add((fFirst - fSoFar) / (1.0 - fSoFar)); // add fraction in remaining B&eacute;zier curve
-                SortedSet<Double> offsets = currentBezier.getOffsetT(fCrossSection);
-                t = offsets.first();
-            }
-            if (t < 1e-10)
+            if (tInFull - tStart < 1e-10)
             {
                 continue;
             }
+            Boundary type = splits.get(tInFull);
+            // Note: as we split the B&eacute;zier curve and work with the remainder in each loop, the resulting t value is not
+            // the same as on the full B&eacute;zier curve. Therefore we need to refind the roots, or inflections, or at least
+            // one cross-section.
+            double t = switch (type)
+            {
+                case ROOT -> currentBezier.getRoots().stream().filter((d) -> d >= 1e-10).findFirst().get();
+                case INFLECTION -> currentBezier.getInflections().stream().filter((d) -> d >= 1e-10).findFirst().get();
+                case KNOT ->
+                {
+                    NavigableSet<Double> fCrossSection = new TreeSet<>();
+                    double fSoFar = lengthSoFar / lengthTotal;
+                    double fFirst = fCrossSectionRemain.pollFirst(); // fraction in total B&eacute;zier curve
+                    fCrossSection.add((fFirst - fSoFar) / (1.0 - fSoFar)); // add fraction in remaining B&eacute;zier curve
+                    SortedSet<Double> offsets = currentBezier.getOffsetT(fCrossSection);
+                    yield offsets.first();
+                }
+            };
 
             // Split B&eacute;zier curve, and add offset of first part
             SplitBeziers parts = currentBezier.split(t);
